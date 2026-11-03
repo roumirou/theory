@@ -155,6 +155,7 @@ svg.diagram .state.hl .outer{fill:var(--accent-soft);stroke:var(--accent);stroke
 .narr p.latest{background:var(--accent-soft);padding:6px 10px;border-radius:8px}
 .newtag{font-family:var(--f-mono);font-size:11px;background:var(--butter);color:var(--butter-ink);padding:1px 6px;border-radius:4px}
 .note{font-size:15px;color:var(--ink-2);background:var(--bg);border-radius:8px;padding:8px 12px;margin:8px 0}
+.aiout{margin-top:8px}.aitext{white-space:pre-wrap;background:var(--surface-2,rgba(127,127,127,.08));border-radius:10px;padding:12px 14px;font-size:15px;line-height:1.55}
 .banner{padding:10px 14px;border-radius:10px;margin:10px 0;font-size:15px}
 .banner.ok{background:var(--good-soft);color:var(--good)} .banner.no{background:var(--bad-soft);color:var(--bad)}
 .okc{color:var(--good);font-weight:700}.noc{color:var(--bad);font-weight:700}
@@ -244,6 +245,9 @@ svg.tree .tt{font-family:var(--f-mono);fill:var(--ink);font-size:15px}
 .lpanel{margin-top:10px;padding:10px;border-radius:10px;background:var(--note);color:var(--note-ink)}
 .ta{font:inherit;font-size:15px;width:100%;max-width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);resize:vertical}
 .ta.mono{font-family:var(--f-mono)}
+.penpad{border:1px solid var(--line);border-radius:12px;padding:8px;background:var(--bg);margin:8px 0}
+.pencv{display:block;width:100%;background:var(--paper);border-radius:8px;border:1px dashed var(--line);touch-action:pan-y;cursor:crosshair}
+.pencv.fingerdraw{touch-action:none}
 .pre{background:var(--bg);border-radius:8px;padding:10px 12px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;margin:8px 0}
 .qpaper{background:var(--bg);border-radius:10px;padding:10px 14px;margin:8px 0}
 .qcard{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px;margin:18px 0}
@@ -2389,39 +2393,190 @@ function reportHTML(res, kindWord) {
 }
 
 /* ---------- answer widgets used by the lab and the exam papers ---------- */
+/* ---------- type the transition table ---------- */
+function layeredSpec(states, tr, start, accept) {
+  const depth = {}; if (start) depth[start] = 0; const q = start ? [start] : [];
+  while (q.length) { const s = q.shift(); tr.filter(t => t.from === s).forEach(t => { if (depth[t.to] == null) { depth[t.to] = depth[s] + 1; q.push(t.to); } }); }
+  let maxD = Math.max(0, ...Object.values(depth)); states.forEach(s => { if (depth[s] == null) depth[s] = ++maxD; });
+  const cols = {}; states.forEach(s => (cols[depth[s]] = cols[depth[s]] || []).push(s));
+  const nRows = Math.max(...Object.values(cols).map(c => c.length));
+  const W = Math.max(360, 140 * (maxD + 1) + 160), H = Math.max(200, 130 * nRows + 90);
+  const pos = {}; Object.entries(cols).forEach(([d, c]) => c.forEach((s, i) => { pos[s] = [80 + d * 140, H / 2 + (i - (c.length - 1) / 2) * 130]; }));
+  const st = states.map(id => ({ id, x: pos[id][0], y: pos[id][1], start: id === start, accept: accept.includes(id) }));
+  const merged = {}; tr.forEach(t => { const k = t.from + '>' + t.to; merged[k] = merged[k] ? merged[k] + ',' + t.sym : t.sym; });
+  const edges = Object.entries(merged).map(([k, label]) => { const [from, to] = k.split('>'); if (from === to) return { from, to, label, loop: 'up' };
+    const two = merged[to + '>' + from]; const span = Math.abs(depth[from] - depth[to]); const same = depth[from] === depth[to] && Math.abs(pos[from][1] - pos[to][1]) > 140;
+    return { from, to, label, bend: two ? 22 : (span > 1 || same) ? 45 : 0 }; });
+  return { w: W, h: H, r: 26, states: st, edges };
+}
+function parseTable(text, kind) {
+  const errs = []; const states = []; const add = id => { if (!states.includes(id)) states.push(id); };
+  let start = null, accept = [];
+  const edges = {};
+  text.split(/\n/).map(l => l.trim()).filter(l => l && !l.startsWith('#')).forEach(line => {
+    let m;
+    if ((m = line.match(/^start\s*[:=]\s*(\S+)$/i))) { start = m[1]; add(start); return; }
+    if ((m = line.match(/^(accept|final)\w*\s*[:=]\s*(.*)$/i))) { m[2].split(/[\s,]+/).filter(Boolean).forEach(q => { accept.push(q); add(q); }); return; }
+    const t = line.split(/\s+/);
+    if (t.length < 3) { errs.push(`"${line}" needs three parts: FROM letters TO` + (kind === 'pda' ? '   (for a PDA: FROM TO read,pop→push)' : '   (example: q0 a,b q1)')); return; }
+    let from, to, label;
+    if (kind === 'pda') {
+      from = t[0]; to = t[1]; const r = parsePDALabel(t.slice(2).join(' '));
+      if (r.error) { errs.push(r.error); return; } label = r.label;
+    } else {
+      if (t.length !== 3) { errs.push(`"${line}": write  FROM letters TO  with no extra spaces (example: q0 a,b q1)`); return; }
+      [from, label, to] = [t[0], normFALabel(t[1]), t[2]];
+    }
+    add(from); add(to);
+    const k = from + '>' + to;
+    if (edges[k]) edges[k].label = kind === 'pda' ? edges[k].label + '\n' + label : normFALabel(edges[k].label + ',' + label);
+    else edges[k] = { from, to, label };
+  });
+  if (!start && states.length) start = states[0];
+  const tr = []; Object.values(edges).forEach(e => tr.push({ from: e.from, to: e.to, sym: e.label }));
+  const sp = layeredSpec(states, tr, start, accept);
+  sp.edges.forEach(e => { e.label = e.label.replace(/,(?=[^\n]*→)/g, ',').split(',').join(kind === 'pda' ? ',' : ','); });
+  if (kind === 'pda') sp.edges.forEach(e => { e.label = edges[e.from + '>' + e.to].label; });
+  return { spec: sp, errs };
+}
+function specToTable(sp, kind) {
+  const lines = [];
+  const s0 = sp.states.find(x => x.start); if (s0) lines.push('start: ' + s0.id);
+  const acc = sp.states.filter(x => x.accept).map(x => x.id); if (acc.length) lines.push('accept: ' + acc.join(' '));
+  sp.edges.forEach(e => { if (kind === 'pda') String(e.label).split('\n').forEach(l => lines.push(`${e.from} ${e.to} ${l.replace(/\s+/g, '')}`)); else lines.push(`${e.from} ${String(e.label).replace(/\s+/g, '')} ${e.to}`); });
+  return lines.join('\n');
+}
+
+/* ---------- pencil scratch paper (iPad / Apple Pencil) ---------- */
+function PenPad(host, storeKey, aiCtx) {
+  const box = h('div', { class: 'penpad' });
+  const cv = h('canvas', { class: 'pencv', 'aria-label': 'drawing area' });
+  const bPen = h('button', { class: 'chip sel', type: 'button' }, '✎ Pen');
+  const bEr = h('button', { class: 'chip', type: 'button' }, '⌫ Eraser');
+  const bUndo = h('button', { class: 'chip', type: 'button' }, '↶ Undo');
+  const bClr = h('button', { class: 'chip', type: 'button' }, 'Clear');
+  const fid = (storeKey || 'pp') + '-finger';
+  const fin = h('input', { type: 'checkbox', id: fid });
+  box.append(h('div', { class: 'edbar' }, bPen, bEr, bUndo, bClr, h('label', { class: 'small muted', for: fid, style: 'display:flex;gap:6px;align-items:center' }, fin, 'draw with finger too')), cv,
+    h('div', { class: 'small muted' }, 'Draw your answer here with the pencil, exactly like on paper. Then open the model answer and compare. (Handwriting is not checked automatically: to get an automatic check, also type the table.)'));
+  host.append(box);
+  let strokes = storeKey ? store.get(storeKey, []) : [], cur = null, mode = 'pen';
+  const ctx = cv.getContext('2d');
+  const H = 460;
+  function size() { const w = box.clientWidth || 600; const d = window.devicePixelRatio || 1; cv.width = w * d; cv.height = H * d; cv.style.height = H + 'px'; ctx.setTransform(d, 0, 0, d, 0, 0); redraw(); }
+  function ink() { return getComputedStyle(document.body).color || '#18213F'; }
+  function drawStroke(s) {
+    if (s.pts.length < 1) return;
+    ctx.save(); ctx.globalCompositeOperation = s.er ? 'destination-out' : 'source-over';
+    ctx.strokeStyle = ink(); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    for (let i = 1; i < s.pts.length; i++) { const a = s.pts[i - 1], c = s.pts[i]; ctx.lineWidth = s.er ? 18 : 1.2 + 2.6 * (c[2] || 0.5); ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(c[0], c[1]); ctx.stroke(); }
+    if (s.pts.length === 1 && !s.er) { ctx.beginPath(); ctx.arc(s.pts[0][0], s.pts[0][1], 1.5, 0, 7); ctx.fillStyle = ink(); ctx.fill(); }
+    ctx.restore();
+  }
+  function redraw() { ctx.clearRect(0, 0, cv.width, cv.height); strokes.forEach(drawStroke); }
+  const allowed = e => e.pointerType === 'pen' || e.pointerType === 'mouse' || fin.checked;
+  const pos = e => { const r = cv.getBoundingClientRect(); return [Math.round(e.clientX - r.left), Math.round(e.clientY - r.top), e.pressure || 0.5]; };
+  cv.addEventListener('pointerdown', e => { if (!allowed(e)) return; e.preventDefault(); cv.setPointerCapture(e.pointerId); cur = { er: mode === 'er', pts: [pos(e)] }; strokes.push(cur); drawStroke(cur); });
+  cv.addEventListener('pointermove', e => { if (!cur) return; e.preventDefault(); const evs = e.getCoalescedEvents ? e.getCoalescedEvents() : [e]; evs.forEach(ev => cur.pts.push(pos(ev))); redraw(); });
+  const end = () => { if (!cur) return; cur = null; if (storeKey) { try { store.set(storeKey, strokes); } catch (x) {} } };
+  cv.addEventListener('pointerup', end); cv.addEventListener('pointercancel', end);
+  // stop the page from scrolling when the pencil touches the canvas, but let fingers scroll
+  cv.addEventListener('touchstart', e => { const t = e.touches[0]; if ((t && t.touchType === 'stylus') || fin.checked) e.preventDefault(); }, { passive: false });
+  cv.addEventListener('touchmove', e => { const t = e.touches[0]; if ((t && t.touchType === 'stylus') || fin.checked) e.preventDefault(); }, { passive: false });
+  bPen.onclick = () => { mode = 'pen'; bPen.classList.add('sel'); bEr.classList.remove('sel'); };
+  bEr.onclick = () => { mode = 'er'; bEr.classList.add('sel'); bPen.classList.remove('sel'); };
+  bUndo.onclick = () => { strokes.pop(); redraw(); end(); if (storeKey) store.set(storeKey, strokes); };
+  bClr.onclick = () => { strokes = []; redraw(); if (storeKey) store.set(storeKey, strokes); };
+  fin.onchange = () => cv.classList.toggle('fingerdraw', fin.checked);
+  new ResizeObserver(() => size()).observe(box);
+  size();
+
+  function exportBlob() {
+    return new Promise(res => {
+      const w = cv.clientWidth, hh = H, c2 = document.createElement('canvas'); c2.width = w * 2; c2.height = hh * 2;
+      const x = c2.getContext('2d'); x.scale(2, 2); x.fillStyle = '#ffffff'; x.fillRect(0, 0, w, hh);
+      strokes.forEach(s => { x.save(); x.strokeStyle = s.er ? '#ffffff' : '#111111'; x.lineCap = 'round'; x.lineJoin = 'round';
+        for (let i = 1; i < s.pts.length; i++) { const a = s.pts[i - 1], c = s.pts[i]; x.lineWidth = s.er ? 18 : 1.6 + 2.6 * (c[2] || 0.5); x.beginPath(); x.moveTo(a[0], a[1]); x.lineTo(c[0], c[1]); x.stroke(); } x.restore(); });
+      c2.toBlob(res, 'image/png');
+    });
+  }
+}
+function PenToggle(host, storeKey, ctx) {
+  const b = h('button', { class: 'btn ghost', type: 'button' }, '✎ Answer by hand (pencil)');
+  const slot = h('div'); let open = false, made = false;
+  b.onclick = () => { open = !open; slot.hidden = !open; b.textContent = open ? 'Hide the drawing area' : '✎ Answer by hand (pencil)'; if (open && !made) { made = true; PenPad(slot, storeKey, ctx); } };
+  host.append(h('div', { class: 'ctl' }, b), slot);
+}
+
 function DrawAnswer(host, task, opts = {}) {
   const kind = task.kind === 'pda' ? 'pda' : 'fa';
-  const ed = MachineEditor(host, { kind, alpha: task.alpha, storeKey: opts.storeKey });
+  const sk = opts.storeKey || ('da' + Math.random().toString(36).slice(2));
+  let applyAI = () => {};
+  PenToggle(host, sk + '-pen', { question: opts.question || task.q || '', mode: kind === 'pda' ? 'pda' : 'fa', apply: t => applyAI(t) });
+  let mode = store.get(sk + '-mode', 'table');
+  const tabs = h('div', { class: 'chips' });
+  const tblBox = h('div'), drawBox = h('div');
+  host.append(h('div', { class: 'sub' }, 'Your machine (for the automatic check):'), tabs, tblBox, drawBox);
+  // table mode
+  const ta = h('textarea', { class: 'ta mono', id: sk + '-tbl', rows: 7, spellcheck: 'false', 'aria-label': 'transition table',
+    placeholder: kind === 'pda' ? 'start: q1\naccept: q4\nq1 q2 ε,ε→$\nq2 q2 0,ε→0\nq2 q3 1,0→ε\nq3 q3 1,0→ε\nq3 q4 ε,$→ε' : 'start: q0\naccept: q2\nq0 a q1\nq0 b q0\nq1 a,b q2\nq2 a,b q2' });
+  ta.value = store.get(sk + '-tbl', '');
+  const keys = h('div', { class: 'chips' });
+  (kind === 'pda' ? ['ε', '→', '$', 'start: ', 'accept: '] : ['ε', 'start: ', 'accept: ']).forEach(k => keys.append(h('button', { class: 'chip key', type: 'button', onclick: () => { const p = ta.selectionStart ?? ta.value.length; ta.value = ta.value.slice(0, p) + k + ta.value.slice(p); ta.focus(); ta.setSelectionRange(p + k.length, p + k.length); upd(); } }, k.trim())));
+  const prev = h('div'); const perr = h('div', { class: 'noc small' });
+  tblBox.append(h('div', { class: 'small muted', html: kind === 'pda' ? 'One arrow per line: <span class="mono">FROM TO read,pop→push</span>. Then <span class="mono">start: q1</span> and <span class="mono">accept: q4</span>. Use ε (or e) for "nothing".' : 'One line per arrow: <span class="mono">FROM letters TO</span>, like <span class="mono">q0 a,b q1</span>. Then <span class="mono">start: q0</span> and <span class="mono">accept: q2 q3</span>. Use ε (or e) for a free move. This is the δ table you write in the exam.' }), ta, keys, perr, prev);
+  let tSpec = null;
+  function upd() {
+    store.set(sk + '-tbl', ta.value);
+    prev.innerHTML = ''; perr.textContent = '';
+    if (!ta.value.trim()) { tSpec = null; return; }
+    const r = parseTable(ta.value, kind); tSpec = r.spec;
+    if (r.errs.length) perr.innerHTML = r.errs.map(esc).join('<br>');
+    if (tSpec.states.length) { prev.append(h('div', { class: 'small muted' }, 'Your machine, drawn from your table:')); Diagram(prev, tSpec); }
+  }
+  let tmr; ta.oninput = () => { clearTimeout(tmr); tmr = setTimeout(upd, 250); };
+  upd();
+  // draw mode
+  const ed = MachineEditor(drawBox, { kind, alpha: task.alpha, storeKey: opts.storeKey });
+  function setMode(m) { mode = m; store.set(sk + '-mode', m); tblBox.hidden = m !== 'table'; drawBox.hidden = m !== 'draw'; tabs.innerHTML = ''; [['table', 'Type the table'], ['draw', 'Tap to draw']].forEach(([k, l]) => tabs.append(h('button', { class: 'chip' + (k === m ? ' sel' : ''), type: 'button', onclick: () => setMode(k) }, l))); }
+  setMode(mode);
+  const curSpec = () => mode === 'table' ? (tSpec || { states: [], edges: [] }) : ed.spec();
   const out = h('div');
   const bCheck = h('button', { class: 'btn primary', type: 'button' }, 'Check my answer');
-  const testIn = h('input', { class: 'txt mono', id: (opts.storeKey || 'x') + '-t', placeholder: 'test a string', spellcheck: 'false', 'aria-label': 'test a string' });
+  const testIn = h('input', { class: 'txt mono', id: sk + '-t', placeholder: 'test a string', spellcheck: 'false', 'aria-label': 'test a string' });
   const testOut = h('span', { class: 'small' });
   testIn.oninput = () => {
-    const w = testIn.value.trim(); const sp = ed.spec();
+    const w = testIn.value.trim(); const sp = curSpec();
     if (!sp.states.some(x => x.start)) { testOut.textContent = 'Set a start state first.'; return; }
-    let ok;
-    if (kind === 'pda') ok = pdaAccepts(specToPDA(sp), w); else ok = faFromSpec(sp).run(w).ok;
+    const ok = kind === 'pda' ? pdaAccepts(specToPDA(sp), w) : faFromSpec(sp).run(w).ok;
     testOut.innerHTML = ok ? '<span class="okc">your machine ACCEPTS it</span>' : '<span class="noc">your machine REJECTS it</span>';
   };
   bCheck.onclick = () => {
-    const res = kind === 'pda' ? checkPDA(ed.spec(), task) : checkFA(ed.spec(), task);
+    if (mode === 'table') upd();
+    const res = kind === 'pda' ? checkPDA(curSpec(), task) : checkFA(curSpec(), task);
     const r = reportHTML(res, kind === 'pda' ? 'PDA' : task.dfa ? 'DFA' : 'NFA');
     out.innerHTML = r.html;
     if (opts.onResult) opts.onResult(r.ok);
   };
   host.append(h('div', { class: 'ctl' }, bCheck, testIn, testOut), out);
-  return ed;
+  applyAI = t => { setMode('table'); ta.value = t; upd(); bCheck.click(); };
+  return { load(sp) { ed.load(sp); ta.value = specToTable(sp, kind); upd(); } };
 }
 function TextCheckAnswer(host, task, opts = {}) {
+  let applyAI = () => {};
+  PenToggle(host, (opts.storeKey || 'tc') + '-pen', { question: opts.question || task.q || '', mode: task.kind === 'cfg' ? 'cfg' : 'tm', apply: t => applyAI(t) });
   const ta = h('textarea', { class: 'ta mono', id: opts.storeKey || ('ta' + Math.random()), rows: task.kind === 'tm' ? 10 : 5, spellcheck: 'false', placeholder: task.kind === 'cfg' ? 'S → aSb | ε' : task.kind === 'tm' ? 'q1 a → q2 x R\nq2 _ → qacc _ R' : '', 'aria-label': 'your answer' });
   if (opts.storeKey) { ta.value = store.get(opts.storeKey, ''); ta.oninput = () => store.set(opts.storeKey, ta.value); }
   const keys = h('div', { class: 'chips' }); (task.kind === 'cfg' ? ['→', '|', 'ε'] : task.kind === 'tm' ? ['→', '_', 'qacc', 'qrej', 'R', 'L'] : []).forEach(k => keys.append(h('button', { class: 'chip key', type: 'button', onclick: () => { const p = ta.selectionStart ?? ta.value.length; ta.value = ta.value.slice(0, p) + k + ta.value.slice(p); ta.focus(); ta.setSelectionRange(p + k.length, p + k.length); if (opts.storeKey) store.set(opts.storeKey, ta.value); } }, k)));
   const out = h('div'); const b = h('button', { class: 'btn primary', type: 'button' }, 'Check my answer');
   b.onclick = () => { const res = task.kind === 'cfg' ? checkCFG(ta.value, task) : checkTM(ta.value, task); const r = reportHTML(res, task.kind === 'cfg' ? 'grammar' : 'Turing machine'); out.innerHTML = r.html; if (opts.onResult) opts.onResult(r.ok); };
+  applyAI = t => { ta.value = t; if (opts.storeKey) store.set(opts.storeKey, t); b.click(); };
   host.append(h('div', { class: 'small muted' }, task.kind === 'cfg' ? 'One variable per line. Capital letters are variables. Example:  S → aSb | ε' : 'One transition per line:  state read → next write move.   Use _ for the blank, qacc / qrej for accept / reject. Missing transitions reject.'), ta, keys, h('div', { class: 'ctl' }, b), out);
   return { set: v => { ta.value = v; if (opts.storeKey) store.set(opts.storeKey, v); } };
 }
 function RegexAnswer(host, task, opts = {}) {
+  let applyAI = () => {};
+  PenToggle(host, (opts.storeKey || 'rx') + '-pen', { question: opts.question || task.q || '', mode: 'regex', apply: t => applyAI(t) });
   const inp = h('input', { class: 'txt mono wide', id: opts.storeKey || ('rx' + Math.random()), spellcheck: 'false', autocomplete: 'off', 'aria-label': 'your regular expression' });
   if (opts.storeKey) { inp.value = store.get(opts.storeKey, ''); inp.oninput = () => store.set(opts.storeKey, inp.value); }
   const keys = h('div', { class: 'chips' }); ['∪', '*', 'ε', '(', ')', ...task.alpha].forEach(k => keys.append(h('button', { class: 'chip key', type: 'button', onclick: () => { const p = inp.selectionStart ?? inp.value.length; inp.value = inp.value.slice(0, p) + k + inp.value.slice(p); inp.focus(); inp.setSelectionRange(p + k.length, p + k.length); if (opts.storeKey) store.set(opts.storeKey, inp.value); } }, k)));
@@ -2433,6 +2588,7 @@ function RegexAnswer(host, task, opts = {}) {
     for (const w of all) { const got = re.test(w), want = !!task.test(w); if (got !== want) { wrong.push({ w, want }); if (wrong.length >= 6) break; } }
     const r = reportHTML({ issues: [], wrong, tested: all.length }, 'regular expression'); out.innerHTML = r.html; if (opts.onResult) opts.onResult(r.ok);
   };
+  applyAI = t => { inp.value = t.split('\n')[0].trim(); if (opts.storeKey) store.set(opts.storeKey, inp.value); b.click(); };
   host.append(inp, keys, h('div', { class: 'ctl' }, b), out);
   return { set: v => { inp.value = v; } };
 }
@@ -2464,9 +2620,9 @@ function Lab(host, tasks) {
     if (t.fig && FIG[t.fig]) desc.append(h('div', { class: 'figimg' }, h('img', { src: FIG[t.fig], alt: 'figure from the assignment' })));
     const sk = 'lab-' + t.id;
     let api;
-    if (t.kind === 'dfa' || t.kind === 'nfa' || t.kind === 'pda') api = DrawAnswer(area, { ...t, dfa: t.kind === 'dfa' }, { storeKey: sk, onResult: ok => { if (!ok) noteMistake({ kind: 'lab', id: t.id, label: t.name, href: '#lab' }); } });
-    else if (t.kind === 'regex') api = RegexAnswer(area, t, { storeKey: sk });
-    else api = TextCheckAnswer(area, t, { storeKey: sk });
+    if (t.kind === 'dfa' || t.kind === 'nfa' || t.kind === 'pda') api = DrawAnswer(area, { ...t, dfa: t.kind === 'dfa' }, { storeKey: sk, question: (t.name || "") + ". " + (t.q || ""), onResult: ok => { if (!ok) noteMistake({ kind: 'lab', id: t.id, label: t.name, href: '#lab' }); } });
+    else if (t.kind === 'regex') api = RegexAnswer(area, t, { storeKey: sk, question: (t.name || "") + ". " + (t.q || "") });
+    else api = TextCheckAnswer(area, t, { storeKey: sk, question: (t.name || "") + ". " + (t.q || "") });
     if (t.sample) {
       const b = h('button', { class: 'btn ghost', type: 'button' }, 'Show a sample answer');
       b.onclick = () => {
@@ -3380,13 +3536,14 @@ function renderPart(host, q, part, pid, key) {
     box.append(h('div', { class: 'ctl' }, b), markRow);
     return;
   }
-  if (part.type === 'draw') api = DrawAnswer(box, { ...part.task, dfa: part.task.kind === 'dfa' }, { storeKey: `${pid}-${key}`, onResult: award });
-  else if (part.type === 'regex') api = RegexAnswer(box, part.task, { storeKey: `${pid}-${key}`, onResult: award });
-  else if (part.type === 'cfg' || part.type === 'tm') api = TextCheckAnswer(box, { ...part.task, kind: part.type }, { storeKey: `${pid}-${key}`, onResult: award });
+  const qtext = (q.q || '') + (q.parts ? ' ' + (part.q || '') : '');
+  if (part.type === 'draw') api = DrawAnswer(box, { ...part.task, dfa: part.task.kind === 'dfa' }, { storeKey: `${pid}-${key}`, onResult: award, question: qtext });
+  else if (part.type === 'regex') api = RegexAnswer(box, part.task, { storeKey: `${pid}-${key}`, onResult: award, question: qtext });
+  else if (part.type === 'cfg' || part.type === 'tm') api = TextCheckAnswer(box, { ...part.task, kind: part.type }, { storeKey: `${pid}-${key}`, onResult: award, question: qtext });
   else if (part.type === 'subset') {
     const nfaFa = faFromSpec(part.nfa);
     box.append(h('div', { class: 'small muted' }, 'Answer in exam style: write the NFA table and the DFA table on paper, then draw the final DFA here and label each state with its subset (for example q1q2). The checker tests that your DFA accepts exactly the same strings as the NFA.'));
-    api = DrawAnswer(box, { kind: 'dfa', dfa: true, alpha: part.alpha, test: w => nfaFa.run(w).ok }, { storeKey: `${pid}-${key}`, onResult: award });
+    api = DrawAnswer(box, { kind: 'dfa', dfa: true, alpha: part.alpha, test: w => nfaFa.run(w).ok }, { storeKey: `${pid}-${key}`, onResult: award, question: qtext });
   }
   else if (part.type === 'marble') {
     const fields = ['States', 'Start state', 'Accept states', 'Alphabet'];
@@ -3410,6 +3567,7 @@ function renderPart(host, q, part, pid, key) {
   else if (part.type === 'write') {
     (part.fields || ['Your answer']).forEach((f, i) => { const k = `${pid}-${key}-w${i}`; const t = h('textarea', { class: 'ta', id: k, rows: part.rows || 2, 'aria-label': f }); t.value = store.get(k, ''); t.oninput = () => store.set(k, t.value); box.append(h('div', { class: 'field' }, h('label', { class: 'lbl', for: k }, f), t)); });
   }
+  if (['write', 'trace', 'marble'].includes(part.type)) PenToggle(box, `${pid}-${key}-pen`, part.type === 'marble' ? null : { mode: 'write', question: (q.q || '') + ' ' + (part.q || ''), marks: part.marks, model: part.sheet || part.modelText || '', rubric: part.rubric });
   // reveal + rubric
   box.append(h('div', { class: 'ctl' }, reveal), sheetBox);
   reveal.onclick = () => {
