@@ -8,7 +8,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Caveat:wght@500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Carlito:ital,wght@0,400;0,700;1,400&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Caveat:wght@500;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* Layout: a study notebook — chapter rail on the left, one lecture open at a time, worked lines with handwritten "why" notes in the margin. */
 :root{
@@ -287,6 +287,60 @@ ol.flaw{margin:6px 0;padding-left:22px;font-size:15px}
   .mv{min-width:0;width:100%}
   body{font-size:16px}
 }
+
+.tcard{border:1px solid var(--line);border-radius:6px;margin:8px 0;background:var(--paper)}
+.tcard>summary{cursor:pointer;padding:10px 14px;display:flex;gap:10px;align-items:center;font-weight:700;list-style:none}
+.tcard>summary::-webkit-details-marker{display:none}
+.tcard>summary::after{content:"+";margin-left:auto;font-weight:400;color:var(--accent);font-size:20px}
+.tcard[open]>summary::after{content:"–"}
+.tcard[open]{padding:0 14px 14px}.tcard[open]>summary{margin:0 -14px 8px;border-bottom:1px solid var(--line)}
+.tkind{font-size:11px;letter-spacing:.12em;background:var(--accent);color:#fff;border-radius:4px;padding:2px 7px;font-weight:700;flex:0 0 auto}
+/* ===== NGU slide look (matches the lecture slides) ===== */
+:root{--ngu:#750928;--ngu-2:#5C0720;--ngu-green:#97CB90;--ngu-cream:#FDF1B6;
+  --bg:#FFFFFF; --paper:#FFFFFF; --ink:#111111; --ink-2:#333333; --muted:#6B6B6B; --line:#E7DCDF;
+  --accent:#750928; --accent-soft:#F7E8EC; --powder:#E3F1E0; --butter:#FDF1B6; --butter-ink:#5E4700;
+  --good:#2E7A3B; --good-soft:#E3F1E0; --note:#FDF6D6; --note-ink:#5B4A10;
+  --f-display:Calibri, Carlito, "Segoe UI", system-ui, sans-serif;
+  --f-body:Calibri, Carlito, "Segoe UI", system-ui, sans-serif; --r:6px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#160B0F; --paper:#1F1016; --ink:#F4ECEE; --ink-2:#D9C9CE; --muted:#A9979C; --line:#3E2530;
+  --accent:#EE9AB0; --accent-soft:#3A1824; --powder:#1E3320; --good:#8FD49A; --good-soft:#1A3020; --note:#2B2614; --note-ink:#F4E3A3}}
+:root[data-theme="dark"]{
+  --bg:#160B0F; --paper:#1F1016; --ink:#F4ECEE; --ink-2:#D9C9CE; --muted:#A9979C; --line:#3E2530;
+  --accent:#EE9AB0; --accent-soft:#3A1824; --powder:#1E3320; --good:#8FD49A; --good-soft:#1A3020; --note:#2B2614; --note-ink:#F4E3A3}
+body{font-size:18px}
+h1,h2,h3{letter-spacing:0;font-weight:700}
+h2,h3{color:var(--accent)}
+h2{position:relative;padding:0 0 8px;border-bottom:2px solid var(--line);padding-right:200px}
+h2::after{content:"NEWGIZA UNIVERSITY";position:absolute;right:0;bottom:12px;font-size:10px;letter-spacing:.42em;font-weight:400;color:var(--accent)}
+@media (max-width:700px){h2{padding-right:0}h2::after{display:none}}
+.eyebrow{font-family:var(--f-display);letter-spacing:.2em}
+/* chapter head = title slide */
+.ch-head{background:var(--ngu);color:#fff;padding:30px 120px 46px 30px;border-radius:4px;position:relative;overflow:hidden;min-height:170px}
+.ch-head h1{color:#fff;font-weight:400}
+.ch-head .eyebrow{color:var(--ngu-cream)}
+.ch-head .lead,.ch-head p{color:#F2D9E0}
+.ch-head a{color:var(--ngu-cream)}
+.ch-head::before{content:"";position:absolute;right:30px;top:26px;width:62px;height:70px;background:linear-gradient(135deg,var(--ngu-green) 0 50%,transparent 50%),var(--ngu-cream);clip-path:polygon(0 0,100% 50%,0 100%);opacity:.95}
+.ch-head::after{content:"NEWGIZA UNIVERSITY";position:absolute;left:30px;bottom:16px;font-size:10px;letter-spacing:.42em;color:var(--ngu-cream)}
+@media (max-width:700px){.ch-head{padding:22px 62px 40px 18px}.ch-head::before{width:34px;height:40px;right:16px;top:16px}}
+/* side rail = maroon like the slides */
+.rail{background:var(--ngu);border-right:0;color:#fff}
+.rail .brand{color:#fff;font-weight:700}
+.rail .brand small{color:var(--ngu-cream);font-family:var(--f-display);font-size:13px;letter-spacing:.3em;text-transform:uppercase;margin-top:8px}
+.rail .prog{color:#F2D9E0}
+.rail .bar{background:rgba(255,255,255,.18)} .rail .bar i{background:var(--ngu-green)}
+.rail .whytoggle{color:#F2D9E0}
+.rail .nav a{color:#fff}
+.rail .nav a:hover{background:rgba(255,255,255,.12)}
+.rail .nav a.cur{background:var(--ngu-green);color:#1C2A1A}
+.rail .nav a.cur .ln{color:#1C2A1A}
+.rail .nav .ln{color:#E4BFCA}
+.rail .nav .ck{color:var(--ngu-green)} .rail .nav a.cur .ck{color:#1C2A1A}
+.rail .nav .grp{color:var(--ngu-cream);letter-spacing:.3em}
+@media (max-width:860px){.topbar{background:var(--ngu);border-bottom:3px solid var(--ngu-green)}.topbar .brand{color:#fff}}
+.btn,.chip,.whyb{border-radius:6px}
+.box{border-left:5px solid var(--accent)}
 </style>
 </head>
 <body>
@@ -493,6 +547,7 @@ ol.flaw{margin:6px 0;padding-left:22px;font-size:15px}
 <p><b>Concatenation is harder</b> (last slide of the lecture): the machine must accept w if w = xy with M1 accepting x and M2 accepting y. But where do we split w? A DFA cannot know. This is exactly why Lecture 3 introduces nondeterminism.</p>
 
 <div data-w="quiz-l1"></div>
+<div data-w="solve-l1"></div>
 </section>
 
 <!-- ===================== LECTURE 3-4 ===================== -->
@@ -569,6 +624,7 @@ ol.flaw{margin:6px 0;padding-left:22px;font-size:15px}
 </div>
 <div data-w="closure-pics"></div>
 <div data-w="quiz-l3"></div>
+<div data-w="solve-l3"></div>
 </section>
 <!-- ===================== LECTURE 5 ===================== -->
 <section class="ch" id="l5" data-title="Regular expressions">
@@ -699,6 +755,7 @@ ol.flaw{margin:6px 0;padding-left:22px;font-size:15px}
 <li>The order you remove states changes how the answer looks, not the language. Any order is correct.</li>
 </ul></div>
 <div data-w="quiz-l5"></div>
+<div data-w="solve-l5"></div>
 </section>
 
 <!-- ===================== LECTURE 6 ===================== -->
@@ -852,6 +909,7 @@ ol.flaw{margin:6px 0;padding-left:22px;font-size:15px}
 </ul></div>
 <div class="box exam"><div class="bt">Assignment 3, your turn</div><p>Every language from Assignment 3 part 1 (except the factorial ones) is in the game above. Find an s that wins, then write the 6-line proof yourself using the template. If the game shows survivors, change s or i.</p></div>
 <div data-w="quiz-l6"></div>
+<div data-w="solve-l6"></div>
 </section>
 <!-- ===================== LECTURE 7 ===================== -->
 <section class="ch" id="l7" data-title="Context-free grammars">
@@ -997,6 +1055,7 @@ ol.flaw{margin:6px 0;padding-left:22px;font-size:15px}
 
 <h2>Check-ins from the slides</h2>
 <div data-w="quiz-l7"></div>
+<div data-w="solve-l7"></div>
 </section>
 
 <!-- ===================== LECTURE 8 ===================== -->
@@ -1068,6 +1127,7 @@ ol.flaw{margin:6px 0;padding-left:22px;font-size:15px}
 <div data-w="pda-hash"></div>
 <p><b>Midterm 2023 C.3: {##w##w<sup>R</sup>##}</b> — read the two #'s at the start without touching the stack, push w, switch on the middle ##, pop w<sup>R</sup>, read the final ## and pop $. <b>Midterm 2025 Q.9: {c<sup>m</sup>#w<sup>R</sup>w@ | m ≥ 1}</b> — read one or more c's (no stack needed), read #, then w<sup>R</sup>w is an even palindrome: push, guess the middle with ε, ε → ε, pop and compare, then read @ and pop $.</p>
 <div data-w="quiz-l8"></div>
+<div data-w="solve-l8"></div>
 </section>
 
 <!-- ===================== LECTURE 9 ===================== -->
@@ -1120,6 +1180,7 @@ ol.flaw{margin:6px 0;padding-left:22px;font-size:15px}
 </table></div>
 <div class="nest"><div>Context-free languages<div>Regular languages</div></div></div>
 <div data-w="quiz-l9"></div>
+<div data-w="solve-l9"></div>
 </section>
 
 <!-- ===================== LECTURE 10 ===================== -->
@@ -1199,6 +1260,7 @@ ol.flaw{margin:6px 0;padding-left:22px;font-size:15px}
 <li>So uv<sup>i</sup>xy<sup>i</sup>z ∉ L. Contradiction, L is not context-free. ∎</li>
 </ol></div>
 <div data-w="quiz-l10"></div>
+<div data-w="solve-l10"></div>
 </section>
 <!-- ===================== LECTURE 11 ===================== -->
 <section class="ch" id="l11" data-title="Turing machines I">
@@ -1277,6 +1339,7 @@ ol.flaw{margin:6px 0;padding-left:22px;font-size:15px}
 </div>
 <div class="nest"><div>T-recognizable<div>T-decidable<div>CFLs<div>regular</div></div></div></div></div>
 <div data-w="quiz-l11"></div>
+<div data-w="solve-l11"></div>
 </section>
 
 <!-- ===================== LECTURE 12 ===================== -->
@@ -1339,6 +1402,7 @@ ol.flaw{margin:6px 0;padding-left:22px;font-size:15px}
 <li>Run it by hand on one short accepted string and write the configurations (u q v).</li>
 </ol></div>
 <div data-w="quiz-l12"></div>
+<div data-w="solve-l12"></div>
 </section>
 
 <!-- ===================== EXAM ===================== -->
@@ -2437,6 +2501,8 @@ function parseTable(text, kind) {
   const sp = layeredSpec(states, tr, start, accept);
   sp.edges.forEach(e => { e.label = e.label.replace(/,(?=[^\n]*→)/g, ',').split(',').join(kind === 'pda' ? ',' : ','); });
   if (kind === 'pda') sp.edges.forEach(e => { e.label = edges[e.from + '>' + e.to].label; });
+  let shift = 0; sp.edges.filter(e => e.loop).forEach(e => { const s = sp.states.find(x => x.id === e.from); const top = s.y - sp.r - 34 - 16 * String(e.label).split('\n').length; if (top < 8) shift = Math.max(shift, 8 - top); });
+  if (shift) { sp.states.forEach(s => s.y += shift); sp.h += shift; }
   return { spec: sp, errs };
 }
 function specToTable(sp, kind) {
@@ -2591,6 +2657,48 @@ function RegexAnswer(host, task, opts = {}) {
   applyAI = t => { inp.value = t.split('\n')[0].trim(); if (opts.storeKey) store.set(opts.storeKey, inp.value); b.click(); };
   host.append(inp, keys, h('div', { class: 'ctl' }, b), out);
   return { set: v => { inp.value = v; } };
+}
+
+/* ---------- one task as a card (used by the per-lecture "Solve it yourself") ---------- */
+function TaskCard(host, t, href) {
+  const card = h('details', { class: 'tcard' });
+  const kindName = { dfa: 'DFA', nfa: 'NFA', pda: 'PDA', cfg: 'CFG', regex: 'Regex', tm: 'TM' }[t.kind];
+  card.append(h('summary', {}, h('span', { class: 'tkind' }, kindName), h('span', {}, t.name)));
+  host.append(card);
+  let built = false;
+  card.addEventListener('toggle', () => {
+    if (!card.open || built) return; built = true;
+    const desc = h('div', { class: 'qpaper', html: `<div class="qtext">${t.q}</div><div class="small muted">${t.kind === 'dfa' ? 'Must be a DFA: exactly one arrow per letter from every state.' : t.kind === 'nfa' ? 'An NFA is allowed (several arrows, missing arrows, ε-arrows).' : ''} Alphabet: {${t.alpha.join(', ')}}.</div>` });
+    if (t.fig && FIG[t.fig]) desc.append(h('div', { class: 'figimg' }, h('img', { src: FIG[t.fig], alt: 'figure' })));
+    const area = h('div'), sample = h('div'); card.append(desc, area, sample);
+    const sk = 'lab-' + t.id, onResult = ok => { if (!ok) noteMistake({ kind: 'lab', id: t.id, label: t.name, href }); else noteRight({ kind: 'lab', id: t.id }); };
+    let api;
+    if (t.kind === 'dfa' || t.kind === 'nfa' || t.kind === 'pda') api = DrawAnswer(area, { ...t, dfa: t.kind === 'dfa' }, { storeKey: sk, onResult });
+    else if (t.kind === 'regex') api = RegexAnswer(area, t, { storeKey: sk, onResult });
+    else api = TextCheckAnswer(area, t, { storeKey: sk, onResult });
+    let sp = t.sample;
+    if (typeof sp === 'string' && ['dfa', 'nfa', 'pda'].includes(t.kind)) sp = parseTable(sp, t.kind === 'pda' ? 'pda' : 'fa').spec;
+    if (sp) {
+      const b = h('button', { class: 'btn ghost', type: 'button' }, 'I tried. Show the model answer');
+      b.onclick = () => {
+        if (sample.dataset.open) { sample.innerHTML = ''; sample.dataset.open = ''; sample.append(b); b.textContent = 'I tried. Show the model answer'; return; }
+        sample.dataset.open = 1; b.textContent = 'Hide the model answer';
+        const box = h('div', { class: 'sheet' }, h('div', { class: 'sheet-h' }, 'Model answer (other correct answers exist)'));
+        if (sp.states) { Diagram(box, sp); box.append(h('button', { class: 'btn', type: 'button', onclick: () => api.load(sp) }, 'Copy it into my answer')); }
+        else box.append(h('pre', { class: 'mono pre' }, sp), api && api.set ? h('button', { class: 'btn', type: 'button', onclick: () => api.set(sp) }, 'Put it in my box') : null);
+        if (t.why) box.append(h('div', { class: 'wl-list', html: t.why }));
+        sample.append(box);
+      };
+      sample.append(b);
+    } else if (t.graded) sample.append(h('div', { class: 'small muted' }, 'From a graded assignment, so no model answer. When "Check" says correct, your answer is right.'));
+  });
+}
+function SolveSet(host, tasks, title, note) {
+  const box = h('div', { class: 'widget solve' });
+  box.append(h('div', { class: 'w-title' }, title || 'Solve it yourself'));
+  box.append(h('p', { class: 'small muted' }, note || 'Solve each one on paper (or with the pencil) first. Then type it and press Check: the site tests it on hundreds of strings. Open the model answer only after you tried.'));
+  tasks.forEach(t => TaskCard(box, t, '#' + (host.closest('section') || {}).id));
+  host.append(box);
 }
 
 /* ---------- the lab page ---------- */
@@ -3755,6 +3863,52 @@ const LAB = [
 ];
 
 /* ================= SECTIONS + BOOT ================= */
+/* ---------- per-lecture "Solve it yourself" sets ---------- */
+const LABID = id => { const t = LAB.find(x => x.id === id); if (!t) throw new Error('no lab task ' + id); return t; };
+const LABNAME = s => { const t = LAB.find(x => x.name.includes(s)); if (!t) throw new Error('no lab task named ' + s); return t; };
+const SOLVE = {
+  l1: () => [...['d-11', 'd-even1', 'd-3a', 'd-pass', 'd-t2ex', 'd-t2ab', 'd-t2110', 'd-t2c', 'd-t2u'].map(LABID),
+    { id: 'x-l1-ends01', kind: 'dfa', name: 'Ends with 01', alpha: ['0', '1'], q: 'Draw a DFA for {w | w ends with 01}.', test: w => w.endsWith('01'),
+      sample: 'start: A\naccept: C\nA 1 A\nA 0 B\nB 0 B\nB 1 C\nC 0 B\nC 1 A' }],
+  l3: () => [...['n-01', 'n-3rd', 'n-23', 'n-00', 'n-be', 'n-t4a', 'n-t4b'].map(LABID),
+    { id: 'x-l3-sub', kind: 'dfa', name: 'NFA → DFA: ends with 01', alpha: ['0', '1'], q: 'Use the subset construction on the NFA for "ends with 01" (q0 loops on 0,1; q0 —0→ q1 —1→ q2) and draw the DFA you get.', test: w => w.endsWith('01'),
+      sample: 'start: q0\naccept: q0q2\nq0 1 q0\nq0 0 q0q1\nq0q1 0 q0q1\nq0q1 1 q0q2\nq0q2 0 q0q1\nq0q2 1 q0',
+      why: wl('Name each DFA state after its set: q0 = {q0}, q0q1 = {q0, q1}, q0q2 = {q0, q2}', 'State names cannot contain commas in the table, so we glue them.') + wl('Accept = every set that contains q2', 'q2 is the NFA\'s accept state.') },
+    { id: 'x-l3-union', kind: 'nfa', name: 'Closure under union (ε-arrows)', alpha: ['0', '1'], q: 'Build an NFA for {w | w contains 11} ∪ {w | w has an even number of 0s}: add a new start state with ε-arrows to the two machines.', test: w => w.includes('11') || (w.split('0').length - 1) % 2 === 0,
+      sample: 'start: s\naccept: a2 e0\ns ε a0\ns ε e0\na0 0 a0\na0 1 a1\na1 0 a0\na1 1 a2\na2 0,1 a2\ne0 0 e1\ne1 0 e0\ne0 1 e0\ne1 1 e1' },
+    { id: 'x-l3-star', kind: 'nfa', name: 'Closure under star', alpha: ['a', 'b'], q: 'N accepts only ab. Use the star construction (new accepting start state + ε-arrows back) to build an NFA for (ab)*.', test: w => /^(ab)*$/.test(w),
+      sample: 'start: s\naccept: s q2\ns ε q0\nq0 a q1\nq1 b q2\nq2 ε q0' }],
+  l5: () => [LABID('r-t4'), LABID('n-t4'), LABID('n-23b5'), LABID('n-24b6'), LABNAME('Midterm 2022 B.6'), LABNAME('Midterm 2023 B.6'), LABNAME('Midterm 2025 Q.5'), LABNAME('Even length'), LABNAME('Tutorial 5 machine')],
+  l6: () => [
+    { id: 'x-l6-0110', kind: 'dfa', name: 'Looks non-regular, but is regular: as many 01 as 10', alpha: ['0', '1'], q: 'L = {w | w has as many substrings 01 as 10}. It looks like it needs counting, but it is regular. Draw a DFA. (Hint: try short strings. It only depends on the first and last symbol.)', test: w => w.split('').filter((c, i) => i && w[i - 1] + c === '01').length === w.split('').filter((c, i) => i && w[i - 1] + c === '10').length,
+      sample: 'start: s\naccept: s a1 b1\ns 0 a1\ns 1 b1\na1 0 a1\na1 1 a2\na2 1 a2\na2 0 a1\nb1 1 b1\nb1 0 b2\nb2 0 b2\nb2 1 b1',
+      why: wl('Every 01 and every 10 alternate along the string', 'Between two "changes" of symbol, the direction flips.') + wl('So they are equal exactly when the first and last symbols are the same (or w is empty)', 'That only needs finite memory: the first symbol and the last one. No pumping lemma here!') },
+    { id: 'x-l6-even', kind: 'dfa', name: 'Regular: aⁿbᵐ with n + m even', alpha: ['a', 'b'], q: 'L = {aⁿbᵐ | n + m is even}. Do not try the pumping lemma here: it is regular. Draw a DFA.', test: w => /^a*b*$/.test(w) && w.length % 2 === 0,
+      sample: 'start: A0\naccept: A0 B0\nA0 a A1\nA1 a A0\nA0 b B1\nA1 b B0\nB0 b B1\nB1 b B0\nB0 a D\nB1 a D\nD a,b D',
+      why: wl('Only the parity matters, not n and m themselves', 'A DFA can remember even/odd with 2 states.') + wl('A dead state D for an a after a b', 'Then the string is not of the form aⁿbᵐ.') },
+    { id: 'x-l6-rx', kind: 'regex', name: 'Regular: aⁿbᵐ (no link between n and m)', alpha: ['a', 'b'], q: 'L = {aⁿbᵐ | n, m ≥ 0}. Compare with {aⁿbⁿ}: here n and m are free, so it is regular. Give a regular expression.', test: w => /^a*b*$/.test(w), sample: 'a*b*' }],
+  l7: () => ['g-anbn', 'g-pal', 'g-a2n', 'g-nm', 'g-paren', 'g-eq', 'g-ijk', 'g-fml', 'g-awwb'].map(LABID),
+  l8: () => ['p-0k1k', 'p-wwr', 'p-a2n', 'p-hash', 'p-eq', 'p-ex3', 'p-hh'].map(LABID),
+  l9: () => [
+    { id: 'x-l9-1', kind: 'pda', name: 'CFG → PDA: S → 0S1 | ε', alpha: ['0', '1'], len: 8, q: 'Use the CFG → PDA construction (3 main states: start, loop, accept) for S → 0S1 | ε.', test: w => /^0*1*$/.test(w) && w.split('0').length === w.split('1').length,
+      sample: 'start: qs\naccept: qa\nqs ql ε,ε→S$\nql ql ε,S→0S1\nql ql ε,S→ε\nql ql 0,0→ε\nql ql 1,1→ε\nql qa ε,$→ε' },
+    { id: 'x-l9-2', kind: 'pda', name: 'CFG → PDA: S → aSa | bSb | c', alpha: ['a', 'b', 'c'], len: 7, q: 'Use the CFG → PDA construction for S → aSa | bSb | c.', test: w => { const p = w.split('c'); return p.length === 2 && p[1] === [...p[0]].reverse().join('') && !/c/.test(p[0] + p[1]); },
+      sample: 'start: qs\naccept: qa\nqs ql ε,ε→S$\nql ql ε,S→aSa\nql ql ε,S→bSb\nql ql ε,S→c\nql ql a,a→ε\nql ql b,b→ε\nql ql c,c→ε\nql qa ε,$→ε' },
+    { id: 'x-l9-3', kind: 'pda', name: 'CFG → PDA: S → aSb | bb (Quiz M Q.8)', alpha: ['a', 'b'], len: 8, q: 'Use the CFG → PDA construction for S → aSb | bb.', test: w => { const m = w.match(/^(a*)(b*)$/); return !!m && m[2].length === m[1].length + 2; },
+      sample: 'start: qs\naccept: qa\nqs ql ε,ε→S$\nql ql ε,S→aSb\nql ql ε,S→bb\nql ql a,a→ε\nql ql b,b→ε\nql qa ε,$→ε' },
+    { id: 'x-l9-4', kind: 'pda', name: 'CFG → PDA with two variables: S → aT, T → Sb | b', alpha: ['a', 'b'], len: 8, q: 'Use the CFG → PDA construction for S → aT, T → Sb | b. (One loop arrow per rule, for every variable.)', test: w => { const m = w.match(/^(a*)(b*)$/); return !!m && m[1].length >= 1 && m[1].length === m[2].length; },
+      sample: 'start: qs\naccept: qa\nqs ql ε,ε→S$\nql ql ε,S→aT\nql ql ε,T→Sb\nql ql ε,T→b\nql ql a,a→ε\nql ql b,b→ε\nql qa ε,$→ε' }],
+  l10: () => [
+    { id: 'x-l10-1', kind: 'cfg', name: 'Context-free (not regular): aⁿbᵐcᵐdⁿ', alpha: ['a', 'b', 'c', 'd'], len: 8, q: 'L = {aⁿbᵐcᵐdⁿ}. The matched pairs are nested (a…d outside, b…c inside), so it IS context-free. Write a CFG.', test: w => { const m = w.match(/^(a*)(b*)(c*)(d*)$/); return !!m && m[1].length === m[4].length && m[2].length === m[3].length; }, sample: 'S → aSd | T\nT → bTc | ε' },
+    { id: 'x-l10-2', kind: 'cfg', name: 'Context-free: aⁱbʲ with i ≠ j', alpha: ['a', 'b'], len: 8, q: 'L = {aⁱbʲ | i ≠ j}. Write a CFG. (Hint: more a\'s, or more b\'s.)', test: w => { const m = w.match(/^(a*)(b*)$/); return !!m && m[1].length !== m[2].length; }, sample: 'S → AT | TB\nT → aTb | ε\nA → aA | a\nB → bB | b' },
+    { id: 'x-l10-3', kind: 'pda', name: 'Context-free: aⁱbʲcᵏ with i = j or j = k', alpha: ['a', 'b', 'c'], len: 6, q: 'L = {aⁱbʲcᵏ | i = j or j = k}. Not like aⁿbⁿcⁿ: only ONE pair must match, so a PDA can guess which. Draw a PDA.', test: w => { const m = w.match(/^(a*)(b*)(c*)$/); return !!m && (m[1].length === m[2].length || m[2].length === m[3].length); },
+      sample: 'start: q1\naccept: q4 q7\nq1 q2 ε,ε→$\nq2 q2 a,ε→a\nq2 q3 ε,ε→ε\nq3 q3 b,a→ε\nq3 q4 ε,$→ε\nq4 q4 c,ε→ε\nq5 q5 a,ε→ε\nq1 q5 ε,ε→$\nq5 q6 ε,ε→ε\nq6 q6 b,ε→b\nq6 q8 ε,ε→ε\nq8 q8 c,b→ε\nq8 q7 ε,$→ε' },
+    LABID('g-ijk')],
+  l11: () => ['t-even0', 't-anbn', 't-abc', 't-pal'].map(LABID),
+  l12: () => ['t-pow2', 't-wsw'].map(LABID)
+};
+Object.keys(SOLVE).forEach(k => { W['solve-' + k] = el => SolveSet(el, SOLVE[k]()); });
+
 function addSection(id, title, html, before) {
   const sec = h('section', { class: 'ch', id, 'data-title': title, html });
   const ref = before ? $('#' + before) : null;
