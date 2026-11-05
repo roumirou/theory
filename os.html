@@ -373,6 +373,17 @@ h2::after{content:"NEWGIZA UNIVERSITY";position:absolute;right:0;bottom:12px;fon
 .model{margin-top:6px}
 .btn.big{font-size:17px;padding:10px 20px}
 .oq.exam .fb{display:block}
+
+.dgwrap{overflow-x:auto;margin:6px 0 10px}
+svg.dgm{display:block;width:100%;max-width:640px;height:auto;color:var(--ink)}
+.dgs{fill:var(--paper);stroke:var(--ink);stroke-width:1.6}.dgs.fill{fill:var(--accent-soft)}
+.dga{fill:none;stroke:var(--ink);stroke-width:1.6}
+.dgt{fill:var(--ink);font-size:15px;font-family:var(--f-body)}.dgt.small{font-size:12px}
+.dgb{fill:var(--accent);stroke:none}.dgbn{fill:#fff;font-size:14px;font-weight:700;font-family:var(--f-body)}
+.lblgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px;margin:6px 0}
+.lblgrid label{display:flex;gap:8px;align-items:center}.lblgrid .txt{flex:1;width:auto}
+.pbar{height:6px;background:var(--powder);border-radius:6px;overflow:hidden;width:100px;margin:4px 0}.pbar i{display:block;height:100%;background:var(--good)}
+.pgood{color:var(--good);font-weight:700}.pmid{color:#B07400;font-weight:700}.pbad{color:var(--bad);font-weight:700}
 </style>
 
 </head>
@@ -420,16 +431,38 @@ const MATCH = (q, pairs) => ({ t: 'match', q, pairs });
 const ORD = (q, steps, why) => ({ t: 'order', q, steps, why });
 const NUM = (q, ans, model, unit) => ({ t: 'num', q, ans, model, unit });
 const SCH = (alg, procs, opts = {}) => ({ t: 'sched', alg, procs, ...opts });
+const LABEL = (q, dg, acc, why) => ({ t: 'label', q, dg, acc, why });
+const WHATIF = (q, model, points) => ({ t: 'write', kind: 'What happens if', q, model, points });
+const ADV = (q, model, points) => ({ t: 'write', kind: 'Advantages & disadvantages', q, model, points });
+const EX = (q, model, points) => ({ t: 'write', kind: 'Give an example', q, model, points });
+const FIX = (q, model, points) => ({ t: 'write', kind: 'Find the mistake', q, model, points });
+const TRACE = (q, model, points) => ({ t: 'write', kind: 'Trace the code', q, model, points });
+/* tiny diagram language for labelling questions: boxes, circles and arrows with numbered blanks */
+function diagramSVG(dg) {
+  const NS = 'http://www.w3.org/2000/svg'; const el = (t, a) => { const e = document.createElementNS(NS, t); Object.entries(a).forEach(([k, v]) => e.setAttribute(k, v)); return e; };
+  const svg = el('svg', { viewBox: `0 0 ${dg.w} ${dg.h}`, class: 'dgm', role: 'img', 'aria-label': 'diagram to label' });
+  const defs = el('defs', {}); const mk = el('marker', { id: 'ah', viewBox: '0 0 10 10', refX: 9, refY: 5, markerWidth: 7, markerHeight: 7, orient: 'auto-start-reverse' }); mk.append(el('path', { d: 'M0,0 L10,5 L0,10 z', fill: 'currentColor' })); defs.append(mk); svg.append(defs);
+  const text = (x, y, t, o = {}) => { const e = el('text', { x, y, 'text-anchor': 'middle', 'dominant-baseline': 'middle', class: o.cls || 'dgt', ...(o.size ? { 'font-size': o.size } : {}) }); e.textContent = t; svg.append(e); };
+  const blank = (x, y, n) => { svg.append(el('circle', { cx: x, cy: y, r: 13, class: 'dgb' })); text(x, y, String(n), { cls: 'dgbn' }); };
+  (dg.items || []).forEach(it => {
+    if (it.arrow) { const [x1, y1, x2, y2] = it.arrow; const d = it.bend ? `M${x1},${y1} Q${(x1 + x2) / 2 + it.bend[0]},${(y1 + y2) / 2 + it.bend[1]} ${x2},${y2}` : `M${x1},${y1} L${x2},${y2}`; svg.append(el('path', { d, class: 'dga', 'marker-end': 'url(#ah)' })); const lx = it.at ? it.at[0] : (x1 + x2) / 2 + (it.bend ? it.bend[0] / 2 : 0), ly = it.at ? it.at[1] : (y1 + y2) / 2 + (it.bend ? it.bend[1] / 2 : 0); if (it.n) blank(lx, ly, it.n); else if (it.t) text(lx, ly, it.t, { cls: 'dgt small' }); }
+    else if (it.circle) { const [x, y, r] = it.circle; svg.append(el('circle', { cx: x, cy: y, r, class: 'dgs' })); if (it.n) blank(x, y, it.n); else text(x, y, it.t); }
+    else if (it.box) { const [x, y, w, hh] = it.box; svg.append(el('rect', { x, y, width: w, height: hh, rx: 6, class: it.fill ? 'dgs fill' : 'dgs' })); if (it.n) blank(x + w / 2, y + hh / 2, it.n); else if (it.t) text(x + w / 2, y + hh / 2, it.t, { size: it.size }); }
+    else if (it.label) { text(it.label[0], it.label[1], it.t, { cls: 'dgt small' }); }
+  });
+  return svg;
+}
 
 /* ---------- marks ---------- */
 function marksOf(it) {
   if (it.marks != null) return it.marks;
-  return { mc: 1, tf: 1, fill: it.acc ? it.acc.length : 1, write: it.points ? it.points.length : 2, diff: it.rows ? Math.min(4, it.rows.length) : 3, match: Math.ceil((it.pairs || []).length / 2), order: 2, num: 2, sched: 6 }[it.t] || 1;
+  return { mc: 1, tf: 1, fill: it.acc ? it.acc.length : 1, write: it.points ? it.points.length : 2, diff: it.rows ? Math.min(4, it.rows.length) : 3, match: Math.ceil((it.pairs || []).length / 2), order: 2, label: Math.ceil((it.acc || []).length / 2), num: 2, sched: 6 }[it.t] || 1;
 }
 
 /* ---------- mistakes ---------- */
 function noteMistake(id) { if (!id) return; const l = store.get('mistakes', []); if (!l.includes(id)) { l.push(id); store.set('mistakes', l); } badge(); }
 function noteRight(id) { if (!id) return; const r = store.get('rightcount', {}); r[id] = (r[id] || 0) + 1; store.set('rightcount', r); const l = store.get('mistakes', []); if (l.includes(id) && r[id] >= 2) { store.set('mistakes', l.filter(x => x !== id)); r[id] = 0; store.set('rightcount', r); } badge(); }
+function prog(id, ok) { if (!id || String(id).startsWith('lab-')) return; const p = store.get('prog', {}); p[id] = ok ? 1 : 0; store.set('prog', p); }
 function badge() { const n = store.get('mistakes', []).length; $$('.mbadge').forEach(b => b.textContent = n ? String(n) : ''); }
 
 /* ================= scheduling ================= */
@@ -500,7 +533,7 @@ function Item(host, it, num, mode, onScore) {
   card.append(head); host.append(card);
   let got = null; const fb = h('div', { class: 'fb', hidden: true });
   const show = (ok, html) => { fb.hidden = false; fb.className = 'fb ' + (ok ? 'ok' : 'no'); fb.innerHTML = html; };
-  const result = (g, autoOk) => { got = g; if (mode === 'practice') { if (autoOk === true) noteRight(id); else if (autoOk === false) noteMistake(id); } if (onScore) onScore(); };
+  const result = (g, autoOk) => { got = g; if (typeof autoOk === 'boolean') prog(id, autoOk); if (mode === 'practice') { if (autoOk === true) noteRight(id); else if (autoOk === false) noteMistake(id); } if (onScore) onScore(); };
   const api = { max, get got() { return got; }, grade: () => {}, card };
 
   if (it.t === 'mc' || it.t === 'tf') {
@@ -530,10 +563,19 @@ function Item(host, it, num, mode, onScore) {
     };
     b.onclick = () => api.grade();
   }
+  else if (it.t === 'label') {
+    card.append(h('div', { class: 'oqt', html: it.q }), h('div', { class: 'dgwrap' }, diagramSVG(it.dg)));
+    const grid = h('div', { class: 'lblgrid' }); const ins = it.acc.map((_, i) => { const k = `${id}-l${i}`; const inp = h('input', { class: 'txt', 'aria-label': 'label ' + (i + 1), autocomplete: 'off', spellcheck: 'false' }); inp.value = store.get(k, ''); inp.oninput = () => store.set(k, inp.value); grid.append(h('label', {}, h('span', { class: 'oqn' }, String(i + 1)), inp)); return inp; });
+    const b = h('button', { class: 'btn primary', type: 'button' }, 'Check');
+    card.append(grid, mode === 'practice' ? h('div', { class: 'ctl' }, b) : null, fb);
+    api.grade = () => { let ok = 0; ins.forEach((inp, i) => { const v = norm(inp.value); const good = !!v && it.acc[i].some(a => { const n = norm(a); return v === n || (n.length >= 4 && v.includes(n)); }); inp.classList.toggle('good', good); inp.classList.toggle('bad', !good); if (good) ok++; }); const all = ok === ins.length; show(all, `<b>${all ? 'All labels correct.' : `${ok} of ${ins.length} right.`}</b> ${it.acc.map((a, i) => `${i + 1} = <b>${a[0]}</b>`).join(' · ')}. ${it.why || ''}`); result(Math.round(max * ok / ins.length * 2) / 2, all); };
+    b.onclick = () => api.grade();
+  }
   else if (it.t === 'num') {
     card.append(h('div', { class: 'oqt', html: it.q }));
     const k = `${id}-n`; const inp = h('input', { class: 'txt', inputmode: 'decimal', 'aria-label': 'your answer', autocomplete: 'off' }); inp.value = store.get(k, ''); inp.oninput = () => store.set(k, inp.value);
     const b = h('button', { class: 'btn primary', type: 'button' }, 'Check');
+    PenToggle(card, `${id}-pen`);
     card.append(h('div', { class: 'ctl' }, inp, it.unit ? h('span', { class: 'muted' }, it.unit) : null, mode === 'practice' ? b : null), fb);
     api.grade = () => { const v = parseFloat(String(inp.value).replace(',', '.')); const ok = Math.abs(v - it.ans) < 0.011; inp.classList.toggle('good', ok); inp.classList.toggle('bad', !ok); show(ok, `<b>${ok ? 'Correct.' : 'Not quite.'}</b> Answer: <b>${fmt(it.ans)}</b>${it.unit ? ' ' + it.unit : ''}.<div class="model">${it.model || ''}</div>`); result(ok ? max : 0, ok); };
     b.onclick = () => api.grade();
@@ -568,6 +610,7 @@ function Item(host, it, num, mode, onScore) {
     it.procs.forEach(p => tb.append(h('tr', {}, ...[p.n, p.at, p.bt, ...(hasP ? [p.pr] : [])].map(v => h('td', { class: 'mono' }, String(v))))));
     card.append(h('div', { class: 'tblwrap' }, tb));
     const mk = (k, lab) => { const inp = h('input', { class: 'txt', inputmode: 'decimal', 'aria-label': lab, autocomplete: 'off' }); inp.value = store.get(`${id}-${k}`, ''); inp.oninput = () => store.set(`${id}-${k}`, inp.value); return inp; };
+    PenToggle(card, `${id}-pen`);
     const iw = mk('wt', 'average waiting time'), itt = mk('tat', 'average turnaround time');
     const gk = `${id}-g`; const gbox = h('input', { type: 'checkbox' });
     card.append(h('div', { class: 'small muted' }, 'Draw the Gantt chart on paper (or with the pencil), then type the two averages. Fractions are fine as decimals (e.g. 5.33).'),
@@ -584,16 +627,17 @@ function Item(host, it, num, mode, onScore) {
       const upd = () => { store.set(gk, gbox.checked); got = (a ? 2 : 0) + (c ? 2 : 0) + (gbox.checked ? 2 : 0); if (onScore) onScore(); };
       gbox.onchange = upd;
       show(a && c, `<b>${a && c ? 'Both averages are correct.' : 'Check the model below.'}</b> Average waiting = <b>${fmt(r.awt)}</b>, average turnaround = <b>${fmt(r.atat)}</b>.`);
-      if (mode === 'practice') { if (a && c) noteRight(id); else noteMistake(id); }
+      prog(id, a && c); if (mode === 'practice') { if (a && c) noteRight(id); else noteMistake(id); }
       upd();
     };
     b.onclick = () => api.grade();
   }
   else if (it.t === 'write' || it.t === 'diff') {
     card.append(h('div', { class: 'oqt', html: it.q }));
-    const k = `${id}-w`; const ta = h('textarea', { class: 'ta', rows: it.t === 'diff' ? 5 : 3, 'aria-label': 'your answer', placeholder: 'Write your answer here (or on paper).' }); ta.value = store.get(k, ''); ta.oninput = () => store.set(k, ta.value);
+    const k = `${id}-w`; const ta = h('textarea', { class: 'ta', rows: it.t === 'diff' ? 5 : 3, 'aria-label': 'your answer', placeholder: 'Type your answer here, or use the pencil above, or write on paper.' }); ta.value = store.get(k, ''); ta.oninput = () => store.set(k, ta.value);
     const reveal = h('button', { class: 'btn ghost', type: 'button' }, 'I wrote it. Show the model answer');
     const sheet = h('div', { class: 'sheet', hidden: true });
+    PenToggle(card, `${id}-pen`);
     card.append(ta, mode === 'practice' ? h('div', { class: 'ctl' }, reveal) : null, sheet);
     const build = () => {
       if (sheet.dataset.ready) { sheet.hidden = false; return; } sheet.dataset.ready = 1; sheet.hidden = false;
@@ -607,7 +651,7 @@ function Item(host, it, num, mode, onScore) {
       const rb = h('div', { class: 'rubric' }, h('div', { class: 'sub' }, 'Mark yourself honestly: tick each point your answer has.'));
       const ticks = pts.map((p, i) => { const kk = `${k}-r${i}`; const c = h('input', { type: 'checkbox' }); c.checked = store.get(kk, false); c.onchange = () => { store.set(kk, c.checked); upd(); }; rb.append(h('label', { class: 'rbi' }, c, h('span', { html: ' ' + p }))); return c; });
       const sc = h('span', { class: 'pill' }); rb.append(h('div', {}, 'Your mark: ', sc)); sheet.append(rb);
-      const upd = () => { const n = ticks.filter(c => c.checked).length; got = Math.round(max * n / ticks.length * 2) / 2; sc.textContent = `${fmt(got)} / ${max}`; if (mode === 'practice') { if (n === ticks.length) noteRight(id); else if (sheet.dataset.touched) noteMistake(id); sheet.dataset.touched = 1; } if (onScore) onScore(); };
+      const upd = () => { const n = ticks.filter(c => c.checked).length; got = Math.round(max * n / ticks.length * 2) / 2; sc.textContent = `${fmt(got)} / ${max}`; if (sheet.dataset.touched) prog(id, n === ticks.length); if (mode === 'practice') { if (n === ticks.length) noteRight(id); else if (sheet.dataset.touched) noteMistake(id); sheet.dataset.touched = 1; } if (onScore) onScore(); };
       upd();
     };
     reveal.onclick = () => { if (!sheet.hidden && sheet.dataset.ready) { sheet.hidden = true; reveal.textContent = 'I wrote it. Show the model answer'; return; } build(); reveal.textContent = 'Hide the model answer'; };
@@ -617,15 +661,17 @@ function Item(host, it, num, mode, onScore) {
 }
 
 /* ================= a group of items (practice) ================= */
-const PART_TITLE = { mc: 'Choose the correct answer', tf: 'True or False (correct the false ones)', fill: 'Complete the sentences', match: 'Matching', order: 'Put in order', write: 'Written questions', diff: 'Differentiate between', num: 'Problems', sched: 'Scheduling problems' };
+const PART_TITLE = { mc: 'Choose the correct answer', tf: 'True or False (correct the false ones)', fill: 'Complete the sentences', match: 'Matching', order: 'Put in order', label: 'Label the diagram', Define: 'Definitions', 'What happens if': 'What happens if …?', 'Advantages & disadvantages': 'Advantages and disadvantages', 'Give an example': 'Give an example', 'Find the mistake': 'Find the mistake', 'Trace the code': 'Trace the code', write: 'List, explain, write', diff: 'Differentiate between', num: 'Problems', sched: 'Scheduling problems' };
+const WKINDS = ['Define', 'What happens if', 'Advantages & disadvantages', 'Give an example', 'Find the mistake', 'Trace the code'];
+const groupOf = x => x.t === 'write' ? (WKINDS.includes(x.kind) ? x.kind : 'write') : x.t;
 function Practice(host, items, opts = {}) {
-  const order = opts.order || ['mc', 'tf', 'fill', 'match', 'order', 'write', 'diff', 'num', 'sched'];
+  const order = opts.order || ['mc', 'tf', 'fill', 'match', 'order', 'label', 'Define', 'write', 'diff', 'What happens if', 'Advantages & disadvantages', 'Give an example', 'Find the mistake', 'Trace the code', 'num', 'sched'];
   let letter = 0;
   order.forEach(t => {
-    const its = items.filter(x => (t === 'write' ? x.t === 'write' : x.t === t)); if (!its.length) return;
+    const its = items.filter(x => groupOf(x) === t); if (!its.length) return;
     const sec = h('div', { class: 'opart' });
     const sc = h('span', { class: 'pill' });
-    sec.append(h('h2', {}, `Part ${'ABCDEFGHIJ'[letter++]} · ${PART_TITLE[t]}`));
+    sec.append(h('h2', {}, `Part ${'ABCDEFGHIJKLMNOP'[letter++]} · ${PART_TITLE[t]}`));
     const apis = []; const upd = () => { const done = apis.filter(a => a.got != null); sc.textContent = `${fmt(done.reduce((s, a) => s + a.got, 0))} / ${fmt(done.reduce((s, a) => s + a.max, 0))} on the ${done.length} you answered`; };
     sec.append(h('div', { class: 'opartbar' }, sc));
     its.forEach((it, i) => apis.push(Item(sec, it, i + 1, 'practice', upd)));
@@ -711,10 +757,15 @@ function bootOS() {
     const L = LECT[id]; const P = PAPERS.find(p => p.id === id);
     if (id === 'start') {
       sec.append(headEl('CSAI 350 · Operating Systems', 'Questions only. Every type.', 'No explanations here, only questions on Lectures 1–6, the way the midterm can ask them: MCQ, True/False with correction, complete the sentence, matching, put in order, define, differentiate, list and explain, and calculation problems.'));
-      const tb = h('table', { class: 'tbl' }, h('tr', {}, h('th', {}, 'Lecture'), h('th', {}, 'Topic'), h('th', {}, 'Questions')));
-      Object.entries(LECT).forEach(([k, L]) => tb.append(h('tr', {}, h('td', {}, h('a', { href: '#' + k }, L.ln)), h('td', {}, L.name), h('td', { class: 'mono' }, String(L.items.length)))));
-      sec.append(h('h2', {}, 'What is inside'), h('div', { class: 'tblwrap' }, tb));
-      sec.append(h('h2', {}, 'How to use it'), h('ol', {}, h('li', { html: 'Do the lectures in order. Each lecture page has <b>all question types</b> on that lecture. Choices and blanks are marked as soon as you answer.' }), h('li', { html: 'For written questions, write first (on the page, on paper, or with the pencil), then open the model answer and tick the points you wrote.' }), h('li', { html: 'Then do the <b>Mixed review</b>, <b>All definitions</b> and <b>All differences</b>: they put the six lectures together.' }), h('li', { html: 'Before the midterm, take <b>Quiz A, B and C</b> with the clock. Each one has different questions.' }), h('li', { html: 'Anything you get wrong goes to the <b>Mistakes notebook</b>. It leaves after you get it right twice.' })));
+      const pr = store.get('prog', {});
+      const tb = h('table', { class: 'tbl progt' }, h('tr', {}, h('th', {}, 'Lecture'), h('th', {}, 'Topic'), h('th', {}, 'Questions'), h('th', {}, 'Answered'), h('th', {}, 'Correct')));
+      const row = (href, ln, name, its) => { const ids = its.map(x => x.id); const done = ids.filter(x => pr[x] != null); const ok = done.filter(x => pr[x] === 1).length; const pct = done.length ? Math.round(100 * ok / done.length) : null; const cov = Math.round(100 * done.length / ids.length);
+        tb.append(h('tr', {}, h('td', {}, h('a', { href }, ln)), h('td', {}, name), h('td', { class: 'mono' }, String(ids.length)), h('td', {}, h('div', { class: 'pbar' }, h('i', { style: `width:${cov}%` })), h('span', { class: 'small muted' }, `${done.length} (${cov}%)`)), h('td', { class: 'mono ' + (pct == null ? '' : pct >= 80 ? 'pgood' : pct >= 60 ? 'pmid' : 'pbad') }, pct == null ? '—' : pct + '%'))); };
+      Object.entries(LECT).forEach(([k, L]) => row('#' + k, L.ln, L.name, L.items));
+      row('#all', 'Mix', 'Mixed review', ALLX);
+      PAPERS.forEach(P => row('#' + P.id, P.ln, P.title, P.qs.flatMap(q => q.items)));
+      sec.append(h('h2', {}, 'Your progress'), h('p', { class: 'small muted' }, 'Answered = questions you checked at least once. Correct = of those, how many were right the last time. Red or orange = go back to that lecture.'), h('div', { class: 'tblwrap' }, tb));
+      sec.append(h('h2', {}, 'How to use it'), h('ol', {}, h('li', { html: 'Do the lectures in order. Each lecture page has <b>all question types</b> on that lecture. Choices and blanks are marked as soon as you answer.' }), h('li', { html: 'For written questions, write first (on the page, on paper, or with the pencil), then open the model answer and tick the points you wrote.' }), h('li', { html: 'Then do the <b>Mixed review</b>, <b>All definitions</b> and <b>All differences</b>: they put the six lectures together.' }), h('li', { html: 'Before the midterm, take <b>Quiz A, B and C</b> with the clock (each has different questions), then the <b>Mock Midterm</b> 2–3 days before the exam. Use the ✎ pencil button to write answers by hand, like in the exam.' }), h('li', { html: 'Anything you get wrong goes to the <b>Mistakes notebook</b>. It leaves after you get it right twice.' })));
       sec.append(h('div', { class: 'box' }, h('div', { class: 'bt' }, 'Typing tips'), h('p', { class: 'small', html: 'Blanks accept the usual spellings (e.g. "ROM" or "EPROM"). Capital letters and spaces do not matter.' })));
     } else if (L) {
       sec.append(headEl(`Lecture ${L.ln.slice(1)} · CSAI 350 Operating Systems`, L.name, `${L.items.length} questions. Covers: ${L.covers}.`));
@@ -748,6 +799,57 @@ function bootOS() {
   const show = () => { const id = (location.hash || '#start').slice(1); render(secs.some(s => s.id === id) ? id : 'start'); };
   window.addEventListener('hashchange', show); show();
 }
+function PenPad(host, storeKey) {
+  const box = h('div', { class: 'penpad' });
+  const cv = h('canvas', { class: 'pencv', 'aria-label': 'drawing area' });
+  const bPen = h('button', { class: 'chip sel', type: 'button' }, '✎ Pen');
+  const bEr = h('button', { class: 'chip', type: 'button' }, '⌫ Eraser');
+  const bUndo = h('button', { class: 'chip', type: 'button' }, '↶ Undo');
+  const bClr = h('button', { class: 'chip', type: 'button' }, 'Clear');
+  const fid = (storeKey || 'pp') + '-finger';
+  const fin = h('input', { type: 'checkbox', id: fid });
+  box.append(h('div', { class: 'edbar' }, bPen, bEr, bUndo, bClr, h('label', { class: 'small muted', for: fid, style: 'display:flex;gap:6px;align-items:center' }, fin, 'draw with finger too')), cv,
+    h('div', { class: 'small muted' }, 'Write or draw your answer here with the pencil, like on paper. Then open the model answer and compare.'));
+  host.append(box);
+  let strokes = storeKey ? store.get(storeKey, []) : [], cur = null, mode = 'pen';
+  const ctx = cv.getContext('2d');
+  const H = host.dataset.h ? +host.dataset.h : 380;
+  function size() { const w = box.clientWidth || 600; const d = window.devicePixelRatio || 1; cv.width = w * d; cv.height = H * d; cv.style.height = H + 'px'; ctx.setTransform(d, 0, 0, d, 0, 0); redraw(); }
+  function ink() { return getComputedStyle(document.body).color || '#18213F'; }
+  function drawStroke(s) {
+    if (s.pts.length < 1) return;
+    ctx.save(); ctx.globalCompositeOperation = s.er ? 'destination-out' : 'source-over';
+    ctx.strokeStyle = ink(); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    for (let i = 1; i < s.pts.length; i++) { const a = s.pts[i - 1], c = s.pts[i]; ctx.lineWidth = s.er ? 18 : 1.2 + 2.6 * (c[2] || 0.5); ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(c[0], c[1]); ctx.stroke(); }
+    if (s.pts.length === 1 && !s.er) { ctx.beginPath(); ctx.arc(s.pts[0][0], s.pts[0][1], 1.5, 0, 7); ctx.fillStyle = ink(); ctx.fill(); }
+    ctx.restore();
+  }
+  function redraw() { ctx.clearRect(0, 0, cv.width, cv.height); strokes.forEach(drawStroke); }
+  const allowed = e => e.pointerType === 'pen' || e.pointerType === 'mouse' || fin.checked;
+  const pos = e => { const r = cv.getBoundingClientRect(); return [Math.round(e.clientX - r.left), Math.round(e.clientY - r.top), e.pressure || 0.5]; };
+  cv.addEventListener('pointerdown', e => { if (!allowed(e)) return; e.preventDefault(); cv.setPointerCapture(e.pointerId); cur = { er: mode === 'er', pts: [pos(e)] }; strokes.push(cur); drawStroke(cur); });
+  cv.addEventListener('pointermove', e => { if (!cur) return; e.preventDefault(); const evs = e.getCoalescedEvents ? e.getCoalescedEvents() : [e]; evs.forEach(ev => cur.pts.push(pos(ev))); redraw(); });
+  const end = () => { if (!cur) return; cur = null; if (storeKey) { try { store.set(storeKey, strokes); } catch (x) {} } };
+  cv.addEventListener('pointerup', end); cv.addEventListener('pointercancel', end);
+  // stop the page from scrolling when the pencil touches the canvas, but let fingers scroll
+  cv.addEventListener('touchstart', e => { const t = e.touches[0]; if ((t && t.touchType === 'stylus') || fin.checked) e.preventDefault(); }, { passive: false });
+  cv.addEventListener('touchmove', e => { const t = e.touches[0]; if ((t && t.touchType === 'stylus') || fin.checked) e.preventDefault(); }, { passive: false });
+  bPen.onclick = () => { mode = 'pen'; bPen.classList.add('sel'); bEr.classList.remove('sel'); };
+  bEr.onclick = () => { mode = 'er'; bEr.classList.add('sel'); bPen.classList.remove('sel'); };
+  bUndo.onclick = () => { strokes.pop(); redraw(); end(); if (storeKey) store.set(storeKey, strokes); };
+  bClr.onclick = () => { strokes = []; redraw(); if (storeKey) store.set(storeKey, strokes); };
+  fin.onchange = () => cv.classList.toggle('fingerdraw', fin.checked);
+  new ResizeObserver(() => size()).observe(box);
+  size();
+
+}
+function PenToggle(host, storeKey, ctx) {
+  const b = h('button', { class: 'btn ghost', type: 'button' }, '✎ Answer by hand (pencil)');
+  const slot = h('div'); let open = false, made = false;
+  b.onclick = () => { open = !open; slot.hidden = !open; b.textContent = open ? 'Hide the drawing area' : '✎ Answer by hand (pencil)'; if (open && !made) { made = true; PenPad(slot, storeKey); } };
+  host.append(h('div', { class: 'ctl' }, b), slot);
+}
+
 /* ===== Lectures 1–2 ===== */
 const LECT = {};
 LECT.l1 = { ln: 'L1', title: 'Week 1', name: 'Principles of Operating Systems', covers: 'computer system structure, what an OS is, goals, services, computer system organization and operation, interrupts, multiprocessors, clusters, multiprogramming and time sharing, computing environments, cloud, real-time, open source',
@@ -1574,6 +1676,202 @@ const PAPERS = [
     ] }
   ]}
 ];
+/* ===== new question types: diagrams, what-if, pros/cons, examples, find the mistake, code tracing ===== */
+const DG_OS = {
+  states: (blankStates) => {
+    const S = { new: [80, 60], ready: [200, 170], running: [440, 170], waiting: [320, 272], terminated: [560, 60] };
+    const names = ['new', 'ready', 'running', 'waiting', 'terminated'];
+    const items = names.map((n, i) => ({ circle: [...S[n], 38], ...(blankStates ? { n: i + 1 } : { t: n }) }));
+    const tr = [
+      [[108, 86, 172, 144], 'admitted', [118, 128]],
+      [[238, 184, 402, 184], 'scheduler dispatch', [320, 202]],
+      [[402, 156, 238, 156], 'interrupt', [320, 112], [0, -44]],
+      [[411, 194, 349, 248], 'I/O or event wait', [418, 240]],
+      [[291, 248, 229, 194], 'I/O or event completion', [214, 240]],
+      [[468, 144, 532, 86], 'exit', [522, 124]]];
+    tr.forEach(([a, t, at, bend], i) => items.push({ arrow: a, at, ...(bend ? { bend } : {}), ...(blankStates ? { t } : { n: i + 1 }) }));
+    return { w: 640, h: 320, items };
+  },
+  memory: { w: 520, h: 300, items: [{ box: [160, 20, 240, 46], n: 1 }, { box: [160, 66, 240, 70], t: '↓          ↑' }, { box: [160, 136, 240, 46], n: 2 }, { box: [160, 182, 240, 46], n: 3 }, { box: [160, 228, 240, 46], n: 4 }, { label: [130, 26], t: 'max' }, { label: [130, 268], t: '0' }] },
+  structure: { w: 560, h: 280, items: [{ circle: [120, 36, 26], t: 'user 1' }, { circle: [280, 36, 26], t: 'user 2' }, { circle: [440, 36, 26], t: 'user n' }, { arrow: [120, 64, 120, 92] }, { arrow: [280, 64, 280, 92] }, { arrow: [440, 64, 440, 92] }, { box: [40, 94, 480, 52], n: 1 }, { label: [280, 156], t: 'compiler · web browser · word processor · database' }, { box: [40, 168, 480, 40], fill: 1, n: 2 }, { box: [40, 222, 480, 40], n: 3 }] },
+  layered: { w: 420, h: 260, items: [{ box: [60, 10, 300, 44], n: 1 }, { label: [210, 66], t: '⋮' }, { box: [60, 80, 300, 40], t: 'layer 2' }, { box: [60, 128, 300, 40], t: 'layer 1' }, { box: [60, 176, 300, 44], fill: 1, n: 2 }, { label: [40, 32], t: 'N' }, { label: [40, 198], t: '0' }] },
+  micro: { w: 600, h: 300, items: [{ box: [30, 20, 140, 46], t: 'Application' }, { box: [230, 20, 140, 46], t: 'File system' }, { box: [430, 20, 140, 46], t: 'Device driver' }, { label: [540, 84], t: 'user mode' }, { arrow: [100, 66, 200, 148], n: 1, at: [134, 108] }, { arrow: [400, 148, 500, 66] }, { box: [130, 150, 340, 56], fill: 1, n: 2 }, { label: [300, 222], t: 'IPC · memory management · CPU scheduling' }, { label: [540, 178], t: 'kernel mode' }, { box: [130, 240, 340, 40], n: 3 }] },
+  threads: (() => { const items = []; [[0, 'm1'], [220, '11'], [440, 'mm']].forEach(([x0, kind], pi) => { const us = [0, 1, 2, 3].map(i => [x0 + 35 + i * 50, 40]); us.forEach(([x, y]) => items.push({ circle: [x, y, 12], t: '' })); const ks = kind === 'm1' ? [[x0 + 110, 150]] : kind === '11' ? us.map(([x]) => [x, 150]) : [[x0 + 50, 150], [x0 + 110, 150], [x0 + 170, 150]]; ks.forEach(([x, y]) => items.push({ box: [x - 13, y - 13, 26, 26], fill: 1, t: 'K', size: 12 })); const links = kind === 'm1' ? us.map((u, i) => [i, 0]) : kind === '11' ? us.map((u, i) => [i, i]) : [[0, 0], [1, 0], [1, 1], [2, 1], [2, 2], [3, 2], [3, 1], [0, 1]]; links.forEach(([u, k]) => items.push({ arrow: [us[u][0], us[u][1] + 13, ks[k][0], ks[k][1] - 15] })); items.push({ circle: [x0 + 110, 200, 0.01], n: pi + 1 }); }); items.push({ label: [330, 14], t: 'user threads (circles) → kernel threads (K)' }); return { w: 660, h: 222, items }; })(),
+  queues: { w: 620, h: 250, items: [{ box: [20, 30, 150, 40], n: 1 }, { arrow: [170, 50, 238, 50] }, { box: [240, 30, 90, 40], n: 2 }, { arrow: [330, 50, 560, 50] }, { label: [588, 50], t: 'end' }, { arrow: [285, 70, 285, 118] }, { label: [340, 94], t: 'I/O request' }, { box: [200, 120, 170, 36], n: 3 }, { arrow: [370, 138, 430, 138] }, { box: [432, 120, 70, 36], t: 'I/O' }, { arrow: [467, 156, 95, 72], bend: [0, 150] }, { label: [281, 214], t: 'I/O done → back to the ready queue' }] },
+  cs: { w: 420, h: 280, items: [{ label: [70, 20], t: 'do {' }, { box: [70, 34, 280, 42], n: 1 }, { box: [70, 86, 280, 42], fill: 1, n: 2 }, { box: [70, 138, 280, 42], n: 3 }, { box: [70, 190, 280, 42], n: 4 }, { label: [110, 254], t: '} while (true);' }] }
+};
+
+const ADD = {
+l1: [
+  LABEL('Label the four components of a computer system.', DG_OS.structure, [['application programs', 'applications', 'application program'], ['operating system', 'OS'], ['computer hardware', 'hardware']]),
+  WHATIF('What happens if a user program divides by zero?', 'A <b>software interrupt (exception / trap)</b> is raised. The CPU stops the program and transfers control to the <b>operating system</b>, which handles the error (usually it terminates the program and reports the error).', ['Software interrupt / exception / trap', 'Control goes to the OS', 'OS handles it (e.g. terminates the program)']),
+  WHATIF('In a multiprogrammed system, what happens when the running job has to wait for I/O?', 'The OS <b>switches to another job</b> in memory, so the <b>CPU is never idle</b>. When the I/O finishes, the first job can run again.', ['OS switches to another job', 'CPU stays busy', 'First job continues later']),
+  WHATIF('What happens if one processor fails in a multiprocessor system?', 'The system <b>continues working with the remaining processors</b>, only slower: this is <b>increased reliability (graceful degradation / fault tolerance)</b>.', ['Other processors continue', 'Graceful degradation / fault tolerance']),
+  WHATIF('What happens if a real-time system misses its time constraint?', 'The operation is considered <b>incorrect (a failure)</b>: in a real-time OS, correct operation only happens if the time constraints are met.', ['Considered a failure / incorrect', 'Correct only if constraints are met']),
+  ADV('Give the advantages of <b>multiprocessor systems</b>.', 'Increased throughput; economy of scale (share peripherals, storage, power); increased reliability (graceful degradation).', ['Increased throughput', 'Economy of scale', 'Increased reliability']),
+  ADV('Give one advantage and one disadvantage of <b>cloud computing</b>.', 'Advantage: pay based on usage, huge storage and computing without owning the machines (e.g. Amazon EC2). Disadvantage: needs Internet connectivity and security (firewalls); depends on the provider.', ['Advantage (pay per use / no own hardware / scalable)', 'Disadvantage (needs Internet / security / depends on provider)']),
+  ADV('Give the advantages of <b>virtualization</b>.', 'Run several OSes on one machine (exploration, compatibility); develop apps for many OSes without many systems; QA testing on many OSes without many systems; base of cloud computing.', ['Several OSes on one machine', 'Development / testing without many systems']),
+  EX('Give an example of each cloud model: <b>SaaS, PaaS, IaaS</b>.', 'SaaS: a word processor over the Internet (e.g. Google Docs). PaaS: a database server ready for use. IaaS: servers or storage over the Internet (e.g. Amazon EC2).', ['SaaS example', 'PaaS example', 'IaaS example']),
+  EX('Give an example of a <b>hardware interrupt</b> and a <b>software interrupt</b>.', 'Hardware: the disk controller finished reading a block; a key pressed on the keyboard. Software: division by zero; a request for an OS service (system call).', ['Hardware example (device finished)', 'Software example (division by zero / system call)']),
+  EX('Give examples of <b>real-time embedded systems</b>.', 'Car engine controllers, medical devices (pacemaker), industrial robots, home appliances, airplane control systems.', ['Two correct examples']),
+  FIX('A student wrote: "<i>In symmetric multiprocessing, one master processor gives tasks to the other processors.</i>" Find the mistake and correct it.', 'That describes <b>asymmetric</b> multiprocessing (each processor assigned a specific task). In <b>symmetric</b> multiprocessing <b>each processor performs all tasks</b>.', ['It is asymmetric', 'Symmetric: each processor performs all tasks']),
+  FIX('A student wrote: "<i>The bootstrap program is stored on the hard disk and is loaded after the kernel starts.</i>" Find the mistakes.', 'Two mistakes: it is stored in <b>ROM or EPROM (firmware)</b>, not on the disk; and it runs <b>at power-up, before the kernel</b>; it is the bootstrap that <b>loads the kernel</b>.', ['Stored in ROM/EPROM', 'Runs before the kernel and loads it'])
+],
+l2: [
+  LABEL('Label the <b>layered approach</b>.', DG_OS.layered, [['user interface', 'UI', 'layer N'], ['hardware', 'layer 0']]),
+  LABEL('Label the <b>microkernel</b> figure.', DG_OS.micro, [['messages', 'message passing', 'message'], ['microkernel', 'micro kernel'], ['hardware']]),
+  WHATIF('What happens if a <b>device driver crashes</b> in a microkernel system?', 'The driver runs in <b>user space</b> as a separate module, so only that module fails; the <b>microkernel keeps running</b> and the driver can be restarted. This is why the microkernel is more reliable.', ['Driver is in user space', 'Kernel keeps running', 'More reliable']),
+  WHATIF('What happens when a C program calls <code>printf()</code>?', 'printf() is a <b>library (API) function</b>. It calls the <b>write()</b> system call; the system-call interface finds it by number, it runs in <b>kernel mode</b>, and returns to the program.', ['printf is a library/API call', 'It calls write()', 'Runs in the kernel and returns']),
+  WHATIF('What happens if a program has more system-call parameters than there are registers?', 'They are passed in a <b>block (table) in memory</b> and the <b>address of the block</b> is passed in a register, or they are <b>pushed on the stack</b>.', ['Block in memory + address in register', 'Or on the stack']),
+  ADV('Give the advantages and disadvantages of the <b>simple structure (MS-DOS)</b>.', 'Advantage: most functionality in the least space; simple and fast. Disadvantages: not divided into modules; interfaces and levels not well separated, so an error in one part can crash the whole system; hard to maintain.', ['Advantage: small / most functionality in least space', 'Disadvantage: not modular / not well separated']),
+  ADV('Give the advantages and disadvantages of the <b>microkernel</b>.', 'Advantages: easier to extend, easier to port, more reliable, more secure. Disadvantage: <b>performance overhead</b> of message passing between user space and kernel space.', ['At least two advantages', 'Disadvantage: message-passing overhead / slower']),
+  ADV('Give the advantages and disadvantages of the <b>layered approach</b>.', 'Advantage: simple to build and debug: each layer uses only the layers below. Disadvantages: hard to define the layers; a request passes through many layers, so it can be <b>slower</b>.', ['Advantage: easy to build/debug', 'Disadvantage: hard to define layers / slower']),
+  ADV('Give the advantages of <b>loadable kernel modules</b>.', 'Functionality loaded only when needed; each module talks to others over known interfaces; easier to add features without rebuilding the kernel; still efficient like a monolithic kernel.', ['Load only when needed / dynamic', 'Known interfaces / easy to extend']),
+  EX('Give one example of a system call for each type: process control, file management, device management, information maintenance, communications, protection.', 'fork()/exit(); open()/read(); request device/ioctl(); get time / getpid(); send/receive, pipe(); chmod() / set permissions.', ['Process + file', 'Device + information', 'Communications + protection']),
+  EX('Give an example of an operating system for each structure: simple, layered/UNIX, microkernel, hybrid.', 'Simple: MS-DOS. UNIX: original UNIX. Microkernel: Mach. Hybrid: Mac OS X, Windows, Linux (modules).', ['Simple: MS-DOS', 'Microkernel: Mach', 'Hybrid: Mac OS X / Windows / Linux']),
+  FIX('A student wrote: "<i>Most users see the operating system through system calls.</i>" Correct it.', 'Most users\' view of the OS is through <b>system programs</b>, not the actual system calls.', ['System programs, not system calls']),
+  FIX('A student wrote: "<i>In a microkernel, user modules communicate through shared variables in the kernel.</i>" Correct it.', 'They communicate using <b>message passing</b> through the microkernel.', ['Message passing'])
+],
+l3: [
+  LABEL('Label the <b>process state diagram</b> (write the name of each state).', DG_OS.states(true), [['new'], ['ready'], ['running'], ['waiting', 'blocked'], ['terminated']]),
+  LABEL('Label the <b>transitions</b> of the process state diagram.', DG_OS.states(false), [['admitted'], ['scheduler dispatch', 'dispatch'], ['interrupt'], ['I/O or event wait', 'I/O wait', 'event wait'], ['I/O or event completion', 'I/O completion', 'event completion'], ['exit']]),
+  LABEL('Label the parts of a <b>process in memory</b> (top = max address, bottom = 0).', DG_OS.memory, [['stack'], ['heap'], ['data', 'data section'], ['text', 'text section', 'code']]),
+  LABEL('Label the <b>queueing diagram</b>.', DG_OS.queues, [['ready queue'], ['CPU', 'processor'], ['I/O queue', 'device queue']]),
+  WHATIF('What happens if a parent process terminates <b>without calling wait()</b>?', 'Its children become <b>orphans</b>. Some operating systems do not allow a child to exist without its parent, so <b>all its children are terminated too</b> (cascading termination).', ['Children become orphans', 'Some OSes terminate all children']),
+  WHATIF('What happens if a child terminates but its parent <b>has not called wait() yet</b>?', 'The child becomes a <b>zombie</b>: it finished, but its entry (pid and status) stays until the parent calls wait().', ['Child becomes a zombie', 'Its status waits for the parent\'s wait()']),
+  WHATIF('What happens to the PCB during a <b>context switch</b>?', 'The state of the old process (registers, program counter …) is <b>saved into its PCB</b>, and the saved state of the new process is <b>loaded from its PCB</b>.', ['Old state saved into its PCB', 'New state loaded from its PCB']),
+  WHATIF('What happens if too many processes are in memory and memory is full?', 'The <b>medium-term scheduler</b> removes (swaps out) some processes to <b>disk (swap space)</b> to decrease the degree of multiprogramming, and brings them back later.', ['Medium-term scheduler', 'Swap out to disk', 'Brought back later']),
+  WHATIF('What happens to the other Chrome tabs if one website crashes?', 'Each website has its <b>own renderer process</b>, so only that renderer crashes; the <b>browser and the other tabs keep working</b>.', ['Separate renderer per website', 'Others keep working']),
+  ADV('Give the advantages of Chrome\'s <b>multiprocess architecture</b>.', 'A crash in one website affects only its renderer; the renderer runs in a <b>sandbox</b> restricting disk and network I/O, minimizing the effect of security exploits; plug-ins are isolated too.', ['Crash isolated to one renderer', 'Sandbox: security']),
+  ADV('Compare <b>shared memory</b> and <b>message passing</b> by advantages and disadvantages.', 'Shared memory: <b>fast</b> (no OS involvement after setup) but processes must <b>synchronize</b> themselves. Message passing: <b>easier</b>, no shared variables, works between computers, but <b>slower</b> (OS moves every message).', ['Shared memory fast but needs synchronization', 'Message passing easier / across computers but slower']),
+  ADV('Give the advantages and disadvantages of <b>ordinary pipes</b>.', 'Advantage: simple communication between parent and child. Disadvantages: unidirectional; need a parent-child relationship; cannot be accessed from outside the creating process.', ['Advantage: simple', 'Disadvantages: one-way / parent-child only']),
+  EX('Give an example of an <b>I/O-bound</b> and of a <b>CPU-bound</b> process.', 'I/O-bound: a text editor, a file copy, a web browser waiting for the network. CPU-bound: video encoding, scientific computation, compiling a large program.', ['I/O-bound example', 'CPU-bound example']),
+  EX('Give an example of <b>cooperating processes</b>.', 'A producer and a consumer sharing a buffer; a web browser process and its renderer processes; a compiler pipeline (preprocessor → compiler → assembler).', ['A correct example with why they cooperate']),
+  FIX('A student wrote: "<i>The long-term scheduler runs every few milliseconds and selects which process gets the CPU.</i>" Find the mistake.', 'That is the <b>short-term (CPU)</b> scheduler. The long-term (job) scheduler runs <b>infrequently</b> (seconds, minutes) and selects which processes are brought into the <b>ready queue</b>.', ['That is the short-term scheduler', 'Long-term: infrequent, brings processes into the ready queue']),
+  FIX('A student wrote: "<i>exec() creates a new process that is a copy of the parent.</i>" Correct it.', '<b>fork()</b> creates the copy. <b>exec()</b> replaces the memory space of the process with a new program (it does not create a new process).', ['fork() creates the copy', 'exec() replaces the memory with a new program']),
+  FIX('A student drew this transition: <b>waiting → running</b> when the I/O completes. What is wrong?', 'When the I/O completes, the process goes from waiting to <b>ready</b>, not directly to running. It must wait in the ready queue until the scheduler dispatches it.', ['Waiting → ready', 'Then dispatched to running']),
+  TRACE('What does this program print, and in what order?<pre class="mono pre">pid = fork();\nif (pid == 0) {\n   printf("child\\n");\n} else {\n   wait(NULL);\n   printf("parent\\n");\n}</pre>', 'It prints <b>child</b> then <b>parent</b>. fork() returns 0 in the child, so the child prints "child". In the parent, fork() returns the child\'s pid (not 0), so it goes to else, <b>waits</b> for the child to finish, then prints "parent".', ['child then parent', 'fork returns 0 in the child', 'Parent waits with wait()']),
+  NUM('How many times is "A" printed?<pre class="mono pre">if (fork() == 0)\n   fork();\nprintf("A\\n");</pre>', 3, 'The parent creates C1. In the parent, fork() ≠ 0, so it skips. In C1, fork() == 0, so C1 creates C2. Parent, C1 and C2 all print: <b>3</b>.'),
+  NUM('How many times is "B" printed?<pre class="mono pre">fork();\nif (fork() == 0)\n   printf("B\\n");</pre>', 2, 'After the first fork: 2 processes. Each calls fork() again: 4 processes. Only the 2 new children (where fork() returned 0) print: <b>2</b>.'),
+  NUM('How many processes exist in total?<pre class="mono pre">for (i = 0; i < 3; i++)\n   fork();</pre>', 8, 'The loop calls fork() 3 times: 2³ = <b>8</b> processes.'),
+  TRACE('Draw the <b>process tree</b> for <code>fork(); fork();</code> (P0 is the original).', 'P0 creates P1 (1st fork). Then P0 creates P2 and P1 creates P3 (2nd fork).<br><pre class="mono pre">      P0\n     /  \\\n   P1    P2\n   |\n   P3</pre>4 processes.', ['P0 → P1 and P2', 'P1 → P3', '4 processes total'])
+],
+l4: [
+  LABEL('Name each <b>multithreading model</b> in the figure.', DG_OS.threads, [['many-to-one', 'many to one'], ['one-to-one', 'one to one'], ['many-to-many', 'many to many']]),
+  WHATIF('In the <b>many-to-one</b> model, what happens if one thread makes a blocking system call?', '<b>All the threads of the process block</b>, because they share one kernel thread.', ['All threads block', 'One kernel thread']),
+  WHATIF('In the <b>one-to-one</b> model, what happens if one thread blocks?', 'Only that thread blocks; <b>the other threads continue</b> because each has its own kernel thread.', ['Others continue', 'Each has its own kernel thread']),
+  WHATIF('What happens if a multithreaded program runs on a <b>single-core</b> CPU?', 'The threads run <b>concurrently</b> (interleaved by the scheduler), <b>not in parallel</b>. Responsiveness still improves, but there is no real speedup from parallelism.', ['Concurrent, not parallel', 'Still responsive']),
+  WHATIF('What happens to the other threads if one thread changes a global variable?', 'All threads of the process <b>see the change</b>, because they share the <b>data section</b>. This is why threads need <b>synchronization</b> (L6).', ['They see it (shared data section)', 'Need synchronization']),
+  ADV('Give the advantages and disadvantages of the <b>many-to-one</b> model.', 'Advantage: thread management is fast (in user space, no kernel). Disadvantages: one blocking call blocks all; threads cannot run in parallel on multicore.', ['Advantage: efficient user-space management', 'Disadvantages: blocking + no parallelism']),
+  ADV('Give the advantages and disadvantages of the <b>one-to-one</b> model.', 'Advantages: more concurrency; threads run in parallel on multicore; one blocking does not block others. Disadvantage: creating a user thread creates a kernel thread, which costs more; too many kernel threads can burden the system.', ['Advantages: concurrency / parallel', 'Disadvantage: a kernel thread per user thread (overhead)']),
+  ADV('Give the advantages of <b>threads</b> over processes.', 'Cheaper creation; lower switching overhead; easy resource sharing; responsiveness; scalability on multicore.', ['Cheaper creation / switching', 'Resource sharing', 'Responsiveness / scalability']),
+  EX('Give an example of a <b>multithreaded application</b> and name its threads.', 'A word processor: one thread updates the display, one reads keystrokes, one does spell checking, one saves in the background. A web server: one thread per client request.', ['An application', 'At least two threads with their jobs']),
+  EX('Give an example of <b>data parallelism</b> and one of <b>task parallelism</b>.', 'Data: summing an array of N numbers on 2 cores, each core sums half. Task: on a file, one core counts the words while another core checks the spelling.', ['Data example (same operation, split data)', 'Task example (different operations)']),
+  FIX('A student wrote: "<i>Threads of the same process each have their own code and data sections but share one stack.</i>" Correct it.', 'It is the opposite: threads <b>share</b> the code and data sections (and open files), and each has its <b>own stack</b> (and PC and registers).', ['Share code and data', 'Own stack, PC, registers']),
+  FIX('A student wrote: "<i>Parallelism is possible on a single-core system using a scheduler.</i>" Correct it.', 'On a single core, the scheduler gives <b>concurrency</b>, not parallelism. Parallelism needs <b>multiple cores</b>.', ['Single core = concurrency', 'Parallelism needs multiple cores'])
+],
+l5: [
+  WHATIF('In Round Robin, what happens if the time quantum is <b>very large</b>?', 'RR becomes <b>FCFS (FIFO)</b>: every process finishes its burst within one quantum.', ['Becomes FCFS']),
+  WHATIF('In Round Robin, what happens if the time quantum is <b>very small</b>?', 'Too many <b>context switches</b>: the overhead becomes too high and the CPU spends much time switching instead of working.', ['Many context switches', 'High overhead']),
+  WHATIF('What happens to a <b>low-priority</b> process in priority scheduling if high-priority processes keep arriving?', 'It may <b>never execute</b>: <b>starvation</b>. The solution is <b>aging</b>: increase its priority as it waits.', ['Starvation', 'Aging solves it']),
+  WHATIF('What happens in FCFS if a long CPU-bound process arrives first, followed by many short I/O-bound processes?', 'The short processes wait behind the long one: the <b>convoy effect</b>. Average waiting time becomes large and devices stay idle.', ['Convoy effect', 'Large waiting time']),
+  WHATIF('In the multilevel feedback example, what happens to a job that needs 30 ms of CPU?', 'It enters <b>Q0</b> and runs 8 ms; not finished → moved to <b>Q1</b> and runs 16 ms (total 24); still not finished → moved to <b>Q2 (FCFS)</b> where it runs its last 6 ms.', ['Q0: 8 ms', 'Q1: 16 ms', 'Q2: the remaining 6 ms']),
+  ADV('Give the advantages and disadvantages of <b>FCFS</b>.', 'Advantages: simplest, easy to implement, no starvation. Disadvantages: <b>convoy effect</b>, average waiting time often long, nonpreemptive (bad for time-sharing).', ['Advantage: simple / no starvation', 'Disadvantage: convoy effect / long waiting']),
+  ADV('Give the advantages and disadvantages of <b>SJF</b>.', 'Advantage: <b>optimal</b>: minimum average waiting time. Disadvantages: the length of the next CPU burst is hard to know (must be predicted); long processes may starve.', ['Advantage: minimum average waiting time', 'Disadvantage: next burst unknown / starvation']),
+  ADV('Give the advantages and disadvantages of <b>Round Robin</b>.', 'Advantages: fair, good response time, no starvation, good for time-sharing. Disadvantages: higher average turnaround than SJF; context-switch overhead if q is small.', ['Advantage: good response / fair', 'Disadvantage: higher turnaround / switch overhead']),
+  ADV('Give the advantages and disadvantages of <b>priority scheduling</b>.', 'Advantage: important processes run first. Disadvantage: <b>starvation</b> of low-priority processes (solved by aging).', ['Advantage: important first', 'Disadvantage: starvation']),
+  EX('Give an example of a <b>preemptive</b> and a <b>nonpreemptive</b> scheduling decision.', 'Preemptive: the timer interrupt ends a process\'s quantum in RR (running → ready). Nonpreemptive: a process asks for I/O (running → waiting) or terminates.', ['Preemptive example', 'Nonpreemptive example']),
+  FIX('A student solved FCFS for P1 = 24, P2 = 3, P3 = 3 (all at 0) and wrote: "<i>Waiting P1 = 24, P2 = 27, P3 = 30, average = 27.</i>" Find the mistake.', 'Those are the <b>finish (completion) times</b>, not the waiting times. Waiting = start time here: P1 = 0, P2 = 24, P3 = 27, average = 51/3 = <b>17</b>. (Turnaround would be 24, 27, 30.)', ['Used finish times', 'Correct waiting: 0, 24, 27', 'Average 17']),
+  FIX('A student drew Round Robin (q = 4) for P1 = 24, P2 = 3, P3 = 3 as: <b>P1 0–24, P2 24–27, P3 27–30</b>. What is wrong?', 'That is FCFS. In RR, P1 runs only <b>4</b> units then goes to the end of the queue: P1 0–4, P2 4–7, P3 7–10, then P1 10–14, 14–18, 18–22, 22–26, 26–30.', ['That is FCFS', 'P1 runs only one quantum (4) first', 'Correct chart']),
+  FIX('A student wrote: "<i>Response time is the total time from submission until the process finishes.</i>" Correct it.', 'That is <b>turnaround time</b>. Response time is until the <b>first response</b> is produced.', ['That is turnaround', 'Response = until first response'])
+],
+l6: [
+  LABEL('Label the general structure of a process Pi (critical-section problem).', DG_OS.cs, [['entry section', 'entry'], ['critical section', 'critical'], ['exit section', 'exit'], ['remainder section', 'remainder']]),
+  WHATIF('What happens if two processes run <code>counter++</code> and <code>counter--</code> at the same time without synchronization?', 'A <b>race condition</b>: their machine instructions can interleave and one update overwrites the other, so counter can end wrong (e.g. 4 or 6 instead of 5).', ['Race condition', 'Instructions interleave / overwrite', 'Wrong value']),
+  WHATIF('What happens if a process <b>forgets to call release()</b> after its critical section?', 'The lock stays unavailable, so every other process that calls acquire() <b>busy-waits forever</b>; no one can enter the critical section again (progress is violated / deadlock-like).', ['Lock never released', 'Others wait forever']),
+  WHATIF('What happens if a semaphore used for mutual exclusion is initialized to <b>0</b> instead of 1?', 'The first wait() finds S ≤ 0 and <b>waits forever</b>: no process can ever enter the critical section (unless someone signals).', ['First wait blocks', 'Nobody enters']),
+  WHATIF('What happens if a mutual-exclusion semaphore is initialized to <b>2</b>?', '<b>Two processes</b> can be in the critical section at the same time, so <b>mutual exclusion is violated</b>.', ['Two can enter', 'Mutual exclusion violated']),
+  WHATIF('What happens if wait() and signal() were <b>not atomic</b>?', 'Two processes could read and change S at the same time, giving the same race condition the semaphore was meant to prevent (e.g. both see S = 1 and both enter).', ['S updated by both at once', 'Race condition / both enter']),
+  ADV('Give the advantages and disadvantages of <b>disabling interrupts</b> to protect a critical section.', 'Advantage: simple on a uniprocessor: the running code executes without preemption. Disadvantage: too inefficient on multiprocessors; dangerous to give user processes this power.', ['Advantage: simple on uniprocessor', 'Disadvantage: inefficient on multiprocessors']),
+  ADV('Give the advantage and the disadvantage of <b>spinlocks</b> (busy waiting).', 'Advantage: no context switch is needed while waiting, good when the lock is held for a <b>short</b> time. Disadvantage: <b>wastes CPU cycles</b> while spinning.', ['Advantage: no context switch / short waits', 'Disadvantage: wastes CPU']),
+  EX('Give a real-life example of a <b>race condition</b>.', 'Two people withdraw from the same bank account at the same time: both read balance 1000, both subtract, and the final balance is wrong. Or two threads booking the last seat on a flight.', ['A correct shared-data example', 'Explains the wrong result']),
+  EX('Give an example of using a semaphore to <b>order</b> two statements.', 'S1 in P1 must happen before S2 in P2: synch = 0; P1: S1; signal(synch); P2: wait(synch); S2.', ['synch = 0', 'signal after S1, wait before S2']),
+  FIX('Find the mistake in this mutex code:<pre class="mono pre">acquire() {\n   while (available) ;\n   available = false;\n}</pre>', 'The loop condition is reversed. It must wait <b>while the lock is NOT available</b>: <code>while (!available) ;</code> then set available = false.', ['Condition reversed', 'while (!available)']),
+  FIX('Find the mistake:<pre class="mono pre">wait(S) {\n   while (S <= 0) ;\n   S++;\n}</pre>', 'wait() must <b>decrement</b> S: <code>S--;</code>. (signal() is the one that increments.)', ['Should be S--', 'signal increments']),
+  FIX('A student wrote: "<i>A binary semaphore can take any integer value; a counting semaphore only 0 or 1.</i>" Correct it.', 'It is the opposite: a <b>binary</b> semaphore is only 0 or 1; a <b>counting</b> semaphore ranges over an unrestricted domain.', ['Binary: 0 or 1', 'Counting: unrestricted'])
+]};
+Object.entries(ADD).forEach(([k, arr]) => LECT[k].items.push(...arr));
+
+/* add new types to the quizzes */
+const PA = id => PAPERS.find(p => p.id === id);
+PA('qa').qs.splice(5, 0, { title: 'What happens if …?', items: [WHATIF('What happens if the time quantum in RR is very small?', 'Too many context switches → high overhead.', ['Many context switches', 'High overhead'])] });
+PA('qa').qs.push({ title: 'Label the diagram', items: [LABEL('Write the name of each process state.', DG_OS.states(true), [['new'], ['ready'], ['running'], ['waiting', 'blocked'], ['terminated']])] });
+PA('qb').qs.push({ title: 'Find the mistake', items: [FIX('A student wrote: "<i>In the many-to-one model, threads run in parallel on a multicore system because each has a kernel thread.</i>" Correct it.', 'In many-to-one, all user threads share <b>one</b> kernel thread, and only one can be in the kernel at a time, so they <b>cannot</b> run in parallel.', ['One kernel thread', 'Cannot run in parallel'])] },
+  { title: 'Advantages and disadvantages', items: [ADV('Give one advantage and one disadvantage of the <b>microkernel</b>.', 'Advantage: more reliable / secure / easy to extend. Disadvantage: message-passing overhead.', ['Advantage', 'Disadvantage: overhead'])] });
+PA('qc').qs.push({ title: 'Trace the code', items: [NUM('How many times is "X" printed?<pre class="mono pre">if (fork() == 0) {\n   fork();\n   fork();\n}\nprintf("X\\n");</pre>', 5, 'Parent: skips the if, prints 1. Child C1: does 2 forks → 4 processes (C1 and 3 more), each prints. Total 1 + 4 = <b>5</b>.')] },
+  { title: 'Give an example', items: [EX('Give an example of a real-life <b>race condition</b> and how a semaphore prevents it.', 'Two withdrawals from one bank account at once; protect the balance update with a semaphore mutex = 1: wait(mutex); update balance; signal(mutex).', ['Correct example', 'wait before / signal after the update'])] });
+
+/* ===== full mock midterm ===== */
+PAPERS.push({ id: 'mid', ln: 'Mid', title: 'Mock Midterm (full length)', sub: 'Lectures 1–6, the size of a real midterm. About 60 marks, 90 minutes. Take it 2–3 days before the exam, in one sitting, with the clock.', minutes: 90, qs: [
+  { title: 'Choose the correct answer', items: [
+    M('The OS as a "resource allocator" ___.', ['Prevents improper use', 'Decides between conflicting requests for efficient and fair resource use', 'Loads the kernel', 'Draws the GUI'], 1),
+    M('Which service belongs to the efficient operation of the system itself?', ['File-system manipulation', 'Communications', 'Accounting', 'User interface'], 2),
+    M('Which is NOT a type of system call?', ['Process control', 'Device management', 'Communications', 'Context switching'], 3),
+    M('The Chrome process that is created once per website is the ___.', ['Browser', 'Renderer', 'Plug-in', 'Kernel'], 1),
+    M('Which part of the PCB tells where the next instruction is?', ['Accounting information', 'Program counter', 'I/O status', 'Process state'], 1),
+    M('A thread shares with its peers ___.', ['Its stack', 'Its registers', 'The code section', 'Its program counter'], 2),
+    M('"Each user-level thread maps to a kernel thread" is ___.', ['Many-to-one', 'One-to-one', 'Many-to-many', 'Two-level'], 1),
+    M('Which criterion is the time from submission to the first response?', ['Turnaround', 'Waiting', 'Response', 'Throughput'], 2),
+    M('SJF is optimal because it gives the minimum average ___.', ['Turnaround only', 'Waiting time', 'Response time', 'Throughput'], 1),
+    M('The solution to priority inversion is ___.', ['Aging', 'Priority-inheritance protocol', 'Round robin', 'Disabling interrupts'], 1)
+  ] },
+  { title: 'True or False (correct the false ones)', items: [
+    T('Timesharing is a logical extension of multiprogramming.', true),
+    T('In a layered OS, layer 0 is the user interface.', false, 'Layer 0 is the <b>hardware</b>.'),
+    T('Context-switch time is overhead.', true),
+    T('The medium-term scheduler increases the degree of multiprogramming.', false, 'It is added when the degree of multiprogramming needs to <b>decrease</b>.'),
+    T('Named pipes require a parent-child relationship.', false, 'Named pipes need <b>no</b> parent-child relationship; ordinary pipes do.'),
+    T('In RR, no process waits more than (n−1)q time units.', true),
+    T('Scheduling when a process switches from waiting to ready is nonpreemptive.', false, 'Waiting → ready is <b>preemptive</b> (cases 2 and 3).'),
+    T('A binary semaphore is the same as a mutex lock.', true)
+  ] },
+  { title: 'Complete', items: [
+    C('Accessing the services of the operating system is achieved via system ___.', ['calls']),
+    C('The ___ scheduler is also called the job scheduler.', ['long-term', 'long term']),
+    C('A socket is the concatenation of an IP address and a ___ number.', ['port']),
+    C('Starvation is solved by ___.', ['aging']),
+    C('The three requirements of the critical-section problem are mutual exclusion, progress and ___.', ['bounded waiting'])
+  ] },
+  { title: 'Matching', items: [
+    MATCH('Match.', [['Convoy effect', 'Short processes wait behind a long one'], ['Zombie', 'Terminated, parent has not called wait()'], ['Dispatcher', 'Gives the CPU to the selected process'], ['Spinlock', 'Lock with busy waiting'], ['Stub', 'Client-side proxy in RPC'], ['IaaS', 'Servers or storage over the Internet']])
+  ] },
+  { title: 'Label the diagram', items: [
+    LABEL('Write the name of each transition.', DG_OS.states(false), [['admitted'], ['scheduler dispatch', 'dispatch'], ['interrupt'], ['I/O or event wait', 'I/O wait', 'event wait'], ['I/O or event completion', 'I/O completion', 'event completion'], ['exit']])
+  ] },
+  { title: 'Definitions', items: [
+    DEF('system call', 'An interface to the services provided by the OS, accessed mostly through an API.', ['Interface to OS services', 'Through an API']),
+    DEF('thread', 'A flow of execution in a process with its own PC, registers and stack, sharing code, data and files; a lightweight process.', ['Flow of execution', 'Own PC/registers/stack, shares code/data', 'Lightweight process']),
+    DEF('deadlock', 'Two or more processes waiting indefinitely for an event that can be caused only by one of the waiting processes.', ['Two or more processes wait forever', 'Event caused by one of them'])
+  ] },
+  { title: 'Differentiate between', items: [
+    DIFF('program', 'process', [['Nature', 'Passive', 'Active'], ['Where', 'On disk', 'In memory, executing']]),
+    DIFF('preemptive', 'nonpreemptive scheduling', [['CPU can be taken away', 'Yes', 'No'], ['When', 'Running → ready, waiting → ready', 'Running → waiting, terminate']]),
+    DIFF('user threads', 'kernel threads', [['Managed by', 'User-level library', 'Kernel'], ['Examples', 'Pthreads, Java threads', 'Windows, Linux']])
+  ] },
+  { title: 'Short answers', items: [
+    WHATIF('What happens if a parent terminates without calling wait()?', 'Its children become orphans; some OSes terminate all its children (cascading termination).', ['Orphans', 'Cascading termination in some OSes']),
+    ADV('Give two advantages and one disadvantage of the microkernel.', 'Advantages: easier to extend/port, more reliable, more secure. Disadvantage: message-passing overhead.', ['Two advantages', 'Disadvantage: overhead']),
+    FIX('Find the mistake: "<i>signal(S) decrements S and wait(S) increments it.</i>"', 'Reversed: <b>wait</b> decrements S (after busy-waiting while S ≤ 0); <b>signal</b> increments S.', ['wait decrements', 'signal increments']),
+    W('List', 'List the three requirements of the critical-section problem.', 'Mutual exclusion, progress, bounded waiting.', ['Mutual exclusion', 'Progress', 'Bounded waiting'])
+  ] },
+  { title: 'Scheduling problem', items: [
+    SCH('rr', [P_('P1', 0, 7), P_('P2', 1, 4), P_('P3', 2, 2), P_('P4', 4, 5)], { q: 3 })
+  ] },
+  { title: 'Code', items: [
+    NUM('How many times is "Z" printed?<pre class="mono pre">fork();\nfork();\nif (fork() == 0)\n   printf("Z\\n");</pre>', 4, '2 forks → 4 processes; each does a 3rd fork → 8; only the 4 new children (fork() == 0) print: <b>4</b>.'),
+    NUM('counter = 7. Producer does counter++ and consumer does counter−− with this order: P: reg1 = counter; C: reg2 = counter; P: reg1 = reg1 + 1; C: reg2 = reg2 − 1; C: counter = reg2; P: counter = reg1. Final counter?', 8, 'reg1 = 8, reg2 = 6. The consumer writes 6, then the producer writes <b>8</b> (correct would be 7).')
+  ] }
+]});
 
 if(/github\.io$/.test(location.hostname))document.querySelectorAll(".backlink").forEach(a=>a.hidden=false);
 bootOS();
