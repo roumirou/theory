@@ -358,11 +358,200 @@ h2::after{content:"NEWGIZA UNIVERSITY";position:absolute;right:0;bottom:12px;fon
 
 </head>
 <body>
+<style>.sdock{position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:60;display:flex;gap:8px;align-items:flex-end}
+.sbtn{font:inherit;font-size:14px;font-weight:700;border:1px solid var(--line);background:var(--paper);color:var(--accent);border-radius:999px;padding:9px 14px;box-shadow:0 4px 14px rgba(0,0,0,.12);cursor:pointer}
+.sbtn.notes{background:var(--accent);color:#fff;border-color:var(--accent)}
+.sbtn.on{color:var(--good)} .sbtn.err{color:var(--bad)}
+.smenu{position:absolute;right:0;bottom:52px;width:min(320px,calc(100vw - 28px));background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:12px;box-shadow:0 10px 30px rgba(0,0,0,.18);display:flex;flex-direction:column;gap:8px}
+.smrow{font-size:14px}.smrow.small{font-size:13px;color:var(--muted)}
+.snotes{position:fixed;right:14px;bottom:calc(66px + env(safe-area-inset-bottom,0px));z-index:61;width:min(420px,calc(100vw - 28px));max-height:min(75vh,640px);overflow:auto;background:var(--paper);border:1px solid var(--line);border-top:5px solid var(--accent);border-radius:10px;padding:12px 14px;box-shadow:0 14px 40px rgba(0,0,0,.22);display:flex;flex-direction:column;gap:8px}
+.snotes[hidden]{display:none}
+.snh{display:flex;align-items:center;justify-content:space-between;font-size:17px;color:var(--accent)}
+.sx{border:0;background:none;font-size:22px;line-height:1;cursor:pointer;color:var(--muted);padding:2px 6px}.sx.small{font-size:15px}
+.snotes .ta{min-height:180px;font-size:16px}
+.sng{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);font-weight:700;margin-top:8px}
+.sni{border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+.snl{display:flex;justify-content:space-between;gap:8px;align-items:center}.snt{font-weight:700;color:var(--accent)}
+.snx{white-space:pre-wrap;font-size:14px;margin:4px 0}
+@media print{.sdock,.snotes{display:none!important}}
+</style>
+<script>window.SYNC_CFG={subject:null,prefixes:[]};</script>
+<script>
+/* ===== Mariam's Study Room: account sync (Firebase) + notes =====
+   - Every subject page keeps working from localStorage exactly as before.
+   - When signed in with Google, the subject's keys are copied to Firestore
+     (users/<uid>/subjects/<subject>) and merged key by key: the newest write wins.
+   - Notes live in localStorage "study-notes" and sync in users/<uid>/subjects/common. */
+(function () {
+  const CFG = window.SYNC_CFG || { subject: null, prefixes: [] };
+  const FB = { apiKey: 'AIzaSyDk3CSvsMDx3i0yF07DgZCjFL-IO7ugwPg', authDomain: 'mariam-study-room.firebaseapp.com', projectId: 'mariam-study-room', storageBucket: 'mariam-study-room.firebasestorage.app', messagingSenderId: '146983002691', appId: '1:146983002691:web:89635e012679adac8c2af6' };
+  const CAN_SYNC = /(^|\.)github\.io$/.test(location.hostname) || location.hostname === 'localhost' || window.SYNC_FORCE;
+  const SDK = window.SYNC_SDK || 'https://cdn.jsdelivr.net/npm/firebase@10.12.2/';
+  const NOTES = 'study-notes';
+  const PAGES = { toc: 'theory.html', os: 'os.html' };
+  const SUBJ_NAME = { toc: 'Theory of Computing', os: 'Operating Systems', home: 'Front page' };
+  const LS = window.localStorage;
+  const set0 = Storage.prototype.setItem, rem0 = Storage.prototype.removeItem;
+  const raw = (k, d) => { try { const v = LS.getItem(k); return v == null ? d : v; } catch (e) { return d; } };
+  const docOf = k => k === NOTES ? 'common' : CFG.subject;
+  const mine = k => k === NOTES || (!!CFG.subject && (CFG.prefixes || []).some(p => k.startsWith(p)) && !/-pen$/.test(k) && !/^__sync/.test(k));
+  const TSK = '__sync_ts';
+  let ts = {}; try { ts = JSON.parse(raw(TSK, '{}')) || {}; } catch (e) { ts = {}; }
+  const saveTs = () => { try { set0.call(LS, TSK, JSON.stringify(ts)); } catch (e) {} };
+  let applying = false, user = null, db = null, timer = null, state = 'off';
+  const touch = k => { ts[k] = Date.now(); saveTs(); schedule(); };
+  // a write only counts as a change if the value really changed (and not just "empty default" on a fresh device)
+  const EMPTY = /^(\[\]|\{\}|false|""|null|0)$/;
+  Storage.prototype.setItem = function (k, v) { const watch = this === LS && !applying && mine(k); const old = watch ? raw(k, null) : null; set0.call(this, k, v); if (!watch) return; v = String(v); if (old === v || (old == null && EMPTY.test(v))) return; touch(k); };
+  Storage.prototype.removeItem = function (k) { const watch = this === LS && !applying && mine(k); const old = watch ? raw(k, null) : null; rem0.call(this, k); if (watch && old != null) touch(k); };
+  const enc = k => encodeURIComponent(k).replace(/\./g, '%2E').replace(/\*/g, '%2A');
+  const dec = k => decodeURIComponent(k);
+
+  /* ---------- UI: a small dock in the corner ---------- */
+  const el = (t, a = {}, ...kids) => { const e = document.createElement(t); for (const [k, v] of Object.entries(a)) { if (v == null || v === false) continue; if (k === 'class') e.className = v; else if (k.startsWith('on')) e.addEventListener(k.slice(2), v); else e.setAttribute(k, v); } kids.flat().forEach(c => c != null && e.append(c.nodeType ? c : document.createTextNode(c))); return e; };
+  const dock = el('div', { class: 'sdock' });
+  const bAcc = el('button', { class: 'sbtn', type: 'button', 'aria-label': 'Account and sync' });
+  const bNotes = el('button', { class: 'sbtn notes', type: 'button', 'aria-label': 'My notes' }, '✎ Notes');
+  const menu = el('div', { class: 'smenu', hidden: true });
+  dock.append(menu, bAcc, bNotes);
+  const label = () => {
+    if (!CAN_SYNC) { bAcc.hidden = true; return; }
+    bAcc.hidden = false;
+    bAcc.textContent = !user ? '☁ Sign in to save everywhere' : state === 'saving' ? '☁ Saving…' : state === 'error' ? '☁ Not saved (offline?)' : '☁ Saved';
+    bAcc.classList.toggle('on', !!user); bAcc.classList.toggle('err', state === 'error');
+  };
+  bAcc.onclick = () => {
+    if (!user) { signIn(); return; }
+    menu.hidden = !menu.hidden; menu.innerHTML = '';
+    menu.append(el('div', { class: 'smrow' }, 'Signed in as ', el('b', {}, user.displayName || user.email || 'you')),
+      el('div', { class: 'smrow small' }, 'Your answers, mistakes, progress and notes are saved to your account. Open the site on any device and sign in with the same Google account.'),
+      el('button', { class: 'btn ghost', type: 'button', onclick: () => { menu.hidden = true; pullAll(true); } }, 'Sync now'),
+      el('button', { class: 'btn ghost', type: 'button', onclick: () => { menu.hidden = true; window.firebase.auth().signOut(); } }, 'Sign out'));
+  };
+  document.addEventListener('click', e => { if (!dock.contains(e.target)) menu.hidden = true; });
+
+  /* ---------- notes ---------- */
+  let selText = '';
+  const grabSel = () => { const s = String(window.getSelection ? window.getSelection() : '').trim(); if (s) selText = s.slice(0, 600); };
+  bNotes.addEventListener('pointerdown', grabSel); bNotes.addEventListener('touchstart', grabSel, { passive: true });
+  const notesGet = () => { try { return JSON.parse(raw(NOTES, '{}')) || {}; } catch (e) { return {}; } };
+  const notesSet = o => { try { LS.setItem(NOTES, JSON.stringify(o)); } catch (e) {} };
+  const pageId = () => (CFG.subject || 'home') + '|' + (location.hash || '#');
+  const pageTitle = () => { const sec = document.querySelector('section.ch:not([hidden]) h1, main h1, .lhead h1'); const s = document.querySelector('.ch-head .eyebrow'); return ((s ? s.textContent + ' · ' : '') + (sec ? sec.textContent : document.title)).trim().slice(0, 120); };
+  const panel = el('div', { class: 'snotes', hidden: true, role: 'dialog', 'aria-label': 'My notes' });
+  document.addEventListener('DOMContentLoaded', () => { document.body.append(dock, panel); label(); });
+  if (document.body) { document.body.append(dock, panel); }
+  let tab = 'page';
+  function openNotes() { panel.hidden = false; renderNotes(); }
+  bNotes.onclick = () => { if (!panel.hidden) { panel.hidden = true; return; } openNotes(); };
+  function renderNotes() {
+    panel.innerHTML = '';
+    const all = notesGet(); const id = pageId();
+    const head = el('div', { class: 'snh' }, el('b', {}, 'My notes'), el('button', { class: 'sx', type: 'button', 'aria-label': 'Close', onclick: () => panel.hidden = true }, '×'));
+    const tabs = el('div', { class: 'chips' }, el('button', { class: 'chip' + (tab === 'page' ? ' sel' : ''), type: 'button', onclick: () => { tab = 'page'; renderNotes(); } }, 'This page'), el('button', { class: 'chip' + (tab === 'all' ? ' sel' : ''), type: 'button', onclick: () => { tab = 'all'; renderNotes(); } }, `All notes (${Object.values(all).filter(n => n.text && n.text.trim()).length})`));
+    panel.append(head, tabs);
+    if (tab === 'page') {
+      const n = all[id] || { subj: CFG.subject || 'home', hash: location.hash || '', title: pageTitle(), text: '' };
+      panel.append(el('div', { class: 'small muted' }, n.title || pageTitle()));
+      const ta = el('textarea', { class: 'ta', rows: 10, placeholder: 'Write anything here: a rule to remember, a trick, a question to ask the doctor… It saves by itself.' }); ta.value = n.text || '';
+      const saved = el('span', { class: 'small muted' });
+      const save = () => { const o = notesGet(); o[id] = { subj: CFG.subject || 'home', hash: location.hash || '', title: pageTitle(), text: ta.value, ts: Date.now() }; if (!ta.value.trim()) delete o[id]; notesSet(o); saved.textContent = 'Saved'; };
+      let t0 = null; ta.oninput = () => { saved.textContent = '…'; clearTimeout(t0); t0 = setTimeout(save, 400); };
+      const bQuote = el('button', { class: 'btn ghost', type: 'button', onclick: () => { if (!selText) { saved.textContent = 'First select some text on the page, then open Notes.'; return; } ta.value += (ta.value && !ta.value.endsWith('\n') ? '\n' : '') + '“' + selText + '”\n'; selText = ''; save(); ta.focus(); } }, '+ Add the text I selected');
+      panel.append(ta, el('div', { class: 'ctl' }, bQuote, saved));
+      setTimeout(() => ta.focus(), 50);
+    } else {
+      const list = Object.entries(all).filter(([, n]) => n.text && n.text.trim()).sort((a, b) => (b[1].ts || 0) - (a[1].ts || 0));
+      if (!list.length) panel.append(el('p', { class: 'small muted' }, 'No notes yet. Open "This page" on any page and write.'));
+      const groups = {}; list.forEach(([k, n]) => (groups[n.subj] = groups[n.subj] || []).push([k, n]));
+      Object.entries(groups).forEach(([s, arr]) => {
+        panel.append(el('div', { class: 'sng' }, SUBJ_NAME[s] || s));
+        arr.forEach(([k, n]) => {
+          const href = (s === CFG.subject ? '' : (PAGES[s] || './')) + (n.hash || '');
+          const go = el('a', { href: href || '#', class: 'snt' }, n.title || 'Note');
+          go.onclick = () => { if (s === CFG.subject) { setTimeout(() => { tab = 'page'; renderNotes(); }, 60); } };
+          const del = el('button', { class: 'sx small', type: 'button', 'aria-label': 'Delete note', title: 'Delete', onclick: () => { if (!confirm('Delete this note?')) return; const o = notesGet(); delete o[k]; notesSet(o); renderNotes(); } }, '🗑');
+          panel.append(el('div', { class: 'sni' }, el('div', { class: 'snl' }, go, del), el('div', { class: 'snx' }, n.text.length > 220 ? n.text.slice(0, 220) + '…' : n.text), el('div', { class: 'small muted' }, n.ts ? new Date(n.ts).toLocaleString() : '')));
+        });
+      });
+    }
+  }
+  window.addEventListener('hashchange', () => { if (!panel.hidden && tab === 'page') setTimeout(renderNotes, 80); });
+
+  /* ---------- Firebase ---------- */
+  if (!CAN_SYNC) { label(); return; }
+  const load = src => new Promise((res, rej) => { const s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = rej; document.head.append(s); });
+  label();
+  (async () => {
+    try {
+      await load(SDK + 'firebase-app-compat.js');
+      await Promise.all([load(SDK + 'firebase-auth-compat.js'), load(SDK + 'firebase-firestore-compat.js')]);
+    } catch (e) { state = 'error'; label(); return; }
+    const fb = window.firebase; fb.initializeApp(FB); db = fb.firestore();
+    fb.auth().onAuthStateChanged(async u => { user = u; state = u ? 'ok' : 'off'; label(); if (u) await pullAll(false); });
+  })();
+  async function signIn() {
+    const fb = window.firebase; if (!fb || !fb.auth) { alert('The sign-in service is still loading. Try again in a few seconds.'); return; }
+    const p = new fb.auth.GoogleAuthProvider(); p.setCustomParameters({ prompt: 'select_account' });
+    try { await fb.auth().signInWithPopup(p); }
+    catch (e) { if (e && /popup/.test(e.code || '')) { try { await fb.auth().signInWithRedirect(p); } catch (x) { alert('Sign-in failed: ' + (x.message || x)); } } else if (e && e.code !== 'auth/cancelled-popup-request') alert('Sign-in failed: ' + (e.message || e)); }
+  }
+  const ref = d => db.collection('users').doc(user.uid).collection('subjects').doc(d);
+  async function pullAll(manual) {
+    if (!user || !db) return;
+    state = 'saving'; label();
+    try {
+      const docs = [...new Set([CFG.subject, 'common'].filter(Boolean))];
+      let changed = false;
+      for (const d of docs) {
+        const snap = await ref(d).get(); const kv = (snap.exists && snap.data().kv) || {};
+        const remoteKeys = new Set();
+        applying = true;
+        for (const [ek, rec] of Object.entries(kv)) {
+          const k = dec(ek); if (docOf(k) !== d || !mine(k)) continue; remoteKeys.add(k);
+          const lt = ts[k] || 0;
+          if (rec && rec.t > lt) { const before = raw(k, null); if (rec.v == null) rem0.call(LS, k); else set0.call(LS, k, rec.v); ts[k] = rec.t; if (before !== rec.v) changed = true; }
+        }
+        applying = false;
+        // local keys the account does not have yet (or has an older version of)
+        const push = {};
+        for (let i = 0; i < LS.length; i++) { const k = LS.key(i); if (!mine(k) || docOf(k) !== d) continue; if (!ts[k]) ts[k] = 1; const r = kv[enc(k)]; if (!r || ts[k] > r.t) push[enc(k)] = { v: raw(k, null), t: ts[k] }; }
+        Object.keys(ts).forEach(k => { if (mine(k) && docOf(k) === d && raw(k, null) == null && (!kv[enc(k)] || ts[k] > kv[enc(k)].t)) push[enc(k)] = { v: null, t: ts[k] }; });
+        saveTs();
+        if (Object.keys(push).length) await ref(d).set({ kv: push, updated: Date.now() }, { merge: true });
+      }
+      state = 'ok'; label();
+      if (changed) {
+        const g = 'sync-reloaded-' + (CFG.subject || 'home');
+        if (!sessionStorage.getItem(g) || manual) { sessionStorage.setItem(g, '1'); location.reload(); }
+        else if (!panel.hidden) renderNotes();
+      }
+    } catch (e) { applying = false; state = 'error'; label(); console.warn('sync', e); }
+  }
+  function schedule() { if (!user) return; state = 'saving'; label(); clearTimeout(timer); timer = setTimeout(pushDirty, 1500); }
+  async function pushDirty() {
+    if (!user || !db) return;
+    try {
+      const by = {};
+      Object.entries(ts).forEach(([k, t]) => { if (!mine(k)) return; const d = docOf(k); if (!d) return; (by[d] = by[d] || {})[enc(k)] = { v: raw(k, null), t }; });
+      // only send what changed since the last successful push
+      const sent = JSON.parse(raw('__sync_sent', '{}') || '{}');
+      for (const [d, kv] of Object.entries(by)) { const part = {}; Object.entries(kv).forEach(([ek, r]) => { if ((sent[ek] || 0) < r.t) part[ek] = r; }); if (Object.keys(part).length) { await ref(d).set({ kv: part, updated: Date.now() }, { merge: true }); Object.entries(part).forEach(([ek, r]) => sent[ek] = r.t); } }
+      set0.call(LS, '__sync_sent', JSON.stringify(sent));
+      state = 'ok'; label();
+    } catch (e) { state = 'error'; label(); }
+  }
+  document.addEventListener('visibilitychange', () => { if (!user) return; if (document.visibilityState === 'hidden') { clearTimeout(timer); pushDirty(); } else pullAll(false); });
+  window.addEventListener('online', () => { if (user) pullAll(false); });
+})();
+
+</script>
+
 <main class="land">
 <div class="lhead"><div class="eyebrow">NEWGIZA UNIVERSITY · Fall 2026</div><h1>Mariam's study room</h1><p class="lead">Choose a subject.</p></div>
 <div class="cards">
 <a class="scard" href="theory.html"><span class="code">CSAI 335</span><span class="nm">Theory of Computing</span><span class="ds">Lectures 1–12 explained step by step, machines you build and check, past midterms, quizzes.</span><span class="go">Open →</span></a>
-<a class="scard" href="os.html"><span class="code">CSAI 350</span><span class="nm">Operating Systems</span><span class="ds">Questions on Lectures 1–6: MCQ, True/False, complete, define, differentiate, scheduling problems, and 4 quizzes.</span><span class="go">Open →</span></a>
+<a class="scard" href="os.html"><span class="code">CSAI 350</span><span class="nm">Operating Systems</span><span class="ds">Questions on Lectures 1–6: MCQ, True/False, complete, define, differentiate, diagrams, scheduling problems, 4 quizzes and a full mock midterm.</span><span class="go">Open →</span></a>
 </div></main>
 </body>
 </html>
