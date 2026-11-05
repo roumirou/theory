@@ -394,11 +394,19 @@ svg.dgm{display:block;width:100%;max-width:640px;height:auto;color:var(--ink)}
 .sbtn.on{color:var(--good)} .sbtn.err{color:var(--bad)}
 .smenu{position:absolute;right:0;bottom:52px;width:min(320px,calc(100vw - 28px));background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:12px;box-shadow:0 10px 30px rgba(0,0,0,.18);display:flex;flex-direction:column;gap:8px}
 .smrow{font-size:14px}.smrow.small{font-size:13px;color:var(--muted)}
-.snotes{position:fixed;right:14px;bottom:calc(66px + env(safe-area-inset-bottom,0px));z-index:61;width:min(420px,calc(100vw - 28px));max-height:min(75vh,640px);overflow:auto;background:var(--paper);border:1px solid var(--line);border-top:5px solid var(--accent);border-radius:10px;padding:12px 14px;box-shadow:0 14px 40px rgba(0,0,0,.22);display:flex;flex-direction:column;gap:8px}
+.snotes{position:fixed;z-index:61;background:var(--paper);border:1px solid var(--line);border-top:5px solid var(--accent);border-radius:10px;box-shadow:0 14px 40px rgba(0,0,0,.25);display:flex;flex-direction:column;overflow:hidden}
 .snotes[hidden]{display:none}
-.snh{display:flex;align-items:center;justify-content:space-between;font-size:17px;color:var(--accent)}
-.sx{border:0;background:none;font-size:22px;line-height:1;cursor:pointer;color:var(--muted);padding:2px 6px}.sx.small{font-size:15px}
-.snotes .ta{min-height:180px;font-size:16px}
+.snh{display:flex;align-items:center;gap:8px;padding:8px 10px;font-size:17px;color:var(--accent);cursor:move;touch-action:none;user-select:none;-webkit-user-select:none;background:var(--accent-soft)}
+.sgrip{font-size:18px;color:var(--muted)}.snsp{flex:1}
+.sx{border:0;background:none;font-size:20px;line-height:1;cursor:pointer;color:var(--muted);padding:2px 6px}.sx.small{font-size:15px}
+.sntabs{padding:8px 10px 0}
+.snb{flex:1;min-height:0;display:flex;flex-direction:column;gap:8px;padding:8px 12px 14px;overflow:auto}
+.snta{flex:1;min-height:120px;font-size:16px;resize:none}
+.spadwrap{flex:1;min-height:160px;display:flex;flex-direction:column;gap:6px}
+.spadbar{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.spad{flex:1;width:100%;min-height:140px;border:1px dashed var(--line);border-radius:8px;background:repeating-linear-gradient(transparent 0 27px,var(--line) 27px 28px);touch-action:pan-y}
+.spad.finger{touch-action:none}
+.sresize{position:absolute;right:0;bottom:0;width:26px;height:26px;cursor:nwse-resize;touch-action:none;background:linear-gradient(135deg,transparent 0 55%,var(--muted) 55% 60%,transparent 60% 70%,var(--muted) 70% 75%,transparent 75%)}
 .sng{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);font-weight:700;margin-top:8px}
 .sni{border:1px solid var(--line);border-radius:8px;padding:8px 10px}
 .snl{display:flex;justify-content:space-between;gap:8px;align-items:center}.snt{font-weight:700;color:var(--accent)}
@@ -468,45 +476,115 @@ svg.dgm{display:block;width:100%;max-width:640px;height:auto;color:var(--ink)}
   const notesSet = o => { try { LS.setItem(NOTES, JSON.stringify(o)); } catch (e) {} };
   const pageId = () => (CFG.subject || 'home') + '|' + (location.hash || '#');
   const pageTitle = () => { const sec = document.querySelector('section.ch:not([hidden]) h1, main h1, .lhead h1'); const s = document.querySelector('.ch-head .eyebrow'); return ((s ? s.textContent + ' · ' : '') + (sec ? sec.textContent : document.title)).trim().slice(0, 120); };
+  /* the notes window: floats above the page, can be dragged by its title bar, resized from the corner, and expanded */
   const panel = el('div', { class: 'snotes', hidden: true, role: 'dialog', 'aria-label': 'My notes' });
+  const POSK = 'study-notes-pos';
+  const isPhone = () => window.innerWidth < 640;
+  let geo = null; try { geo = JSON.parse(raw(POSK, 'null')); } catch (e) { geo = null; }
+  let big = false;
+  function place() {
+    const vw = window.innerWidth, vh = window.innerHeight;
+    if (big) { Object.assign(panel.style, { left: '8px', top: '8px', width: (vw - 16) + 'px', height: (vh - 16) + 'px' }); return; }
+    let g = geo || (isPhone() ? { x: 8, y: Math.round(vh * 0.3), w: vw - 16, h: Math.round(vh * 0.62) } : { x: vw - 460, y: vh - 600, w: 440, h: 520 });
+    g.w = Math.max(260, Math.min(g.w, vw - 16)); g.h = Math.max(220, Math.min(g.h, vh - 16));
+    g.x = Math.max(8, Math.min(g.x, vw - g.w - 8)); g.y = Math.max(8, Math.min(g.y, vh - g.h - 8));
+    Object.assign(panel.style, { left: g.x + 'px', top: g.y + 'px', width: g.w + 'px', height: g.h + 'px' });
+  }
+  const saveGeo = () => { const r = panel.getBoundingClientRect(); geo = { x: Math.round(r.left), y: Math.round(r.top), w: Math.round(r.width), h: Math.round(r.height) }; try { set0.call(LS, POSK, JSON.stringify(geo)); } catch (e) {} };
+  function dragger(handle, onMove) {
+    handle.addEventListener('pointerdown', e => {
+      if (e.target.closest('button,textarea,input,a')) return;
+      e.preventDefault(); handle.setPointerCapture(e.pointerId);
+      const r = panel.getBoundingClientRect(), sx = e.clientX, sy = e.clientY;
+      const mv = ev => onMove(r, ev.clientX - sx, ev.clientY - sy);
+      const up = () => { handle.removeEventListener('pointermove', mv); handle.removeEventListener('pointerup', up); handle.removeEventListener('pointercancel', up); saveGeo(); if (tab === 'draw' && pad) pad.size(); };
+      handle.addEventListener('pointermove', mv); handle.addEventListener('pointerup', up); handle.addEventListener('pointercancel', up);
+    });
+  }
+  window.addEventListener('resize', () => { if (!panel.hidden) { place(); if (pad) pad.size(); } });
   document.addEventListener('DOMContentLoaded', () => { document.body.append(dock, panel); label(); });
   if (document.body) { document.body.append(dock, panel); }
-  let tab = 'page';
-  function openNotes() { panel.hidden = false; renderNotes(); }
+  let tab = 'page', pad = null;
+  function openNotes() { panel.hidden = false; place(); renderNotes(); }
   bNotes.onclick = () => { if (!panel.hidden) { panel.hidden = true; return; } openNotes(); };
+
+  /* a scratch sheet for the pencil (kept on this device) */
+  function Pad(host, key) {
+    const bar = el('div', { class: 'spadbar' });
+    const cv = el('canvas', { class: 'spad' });
+    const fin = el('input', { type: 'checkbox' });
+    let strokes = []; try { strokes = JSON.parse(raw(key, '[]')) || []; } catch (e) { strokes = []; }
+    let mode = 'pen', cur = null, color = 'ink';
+    const mk = (t, f, sel) => { const b = el('button', { class: 'chip' + (sel ? ' sel' : ''), type: 'button' }, t); b.onclick = () => { f(b); }; return b; };
+    const pick = (b, m) => { mode = m; [...bar.querySelectorAll('.chip.tool')].forEach(x => x.classList.remove('sel')); b.classList.add('sel'); };
+    const bPen = mk('✎ Pen', b => pick(b, 'pen'), true); bPen.classList.add('tool');
+    const bRed = mk('Red', b => { pick(b, 'pen'); color = color === 'red' ? 'ink' : 'red'; b.textContent = color === 'red' ? 'Red ✓' : 'Red'; }); bRed.classList.add('tool');
+    const bEr = mk('⌫ Eraser', b => pick(b, 'er')); bEr.classList.add('tool');
+    const bUndo = mk('↶ Undo', () => { strokes.pop(); store(); redraw(); });
+    const bClr = mk('Clear', () => { if (!strokes.length || confirm('Clear the whole sheet?')) { strokes = []; store(); redraw(); } });
+    bar.append(bPen, bRed, bEr, bUndo, bClr, el('label', { class: 'small muted', style: 'display:flex;gap:4px;align-items:center' }, fin, 'finger'));
+    host.append(bar, cv);
+    const ctx = cv.getContext('2d');
+    const store = () => { try { set0.call(LS, key, JSON.stringify(strokes)); } catch (e) {} };
+    const ink = () => getComputedStyle(document.body).color || '#111';
+    function line(s) { if (!s.p.length) return; ctx.save(); ctx.globalCompositeOperation = s.e ? 'destination-out' : 'source-over'; ctx.strokeStyle = s.c === 'red' ? '#C0392B' : ink(); ctx.lineCap = ctx.lineJoin = 'round';
+      for (let i = 1; i < s.p.length; i++) { const a = s.p[i - 1], b = s.p[i]; ctx.lineWidth = s.e ? 20 : 1.2 + 2.4 * (b[2] || .5); ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke(); }
+      if (s.p.length === 1 && !s.e) { ctx.beginPath(); ctx.arc(s.p[0][0], s.p[0][1], 1.5, 0, 7); ctx.fillStyle = ctx.strokeStyle; ctx.fill(); } ctx.restore(); }
+    function redraw() { ctx.clearRect(0, 0, cv.width, cv.height); strokes.forEach(line); }
+    function size() { const r = cv.getBoundingClientRect(); const d = window.devicePixelRatio || 1; if (!r.width) return; cv.width = r.width * d; cv.height = r.height * d; ctx.setTransform(d, 0, 0, d, 0, 0); redraw(); }
+    const ok = e => e.pointerType === 'pen' || e.pointerType === 'mouse' || fin.checked;
+    const pos = e => { const r = cv.getBoundingClientRect(); return [Math.round(e.clientX - r.left), Math.round(e.clientY - r.top), e.pressure || .5]; };
+    cv.addEventListener('pointerdown', e => { if (!ok(e)) return; e.preventDefault(); cv.setPointerCapture(e.pointerId); cur = { e: mode === 'er', c: color, p: [pos(e)] }; strokes.push(cur); line(cur); });
+    cv.addEventListener('pointermove', e => { if (!cur) return; e.preventDefault(); (e.getCoalescedEvents ? e.getCoalescedEvents() : [e]).forEach(v => cur.p.push(pos(v))); redraw(); });
+    const end = () => { if (cur) { cur = null; store(); } };
+    cv.addEventListener('pointerup', end); cv.addEventListener('pointercancel', end);
+    ['touchstart', 'touchmove'].forEach(t => cv.addEventListener(t, e => { const x = e.touches[0]; if ((x && x.touchType === 'stylus') || fin.checked) e.preventDefault(); }, { passive: false }));
+    fin.onchange = () => cv.classList.toggle('finger', fin.checked);
+    setTimeout(size, 30);
+    return { size };
+  }
+
   function renderNotes() {
-    panel.innerHTML = '';
+    panel.innerHTML = ''; pad = null;
     const all = notesGet(); const id = pageId();
-    const head = el('div', { class: 'snh' }, el('b', {}, 'My notes'), el('button', { class: 'sx', type: 'button', 'aria-label': 'Close', onclick: () => panel.hidden = true }, '×'));
-    const tabs = el('div', { class: 'chips' }, el('button', { class: 'chip' + (tab === 'page' ? ' sel' : ''), type: 'button', onclick: () => { tab = 'page'; renderNotes(); } }, 'This page'), el('button', { class: 'chip' + (tab === 'all' ? ' sel' : ''), type: 'button', onclick: () => { tab = 'all'; renderNotes(); } }, `All notes (${Object.values(all).filter(n => n.text && n.text.trim()).length})`));
-    panel.append(head, tabs);
+    const bBig = el('button', { class: 'sx', type: 'button', title: big ? 'Make it smaller' : 'Full screen', 'aria-label': 'Toggle full screen' }, big ? '🗗' : '⛶');
+    bBig.onclick = () => { big = !big; place(); renderNotes(); };
+    const head = el('div', { class: 'snh' }, el('span', { class: 'sgrip', 'aria-hidden': 'true' }, '⠿'), el('b', {}, 'My notes'), el('span', { class: 'snsp' }), bBig, el('button', { class: 'sx', type: 'button', 'aria-label': 'Close', onclick: () => panel.hidden = true }, '×'));
+    if (!big) dragger(head, (r, dx, dy) => { const vw = window.innerWidth, vh = window.innerHeight; panel.style.left = Math.max(0, Math.min(r.left + dx, vw - 60)) + 'px'; panel.style.top = Math.max(0, Math.min(r.top + dy, vh - 50)) + 'px'; });
+    const cnt = Object.values(all).filter(n => n.text && n.text.trim()).length;
+    const T = (k, t) => el('button', { class: 'chip' + (tab === k ? ' sel' : ''), type: 'button', onclick: () => { tab = k; renderNotes(); } }, t);
+    const body = el('div', { class: 'snb' });
+    panel.append(head, el('div', { class: 'chips sntabs' }, T('page', '✎ Write'), T('draw', '✍ Draw / solve'), T('all', `All notes (${cnt})`)), body);
+    if (!big) { const grip = el('div', { class: 'sresize', title: 'Drag to resize', 'aria-hidden': 'true' }); panel.append(grip); dragger(grip, (r, dx, dy) => { panel.style.width = Math.max(260, Math.min(r.width + dx, window.innerWidth - r.left - 4)) + 'px'; panel.style.height = Math.max(220, Math.min(r.height + dy, window.innerHeight - r.top - 4)) + 'px'; }); }
     if (tab === 'page') {
-      const n = all[id] || { subj: CFG.subject || 'home', hash: location.hash || '', title: pageTitle(), text: '' };
-      panel.append(el('div', { class: 'small muted' }, n.title || pageTitle()));
-      const ta = el('textarea', { class: 'ta', rows: 10, placeholder: 'Write anything here: a rule to remember, a trick, a question to ask the doctor… It saves by itself.' }); ta.value = n.text || '';
+      const n = all[id] || { text: '' };
+      body.append(el('div', { class: 'small muted' }, pageTitle()));
+      const ta = el('textarea', { class: 'ta snta', placeholder: 'Write anything: a rule, a trick, your own solution, a question for the doctor… It saves by itself.' }); ta.value = n.text || '';
       const saved = el('span', { class: 'small muted' });
       const save = () => { const o = notesGet(); o[id] = { subj: CFG.subject || 'home', hash: location.hash || '', title: pageTitle(), text: ta.value, ts: Date.now() }; if (!ta.value.trim()) delete o[id]; notesSet(o); saved.textContent = 'Saved'; };
       let t0 = null; ta.oninput = () => { saved.textContent = '…'; clearTimeout(t0); t0 = setTimeout(save, 400); };
       const bQuote = el('button', { class: 'btn ghost', type: 'button', onclick: () => { if (!selText) { saved.textContent = 'First select some text on the page, then open Notes.'; return; } ta.value += (ta.value && !ta.value.endsWith('\n') ? '\n' : '') + '“' + selText + '”\n'; selText = ''; save(); ta.focus(); } }, '+ Add the text I selected');
-      panel.append(ta, el('div', { class: 'ctl' }, bQuote, saved));
-      setTimeout(() => ta.focus(), 50);
+      body.append(ta, el('div', { class: 'ctl' }, bQuote, saved));
+    } else if (tab === 'draw') {
+      body.append(el('div', { class: 'small muted' }, 'Scratch paper for this page. Solve with the pencil; it stays on this device. Use ⛶ for a bigger sheet.'));
+      const box = el('div', { class: 'spadwrap' }); body.append(box); pad = Pad(box, 'study-scratch|' + id);
     } else {
       const list = Object.entries(all).filter(([, n]) => n.text && n.text.trim()).sort((a, b) => (b[1].ts || 0) - (a[1].ts || 0));
-      if (!list.length) panel.append(el('p', { class: 'small muted' }, 'No notes yet. Open "This page" on any page and write.'));
+      if (!list.length) body.append(el('p', { class: 'small muted' }, 'No notes yet. Open "Write" on any page.'));
       const groups = {}; list.forEach(([k, n]) => (groups[n.subj] = groups[n.subj] || []).push([k, n]));
       Object.entries(groups).forEach(([s, arr]) => {
-        panel.append(el('div', { class: 'sng' }, SUBJ_NAME[s] || s));
+        body.append(el('div', { class: 'sng' }, SUBJ_NAME[s] || s));
         arr.forEach(([k, n]) => {
-          const href = (s === CFG.subject ? '' : (PAGES[s] || './')) + (n.hash || '');
+          const href = (s === (CFG.subject || 'home') ? '' : (PAGES[s] || './')) + (n.hash || '');
           const go = el('a', { href: href || '#', class: 'snt' }, n.title || 'Note');
-          go.onclick = () => { if (s === CFG.subject) { setTimeout(() => { tab = 'page'; renderNotes(); }, 60); } };
+          go.onclick = () => { if (s === (CFG.subject || 'home')) setTimeout(() => { tab = 'page'; renderNotes(); }, 60); };
           const del = el('button', { class: 'sx small', type: 'button', 'aria-label': 'Delete note', title: 'Delete', onclick: () => { if (!confirm('Delete this note?')) return; const o = notesGet(); delete o[k]; notesSet(o); renderNotes(); } }, '🗑');
-          panel.append(el('div', { class: 'sni' }, el('div', { class: 'snl' }, go, del), el('div', { class: 'snx' }, n.text.length > 220 ? n.text.slice(0, 220) + '…' : n.text), el('div', { class: 'small muted' }, n.ts ? new Date(n.ts).toLocaleString() : '')));
+          body.append(el('div', { class: 'sni' }, el('div', { class: 'snl' }, go, del), el('div', { class: 'snx' }, n.text.length > 220 ? n.text.slice(0, 220) + '…' : n.text), el('div', { class: 'small muted' }, n.ts ? new Date(n.ts).toLocaleString() : '')));
         });
       });
     }
   }
-  window.addEventListener('hashchange', () => { if (!panel.hidden && tab === 'page') setTimeout(renderNotes, 80); });
+  window.addEventListener('hashchange', () => { if (!panel.hidden && tab !== 'all') setTimeout(renderNotes, 80); });
 
   /* ---------- Firebase ---------- */
   if (!CAN_SYNC) { label(); return; }
@@ -722,14 +800,16 @@ function Item(host, it, num, mode, onScore) {
   card.append(head); host.append(card);
   let got = null; const fb = h('div', { class: 'fb', hidden: true });
   const show = (ok, html) => { fb.hidden = false; fb.className = 'fb ' + (ok ? 'ok' : 'no'); fb.innerHTML = html; };
-  const result = (g, autoOk) => { got = g; if (typeof autoOk === 'boolean') prog(id, autoOk); if (mode === 'practice') { if (autoOk === true) noteRight(id); else if (autoOk === false) noteMistake(id); } if (onScore) onScore(); };
+  let silent = false;
+  const result = (g, autoOk) => { got = g; if (silent) { if (onScore) onScore(); return; } if (typeof autoOk === 'boolean') prog(id, autoOk); if (mode === 'practice') { if (autoOk === true) noteRight(id); else if (autoOk === false) noteMistake(id); } if (onScore) onScore(); };
   const api = { max, get got() { return got; }, grade: () => {}, card };
 
   if (it.t === 'mc' || it.t === 'tf') {
     const opts = it.t === 'tf' ? ['True', 'False'] : it.opts; const correct = it.t === 'tf' ? (it.a ? 0 : 1) : it.a;
     card.append(h('div', { class: 'oqt', html: it.t === 'tf' ? `${it.q}` : it.q }));
     const row = h('div', { class: 'opts' }); let picked = null;
-    const btns = opts.map((o, oi) => { const b = h('button', { class: 'opt', type: 'button', html: (it.t === 'mc' ? `<b>${'ABCDEF'[oi]}.</b> ` : '') + o }); b.onclick = () => { if (card.dataset.done) return; picked = oi; btns.forEach(x => x.classList.remove('picked')); b.classList.add('picked'); if (mode === 'practice') api.grade(); }; row.append(b); return b; });
+    const btns = opts.map((o, oi) => { const b = h('button', { class: 'opt', type: 'button', html: (it.t === 'mc' ? `<b>${'ABCDEF'[oi]}.</b> ` : '') + o }); b.onclick = () => { if (card.dataset.done) return; picked = oi; store.set(`${id}-pick`, oi); btns.forEach(x => x.classList.remove('picked')); b.classList.add('picked'); if (mode === 'practice') api.grade(); }; row.append(b); return b; });
+    { const pk = store.get(`${id}-pick`, null); if (pk != null && btns[pk]) { picked = pk; btns[pk].classList.add('picked'); } }
     card.append(row, fb);
     api.grade = () => {
       if (card.dataset.done) return; card.dataset.done = 1;
@@ -816,7 +896,7 @@ function Item(host, it, num, mode, onScore) {
       const upd = () => { store.set(gk, gbox.checked); got = (a ? 2 : 0) + (c ? 2 : 0) + (gbox.checked ? 2 : 0); if (onScore) onScore(); };
       gbox.onchange = upd;
       show(a && c, `<b>${a && c ? 'Both averages are correct.' : 'Check the model below.'}</b> Average waiting = <b>${fmt(r.awt)}</b>, average turnaround = <b>${fmt(r.atat)}</b>.`);
-      prog(id, a && c); if (mode === 'practice') { if (a && c) noteRight(id); else noteMistake(id); }
+      if (!silent) { prog(id, a && c); if (mode === 'practice') { if (a && c) noteRight(id); else noteMistake(id); } }
       upd();
     };
     b.onclick = () => api.grade();
@@ -849,10 +929,14 @@ function Item(host, it, num, mode, onScore) {
         else { noteMistake(id); saved.textContent = 'Saved. Not full marks, so it is in your Mistakes notebook to redo.'; } };
       upd();
     };
-    reveal.onclick = () => { if (!sheet.hidden && sheet.dataset.ready) { sheet.hidden = true; reveal.textContent = 'I wrote it. Show the model answer'; return; } build(); reveal.textContent = 'Hide the model answer'; };
+    reveal.onclick = () => { if (!sheet.hidden && sheet.dataset.ready) { sheet.hidden = true; reveal.textContent = 'I wrote it. Show the model answer'; store.set(`${id}-chk`, 0); return; } build(); reveal.textContent = 'Hide the model answer'; store.set(`${id}-chk`, 1); };
     api.selfMarked = true;
-    api.grade = () => build();
+    api.grade = () => { build(); reveal.textContent = 'Hide the model answer'; };
   }
+  // remember that this question was checked, and show it again (answer + feedback) next time the page opens
+  const g0 = api.grade;
+  api.grade = quiet => { silent = !!quiet; try { g0(); } finally { silent = false; } if (!quiet && it.t !== 'write' && it.t !== 'diff') store.set(`${id}-chk`, 1); };
+  if (mode === 'practice' && id && !String(id).startsWith('lab-') && store.get(`${id}-chk`, 0)) api.grade(true);
   return api;
 }
 
@@ -897,13 +981,14 @@ function Paper(host, paper) {
   });
   const fin = h('button', { class: 'btn primary big', type: 'button' }, 'Finish and mark my paper');
   const res = h('div');
-  fin.onclick = () => { all.forEach(a => a.grade()); clearInterval(iv); fin.disabled = true; fin.textContent = 'Marked'; upd();
+  fin.onclick = () => { store.set(paper.id + '-finished', true); all.forEach(a => a.grade()); clearInterval(iv); fin.disabled = true; fin.textContent = 'Marked'; upd();
     all.forEach(a => { if (!a.selfMarked && a.got != null && a.got < a.max) noteMistake(a.card.dataset.id); });
     res.innerHTML = ''; res.append(h('div', { class: 'banner ok' }, 'Marked. Scroll up: green = right, red = wrong, with the correct answer under each question. Tick the rubric points for the written questions to complete your score.'));
     window.scrollTo({ top: host.offsetTop, behavior: 'smooth' }); };
   const again = h('button', { class: 'btn ghost', type: 'button' }, 'Clear my answers and start over');
   again.onclick = () => { Object.keys(localStorage).filter(k => k.startsWith('os-' + paper.id + '-')).forEach(k => localStorage.removeItem(k)); store.set(tk, null); host.innerHTML = ''; Paper(host, paper); };
   host.append(h('div', { class: 'ctl' }, fin, again), res); upd();
+  if (store.get(paper.id + '-finished', false)) { all.forEach(a => a.grade(true)); fin.disabled = true; fin.textContent = 'Marked'; clearInterval(iv); upd(); res.append(h('div', { class: 'banner ok' }, 'You already finished this paper. Your answers and marks are shown. Press "Clear my answers and start over" to take it again.')); }
 }
 
 /* ================= scheduling lab ================= */
@@ -968,6 +1053,9 @@ function bootOS() {
       sec.append(h('div', { class: 'box' }, h('div', { class: 'bt' }, 'Typing tips'), h('p', { class: 'small', html: 'Blanks accept the usual spellings (e.g. "ROM" or "EPROM"). Capital letters and spaces do not matter.' })));
     } else if (L) {
       sec.append(headEl(`Lecture ${L.ln.slice(1)} · CSAI 350 Operating Systems`, L.name, `${L.items.length} questions. Covers: ${L.covers}.`));
+      const bReset = h('button', { class: 'btn ghost', type: 'button' }, 'Clear my answers on this lecture and start again');
+      bReset.onclick = () => { if (!confirm('Clear all your answers on this lecture? (Your progress numbers and Mistakes notebook stay.)')) return; const ids = new Set(L.items.map(x => 'os-' + x.id + '-')); Object.keys(localStorage).filter(k => [...ids].some(p => k.startsWith(p)) && !/-pen$/.test(k)).forEach(k => localStorage.removeItem(k)); render(id); };
+      sec.append(h('div', { class: 'ctl' }, bReset, h('span', { class: 'small muted' }, 'Your answers stay here when you leave and come back.')));
       Practice(sec, L.items);
     } else if (id === 'all') {
       sec.append(headEl('All lectures together', 'Mixed review', 'Questions that connect several lectures, then a random shuffle of everything.'));
