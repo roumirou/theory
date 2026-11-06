@@ -426,8 +426,8 @@ svg.dgm{display:block;width:100%;max-width:640px;height:auto;color:var(--ink)}
   const CAN_SYNC = /(^|\.)github\.io$/.test(location.hostname) || location.hostname === 'localhost' || window.SYNC_FORCE;
   const SDK = window.SYNC_SDK || 'https://cdn.jsdelivr.net/npm/firebase@10.12.2/';
   const NOTES = 'study-notes';
-  const PAGES = { toc: 'theory.html', os: 'os.html' };
-  const SUBJ_NAME = { toc: 'Theory of Computing', os: 'Operating Systems', home: 'Front page' };
+  const PAGES = { toc: 'theory.html', os: 'os.html', ml: 'ml.html' };
+  const SUBJ_NAME = { toc: 'Theory of Computing', os: 'Operating Systems', ml: 'Machine Learning', home: 'Front page' };
   const LS = window.localStorage;
   const set0 = Storage.prototype.setItem, rem0 = Storage.prototype.removeItem;
   const raw = (k, d) => { try { const v = LS.getItem(k); return v == null ? d : v; } catch (e) { return d; } };
@@ -680,12 +680,14 @@ function h(tag, attrs = {}, ...kids) {
   return e;
 }
 const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const SP = window.STORE_PREFIX || 'os-';
 const store = {
-  get(k, d) { try { const v = localStorage.getItem('os-' + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
-  set(k, v) { try { localStorage.setItem('os-' + k, JSON.stringify(v)); } catch (e) {} }
+  get(k, d) { try { const v = localStorage.getItem(SP + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(SP + k, JSON.stringify(v)); } catch (e) {} }
 };
 const shuffle = (a, seed) => { const r = a.slice(); let s = seed || Math.random() * 1e9 | 0; const rnd = () => (s = (s * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff; for (let i = r.length - 1; i > 0; i--) { const j = Math.floor((seed ? rnd() : Math.random()) * (i + 1)); [r[i], r[j]] = [r[j], r[i]]; } return r; };
-const norm = t => String(t).toLowerCase().replace(/[^a-z0-9]+/g, '');
+const GREEK = { 'λ': 'lambda', 'σ': 'sigma', 'η': 'eta', 'α': 'alpha', 'β': 'beta', 'ε': 'epsilon', 'θ': 'theta', 'μ': 'mu' };
+const norm = t => String(t).normalize('NFKD').toLowerCase().replace(/[λσηαβεθμ]/g, c => GREEK[c]).replace(/[^a-z0-9]+/g, '');
 
 /* ---------- item constructors (used by os_data.js) ---------- */
 const M = (q, opts, a, why) => ({ t: 'mc', q, opts, a, why });
@@ -858,7 +860,7 @@ function Item(host, it, num, mode, onScore) {
     it.pairs.forEach((p, i) => { const k = `${id}-m${i}`; const sel = h('select', { class: 'sel', 'aria-label': p[0] }, h('option', { value: '' }, '–'), ...right.map((r, j) => h('option', { value: String(r.i) }, letters[j]))); sel.value = store.get(k, ''); sel.onchange = () => store.set(k, sel.value); sels.push(sel); tb.append(h('tr', {}, h('td', { html: `<b>${i + 1}.</b> ${p[0]}` }), h('td', {}, sel), h('td', { html: `<b>${letters[i]}.</b> ${right[i].d}` }))); });
     const b = h('button', { class: 'btn primary', type: 'button' }, 'Check');
     card.append(h('div', { class: 'tblwrap' }, tb), mode === 'practice' ? h('div', { class: 'ctl' }, b) : null, fb);
-    api.grade = () => { let ok = 0; sels.forEach((s, i) => { const good = s.value === String(i); s.classList.toggle('good', good); s.classList.toggle('bad', !good); if (good) ok++; }); const g = Math.round(max * ok / sels.length * 2) / 2; show(ok === sels.length, `<b>${ok} of ${sels.length} right.</b> ${it.pairs.map((p, i) => `${i + 1} → ${letters[right.findIndex(r => r.i === i)]}`).join(' · ')}`); result(g, ok === sels.length); };
+    api.grade = () => { let ok = 0; sels.forEach((s, i) => { const good = s.value !== '' && it.pairs[+s.value][1] === it.pairs[i][1]; s.classList.toggle('good', good); s.classList.toggle('bad', !good); if (good) ok++; }); const g = Math.round(max * ok / sels.length * 2) / 2; show(ok === sels.length, `<b>${ok} of ${sels.length} right.</b> ${it.pairs.map((p, i) => `${i + 1} → ${letters[right.findIndex(r => r.i === i)]}`).join(' · ')}`); result(g, ok === sels.length); };
     b.onclick = () => api.grade();
   }
   else if (it.t === 'order') {
@@ -986,7 +988,7 @@ function Paper(host, paper) {
     res.innerHTML = ''; res.append(h('div', { class: 'banner ok' }, 'Marked. Scroll up: green = right, red = wrong, with the correct answer under each question. Tick the rubric points for the written questions to complete your score.'));
     window.scrollTo({ top: host.offsetTop, behavior: 'smooth' }); };
   const again = h('button', { class: 'btn ghost', type: 'button' }, 'Clear my answers and start over');
-  again.onclick = () => { Object.keys(localStorage).filter(k => k.startsWith('os-' + paper.id + '-')).forEach(k => localStorage.removeItem(k)); store.set(tk, null); host.innerHTML = ''; Paper(host, paper); };
+  again.onclick = () => { Object.keys(localStorage).filter(k => k.startsWith(SP + paper.id + '-')).forEach(k => localStorage.removeItem(k)); store.set(tk, null); host.innerHTML = ''; Paper(host, paper); };
   host.append(h('div', { class: 'ctl' }, fin, again), res); upd();
   if (store.get(paper.id + '-finished', false)) { all.forEach(a => a.grade(true)); fin.disabled = true; fin.textContent = 'Marked'; clearInterval(iv); upd(); res.append(h('div', { class: 'banner ok' }, 'You already finished this paper. Your answers and marks are shown. Press "Clear my answers and start over" to take it again.')); }
 }
@@ -1054,7 +1056,7 @@ function bootOS() {
     } else if (L) {
       sec.append(headEl(`Lecture ${L.ln.slice(1)} · CSAI 350 Operating Systems`, L.name, `${L.items.length} questions. Covers: ${L.covers}.`));
       const bReset = h('button', { class: 'btn ghost', type: 'button' }, 'Clear my answers on this lecture and start again');
-      bReset.onclick = () => { if (!confirm('Clear all your answers on this lecture? (Your progress numbers and Mistakes notebook stay.)')) return; const ids = new Set(L.items.map(x => 'os-' + x.id + '-')); Object.keys(localStorage).filter(k => [...ids].some(p => k.startsWith(p)) && !/-pen$/.test(k)).forEach(k => localStorage.removeItem(k)); render(id); };
+      bReset.onclick = () => { if (!confirm('Clear all your answers on this lecture? (Your progress numbers and Mistakes notebook stay.)')) return; const ids = new Set(L.items.map(x => SP + x.id + '-')); Object.keys(localStorage).filter(k => [...ids].some(p => k.startsWith(p)) && !/-pen$/.test(k)).forEach(k => localStorage.removeItem(k)); render(id); };
       sec.append(h('div', { class: 'ctl' }, bReset, h('span', { class: 'small muted' }, 'Your answers stay here when you leave and come back.')));
       Practice(sec, L.items);
     } else if (id === 'all') {

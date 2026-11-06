@@ -349,6 +349,7 @@ h2::after{content:"NEWGIZA UNIVERSITY";position:absolute;right:0;bottom:12px;fon
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin-top:22px}
 .scard{display:flex;flex-direction:column;gap:8px;padding:22px;border:1px solid var(--line);border-top:6px solid var(--ngu);border-radius:6px;background:var(--paper);color:var(--ink);text-decoration:none;transition:transform .15s,box-shadow .15s}
 .scard:nth-child(2){border-top-color:var(--ngu-green)}
+.scard:nth-child(3){border-top-color:var(--ngu-cream)}
 .scard:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.08)}
 .scard .code{font-size:12px;letter-spacing:.3em;color:var(--accent);font-weight:700}
 .scard .nm{font-size:26px;font-weight:700;color:var(--accent)}
@@ -396,8 +397,8 @@ h2::after{content:"NEWGIZA UNIVERSITY";position:absolute;right:0;bottom:12px;fon
   const CAN_SYNC = /(^|\.)github\.io$/.test(location.hostname) || location.hostname === 'localhost' || window.SYNC_FORCE;
   const SDK = window.SYNC_SDK || 'https://cdn.jsdelivr.net/npm/firebase@10.12.2/';
   const NOTES = 'study-notes';
-  const PAGES = { toc: 'theory.html', os: 'os.html' };
-  const SUBJ_NAME = { toc: 'Theory of Computing', os: 'Operating Systems', home: 'Front page' };
+  const PAGES = { toc: 'theory.html', os: 'os.html', ml: 'ml.html' };
+  const SUBJ_NAME = { toc: 'Theory of Computing', os: 'Operating Systems', ml: 'Machine Learning', home: 'Front page' };
   const LS = window.localStorage;
   const set0 = Storage.prototype.setItem, rem0 = Storage.prototype.removeItem;
   const raw = (k, d) => { try { const v = LS.getItem(k); return v == null ? d : v; } catch (e) { return d; } };
@@ -630,6 +631,7 @@ h2::after{content:"NEWGIZA UNIVERSITY";position:absolute;right:0;bottom:12px;fon
 <div class="cards">
 <a class="scard" href="theory.html"><span class="code">CSAI 335</span><span class="nm">Theory of Computing</span><span class="ds">Lectures 1–12 explained step by step, machines you build and check, past midterms, quizzes.</span><span class="go">Open →</span></a>
 <a class="scard" href="os.html"><span class="code">CSAI 350</span><span class="nm">Operating Systems</span><span class="ds">Questions on Lectures 1–6: MCQ, True/False, complete, define, differentiate, diagrams, scheduling problems, 4 quizzes and a full mock midterm.</span><span class="go">Open →</span></a>
+<a class="scard" href="ml.html"><span class="code">CSAI 420</span><span class="nm">Machine Learning</span><span class="ds">Lectures 1–6 explained step by step with a "why?" on every line and interactive plots, then every type of question, model comparisons, unlimited calculation problems, 3 quizzes and a mock midterm.</span><span class="go">Open →</span></a>
 </div></main>
 </body>
 </html>
