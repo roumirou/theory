@@ -690,15 +690,16 @@ const GREEK = { 'λ': 'lambda', 'σ': 'sigma', 'η': 'eta', 'α': 'alpha', 'β':
 const norm = t => String(t).normalize('NFKD').toLowerCase().replace(/[λσηαβεθμ]/g, c => GREEK[c]).replace(/[^a-z0-9]+/g, '');
 
 /* ---------- item constructors (used by os_data.js) ---------- */
-const M = (q, opts, a, why) => ({ t: 'mc', q, opts, a, why });
-const T = (q, a, fix) => ({ t: 'tf', q, a, fix });
+const M = (q, opts, a, why, extra) => Object.assign({ t: 'mc', q, opts, a, why }, extra || {});
+const MS = (q, opts, a, why, extra) => Object.assign({ t: 'ms', q, opts, a, why }, extra || {});
+const T = (q, a, fix, extra) => Object.assign({ t: 'tf', q, a, fix }, extra || {});
 const C = (q, acc, why) => ({ t: 'fill', q, acc: Array.isArray(acc[0]) ? acc : [acc], why });
 const DEF = (term, model, points) => ({ t: 'write', kind: 'Define', q: `Define <b>${term}</b>.`, model, points });
-const W = (kind, q, model, points) => ({ t: 'write', kind, q, model, points });
+const W = (kind, q, model, points, extra) => Object.assign({ t: 'write', kind, q, model, points }, extra || {});
 const DIFF = (a, b, rows, extra) => ({ t: 'diff', kind: 'Differentiate', q: `Differentiate between <b>${a}</b> and <b>${b}</b>.`, a, b, rows, extra });
 const MATCH = (q, pairs) => ({ t: 'match', q, pairs });
 const ORD = (q, steps, why) => ({ t: 'order', q, steps, why });
-const NUM = (q, ans, model, unit) => ({ t: 'num', q, ans, model, unit });
+const NUM = (q, ans, model, unit, extra) => Object.assign({ t: 'num', q, ans, model, unit }, extra || {});
 const SCH = (alg, procs, opts = {}) => ({ t: 'sched', alg, procs, ...opts });
 const LABEL = (q, dg, acc, why) => ({ t: 'label', q, dg, acc, why });
 const WHATIF = (q, model, points) => ({ t: 'write', kind: 'What happens if', q, model, points });
@@ -725,7 +726,7 @@ function diagramSVG(dg) {
 /* ---------- marks ---------- */
 function marksOf(it) {
   if (it.marks != null) return it.marks;
-  return { mc: 1, tf: 1, fill: it.acc ? it.acc.length : 1, write: it.points ? it.points.length : 2, diff: it.rows ? Math.min(4, it.rows.length) : 3, match: Math.ceil((it.pairs || []).length / 2), order: 2, label: Math.ceil((it.acc || []).length / 2), num: 2, sched: 6 }[it.t] || 1;
+  return { mc: 1, ms: 1, tf: 1, fill: it.acc ? it.acc.length : 1, write: it.points ? it.points.length : 2, diff: it.rows ? Math.min(4, it.rows.length) : 3, match: Math.ceil((it.pairs || []).length / 2), order: 2, label: Math.ceil((it.acc || []).length / 2), num: 2, sched: 6 }[it.t] || 1;
 }
 
 /* ---------- mistakes ---------- */
@@ -798,7 +799,7 @@ function schedModel(it) {
 function Item(host, it, num, mode, onScore) {
   const id = it.id; const max = marksOf(it);
   const card = h('div', { class: 'oq' + (mode === 'exam' ? ' exam' : ''), 'data-id': id || '' });
-  const head = h('div', { class: 'oqh' }, h('span', { class: 'oqn' }, String(num)), it.kind ? h('span', { class: 'oqk' }, it.kind) : null, h('span', { class: 'oqm' }, `${max} mark${max === 1 ? '' : 's'}`));
+  const head = h('div', { class: 'oqh' }, h('span', { class: 'oqn' }, String(num)), it.kind ? h('span', { class: 'oqk' }, it.kind) : null, it.src ? h('span', { class: 'oqsrc' }, it.src) : null, h('span', { class: 'oqm' }, `${max} mark${max === 1 ? '' : 's'}`));
   card.append(head); host.append(card);
   let got = null; const fb = h('div', { class: 'fb', hidden: true });
   const show = (ok, html) => { fb.hidden = false; fb.className = 'fb ' + (ok ? 'ok' : 'no'); fb.innerHTML = html; };
@@ -821,6 +822,21 @@ function Item(host, it, num, mode, onScore) {
       result(ok ? max : 0, ok);
     };
   }
+  else if (it.t === 'ms') {
+    card.append(h('div', { class: 'oqt', html: it.q + ' <span class="small muted">(choose ALL the correct answers)</span>' }));
+    const row = h('div', { class: 'opts' }); let picked = new Set(store.get(`${id}-pick`, []) || []);
+    const btns = it.opts.map((o, oi) => { const b = h('button', { class: 'opt' + (picked.has(oi) ? ' picked' : ''), type: 'button', html: `<b>${'abcdef'[oi]}.</b> ` + o }); b.onclick = () => { if (card.dataset.done) return; picked.has(oi) ? picked.delete(oi) : picked.add(oi); b.classList.toggle('picked', picked.has(oi)); store.set(`${id}-pick`, [...picked]); }; row.append(b); return b; });
+    const b = h('button', { class: 'btn primary', type: 'button' }, 'Check');
+    card.append(row); if (mode === 'practice') card.append(h('div', { class: 'ctl' }, b)); card.append(fb);
+    api.grade = () => {
+      if (card.dataset.done) return; card.dataset.done = 1;
+      const A = new Set(it.a); btns.forEach((x, i) => { if (A.has(i)) x.classList.add('right'); else if (picked.has(i)) x.classList.add('wrong'); });
+      const ok = A.size === picked.size && [...A].every(i => picked.has(i));
+      show(ok, `<b>${ok ? 'Correct.' : picked.size ? 'Not quite.' : 'Not answered.'}</b> Answer: <b>${it.a.map(i => 'abcdef'[i]).join(', ')}</b>. ${it.why || ''}`);
+      result(ok ? max : 0, ok);
+    };
+    b.onclick = () => api.grade();
+  }
   else if (it.t === 'fill') {
     const parts = it.q.split('___'); const line = h('div', { class: 'oqt fillq' }); const ins = [];
     parts.forEach((p, i) => { line.append(h('span', { html: p })); if (i < parts.length - 1) { const k = `${id}-f${i}`; const inp = h('input', { class: 'txt blank', 'aria-label': 'blank ' + (i + 1), autocomplete: 'off', spellcheck: 'false' }); inp.value = store.get(k, ''); inp.oninput = () => store.set(k, inp.value); ins.push(inp); line.append(inp); } });
@@ -838,7 +854,7 @@ function Item(host, it, num, mode, onScore) {
     card.append(h('div', { class: 'oqt', html: it.q }), h('div', { class: 'dgwrap' }, diagramSVG(it.dg)));
     const grid = h('div', { class: 'lblgrid' }); const ins = it.acc.map((_, i) => { const k = `${id}-l${i}`; const inp = h('input', { class: 'txt', 'aria-label': 'label ' + (i + 1), autocomplete: 'off', spellcheck: 'false' }); inp.value = store.get(k, ''); inp.oninput = () => store.set(k, inp.value); grid.append(h('label', {}, h('span', { class: 'oqn' }, String(i + 1)), inp)); return inp; });
     const b = h('button', { class: 'btn primary', type: 'button' }, 'Check');
-    card.append(grid, mode === 'practice' ? h('div', { class: 'ctl' }, b) : null, fb);
+    card.append(grid, ...(mode === 'practice' ? [h('div', { class: 'ctl' }, b)] : []), fb);
     api.grade = () => { let ok = 0; ins.forEach((inp, i) => { const v = norm(inp.value); const good = !!v && it.acc[i].some(a => { const n = norm(a); return v === n || (n.length >= 4 && v.includes(n)); }); inp.classList.toggle('good', good); inp.classList.toggle('bad', !good); if (good) ok++; }); const all = ok === ins.length; show(all, `<b>${all ? 'All labels correct.' : `${ok} of ${ins.length} right.`}</b> ${it.acc.map((a, i) => `${i + 1} = <b>${a[0]}</b>`).join(' · ')}. ${it.why || ''}`); result(Math.round(max * ok / ins.length * 2) / 2, all); };
     b.onclick = () => api.grade();
   }
@@ -848,7 +864,7 @@ function Item(host, it, num, mode, onScore) {
     const b = h('button', { class: 'btn primary', type: 'button' }, 'Check');
     PenToggle(card, `${id}-pen`);
     card.append(h('div', { class: 'ctl' }, inp, it.unit ? h('span', { class: 'muted' }, it.unit) : null, mode === 'practice' ? b : null), fb);
-    api.grade = () => { const v = parseFloat(String(inp.value).replace(',', '.')); const ok = Math.abs(v - it.ans) < 0.011; inp.classList.toggle('good', ok); inp.classList.toggle('bad', !ok); show(ok, `<b>${ok ? 'Correct.' : 'Not quite.'}</b> Answer: <b>${fmt(it.ans)}</b>${it.unit ? ' ' + it.unit : ''}.<div class="model">${it.model || ''}</div>`); result(ok ? max : 0, ok); };
+    api.grade = () => { const v = parseFloat(String(inp.value).replace(',', '.')); const ok = Math.abs(v - it.ans) < (it.tol != null ? it.tol : 0.011); inp.classList.toggle('good', ok); inp.classList.toggle('bad', !ok); show(ok, `<b>${ok ? 'Correct.' : 'Not quite.'}</b> Answer: <b>${fmt(it.ans)}</b>${it.unit ? ' ' + it.unit : ''}.<div class="model">${it.model || ''}</div>`); result(ok ? max : 0, ok); };
     b.onclick = () => api.grade();
   }
   else if (it.t === 'match') {
@@ -859,7 +875,7 @@ function Item(host, it, num, mode, onScore) {
     const sels = [];
     it.pairs.forEach((p, i) => { const k = `${id}-m${i}`; const sel = h('select', { class: 'sel', 'aria-label': p[0] }, h('option', { value: '' }, '–'), ...right.map((r, j) => h('option', { value: String(r.i) }, letters[j]))); sel.value = store.get(k, ''); sel.onchange = () => store.set(k, sel.value); sels.push(sel); tb.append(h('tr', {}, h('td', { html: `<b>${i + 1}.</b> ${p[0]}` }), h('td', {}, sel), h('td', { html: `<b>${letters[i]}.</b> ${right[i].d}` }))); });
     const b = h('button', { class: 'btn primary', type: 'button' }, 'Check');
-    card.append(h('div', { class: 'tblwrap' }, tb), mode === 'practice' ? h('div', { class: 'ctl' }, b) : null, fb);
+    card.append(h('div', { class: 'tblwrap' }, tb), ...(mode === 'practice' ? [h('div', { class: 'ctl' }, b)] : []), fb);
     api.grade = () => { let ok = 0; sels.forEach((s, i) => { const good = s.value !== '' && it.pairs[+s.value][1] === it.pairs[i][1]; s.classList.toggle('good', good); s.classList.toggle('bad', !good); if (good) ok++; }); const g = Math.round(max * ok / sels.length * 2) / 2; show(ok === sels.length, `<b>${ok} of ${sels.length} right.</b> ${it.pairs.map((p, i) => `${i + 1} → ${letters[right.findIndex(r => r.i === i)]}`).join(' · ')}`); result(g, ok === sels.length); };
     b.onclick = () => api.grade();
   }
@@ -869,7 +885,7 @@ function Item(host, it, num, mode, onScore) {
     const sels = []; const list = h('div', { class: 'ordl' });
     sh.forEach((x, j) => { const k = `${id}-o${j}`; const sel = h('select', { class: 'sel', 'aria-label': 'position' }, h('option', { value: '' }, '–'), ...it.steps.map((_, n) => h('option', { value: String(n) }, String(n + 1)))); sel.value = store.get(k, ''); sel.onchange = () => store.set(k, sel.value); sels.push([sel, x.i]); list.append(h('div', { class: 'ordi' }, sel, h('span', { html: x.s }))); });
     const b = h('button', { class: 'btn primary', type: 'button' }, 'Check');
-    card.append(list, mode === 'practice' ? h('div', { class: 'ctl' }, b) : null, fb);
+    card.append(list, ...(mode === 'practice' ? [h('div', { class: 'ctl' }, b)] : []), fb);
     api.grade = () => { let ok = 0; sels.forEach(([s, i]) => { const good = s.value === String(i); s.classList.toggle('good', good); s.classList.toggle('bad', !good); if (good) ok++; }); const all = ok === sels.length; show(all, `<b>${all ? 'Correct order.' : `${ok} of ${sels.length} in the right place.`}</b> The order is:<ol>${it.steps.map(s => `<li>${s}</li>`).join('')}</ol>${it.why || ''}`); result(all ? max : Math.round(max * ok / sels.length * 2) / 2, all); };
     b.onclick = () => api.grade();
   }
@@ -888,7 +904,7 @@ function Item(host, it, num, mode, onScore) {
       h('div', { class: 'schin' }, h('label', {}, 'Average waiting time ', iw), h('label', {}, 'Average turnaround time ', itt)));
     const b = h('button', { class: 'btn primary', type: 'button' }, 'Check');
     const model = h('div', { hidden: true, class: 'sheet' });
-    card.append(mode === 'practice' ? h('div', { class: 'ctl' }, b) : null, fb, model);
+    card.append(...(mode === 'practice' ? [h('div', { class: 'ctl' }, b)] : []), fb, model);
     api.grade = () => {
       const r = schedule(it.alg, it.procs, it.q); const close = (inp, v) => Math.abs(parseFloat(String(inp.value).replace(',', '.')) - v) < 0.011;
       const a = close(iw, r.awt), c = close(itt, r.atat); iw.classList.toggle('good', a); iw.classList.toggle('bad', !a); itt.classList.toggle('good', c); itt.classList.toggle('bad', !c);
@@ -909,7 +925,7 @@ function Item(host, it, num, mode, onScore) {
     const reveal = h('button', { class: 'btn ghost', type: 'button' }, 'I wrote it. Show the model answer');
     const sheet = h('div', { class: 'sheet', hidden: true });
     PenToggle(card, `${id}-pen`);
-    card.append(ta, mode === 'practice' ? h('div', { class: 'ctl' }, reveal) : null, sheet);
+    card.append(ta, ...(mode === 'practice' ? [h('div', { class: 'ctl' }, reveal)] : []), sheet);
     const build = () => {
       if (sheet.dataset.ready) { sheet.hidden = false; return; } sheet.dataset.ready = 1; sheet.hidden = false;
       sheet.append(h('div', { class: 'sheet-h' }, 'Model answer'));
@@ -947,13 +963,14 @@ const PART_TITLE = { mc: 'Choose the correct answer', tf: 'True or False (correc
 const WKINDS = ['Define', 'What happens if', 'Advantages & disadvantages', 'Give an example', 'Find the mistake', 'Trace the code'];
 const groupOf = x => x.t === 'write' ? (WKINDS.includes(x.kind) ? x.kind : 'write') : x.t;
 function Practice(host, items, opts = {}) {
+  const gof = opts.groupOf || groupOf; const TT = Object.assign({}, PART_TITLE, opts.titles || {});
   const order = opts.order || ['mc', 'tf', 'fill', 'match', 'order', 'label', 'Define', 'write', 'diff', 'What happens if', 'Advantages & disadvantages', 'Give an example', 'Find the mistake', 'Trace the code', 'num', 'sched'];
   let letter = 0;
   order.forEach(t => {
-    const its = items.filter(x => groupOf(x) === t); if (!its.length) return;
+    const its = items.filter(x => gof(x) === t); if (!its.length) return;
     const sec = h('div', { class: 'opart' });
     const sc = h('span', { class: 'pill' });
-    sec.append(h('h2', {}, `Part ${'ABCDEFGHIJKLMNOP'[letter++]} · ${PART_TITLE[t]}`));
+    sec.append(h('h2', {}, `Part ${'ABCDEFGHIJKLMNOP'[letter++]} · ${TT[t]}`));
     const apis = []; const upd = () => { const done = apis.filter(a => a.got != null); sc.textContent = `${fmt(done.reduce((s, a) => s + a.got, 0))} / ${fmt(done.reduce((s, a) => s + a.max, 0))} on the ${done.length} you answered`; };
     sec.append(h('div', { class: 'opartbar' }, sc));
     its.forEach((it, i) => apis.push(Item(sec, it, i + 1, 'practice', upd)));
