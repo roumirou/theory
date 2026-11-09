@@ -3949,12 +3949,14 @@ function blocksEl(blocks, why) {
     else if (b.k === 'big') out.push(h('div', { class: 'sl-big' }, b.t));
     else if (b.k === 'row') { if (!table) { table = h('table', { class: 'tbl sl-tbl' }); out.push(h('div', { class: 'tblwrap' }, table)); } table.append(h('tr', {}, ...b.cells.map(c => h('td', {}, c)))); }
     else if (b.k === 'pic') out.push(h('div', { class: 'sl-pics' }, picEl(b)));
-    else if (b.k === 'slide') { const el = slideEl({ d: b.d, k: b.n }, false); lazyBg(el); el.classList.add('sl-whole'); el.onclick = () => { const L = []; for (let k = 1; k <= SLIDES_N[b.d]; k++) L.push({ d: b.d, k, label: `${LTITLES[b.d] || ''} · slide ${k} / ${SLIDES_N[b.d]}` }); slideViewer(L, b.n - 1); }; out.push(el); }
+    else if (b.k === 'slide') { const el = slideEl({ d: b.d, k: b.n }, false); lazyBg(el); el.classList.add('sl-whole'); el.onclick = () => { const L = []; for (let k = 1; k <= SLIDES_N[b.d]; k++) if (!(SKIPSL[b.d] || []).includes(k) || k === b.n) L.push({ d: b.d, k, label: `${LTITLES[b.d] || ''} · slide ${k} / ${SLIDES_N[b.d]}` }); slideViewer(L, L.findIndex(x => x.k === b.n)); }; out.push(el); }
     else if (b.k === 'pics') out.push(h('div', { class: 'sl-pics row' }, ...b.items.map(p => picEl(p))));
     else if (b.k === 'side') out.push(h('div', { class: 'sl-side' }, h('div', { class: 'sl-sidetext' }, ...blocksEl(b.text, why)), h('div', { class: 'sl-sidepics' }, ...b.pics.map(p => picEl(p, true)))));
   });
   return out;
 }
+/* animation steps of the scanned slides (faded text that the next slide shows in full): hidden, their notes move to the next slide */
+const SKIPSL = { l3: [18, 24, 25, 26, 31, 37, 39, 40, 41], l4: [7, 17, 32], l5: [16, 17, 29, 34, 39], l6: [16, 18, 20, 61] };
 function LectureText(host, lk) {
   const S = LDATA[lk]; if (!S) { host.append(h('p', {}, 'Coming soon.')); return; }
   const posKey = 'lpos-' + lk; const saved = store.get(posKey, 0);
@@ -3962,11 +3964,13 @@ function LectureText(host, lk) {
   const cards = []; let deck = '';
   const bar = h('div', { class: 'sdeckbar' }, h('span', { class: 'small muted' }, 'Every slide, word for word, with its pictures. Press why? next to a line for the explanation. Tap a picture to enlarge it.'), jump);
   host.append(bar);
-  S.forEach((s, i) => {
+  let carry = [];
+  const SL = S.filter(s => { const [d, n] = s.id.split('-'); if ((SKIPSL[d] || []).includes(+n)) { carry = carry.concat((WHY[s.id] || []).filter(w => !w[0]).map(w => w[1])); return false; } if (carry.length) { const own = (WHY[s.id] || []).filter(w => !w[0]).map(w => w[1]); s._why = [['', carry.concat(own).join('<br><br>')]].concat((WHY[s.id] || []).filter(w => w[0])); carry = []; } return true; });
+  SL.forEach((s, i) => {
     const d = s.id.split('-')[0];
     if (d !== deck) { deck = d; host.append(h('h2', { class: 'sdecktitle' }, LTITLES[d] || d)); }
-    jump.append(h('option', { value: i }, `${S.some(x => x.id.split('-')[0] !== d) ? d.toUpperCase() + ' · ' : ''}Slide ${s.n}${s.title ? ' – ' + s.title.slice(0, 40) : ''}`));
-    const why = (WHY[s.id] || []).map(x => x.slice());
+    jump.append(h('option', { value: i }, `${SL.some(x => x.id.split('-')[0] !== d) ? d.toUpperCase() + ' · ' : ''}Slide ${s.n}${s.title ? ' – ' + s.title.slice(0, 40) : ''}`));
+    const why = (s._why || WHY[s.id] || []).map(x => x.slice());
     const empty = !s.blocks.length;
     const card = h('section', { class: 'sl-card' + (empty ? ' sl-section' : ''), 'data-i': i, id: 'sl-' + s.id },
       h('div', { class: 'sl-head' }, h('span', { class: 'sl-no' }, `Slide ${s.n}`), s.title ? h('h3', { class: 'sl-title' }, s.title) : null),
@@ -3977,7 +3981,7 @@ function LectureText(host, lk) {
   addWhyIn(host);
   jump.onchange = () => cards[+jump.value].scrollIntoView({ behavior: 'smooth', block: 'start' });
   if ('IntersectionObserver' in window) { let t; const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { const i = +e.target.dataset.i; jump.value = i; clearTimeout(t); t = setTimeout(() => store.set(posKey, i), 400); } }), { rootMargin: '-35% 0px -60% 0px' }); cards.forEach(c => io.observe(c)); }
-  if (saved > 0 && cards[saved]) bar.after(h('div', { class: 'ctl' }, h('button', { class: 'btn ghost', type: 'button', onclick: () => cards[saved].scrollIntoView({ block: 'start' }) }, `Continue where you stopped (slide ${S[saved].n})`)));
+  if (saved > 0 && cards[saved]) bar.after(h('div', { class: 'ctl' }, h('button', { class: 'btn ghost', type: 'button', onclick: () => cards[saved].scrollIntoView({ block: 'start' }) }, `Continue where you stopped (slide ${SL[saved].n})`)));
 }
 function addWhyIn(root) { root.querySelectorAll('.wl').forEach(w => { const m = w.querySelector(':scope > .m'), n = w.querySelector(':scope > .n'); if (!m || !n) return; if (!n.textContent.trim()) { n.remove(); return; } if (m.querySelector('.whyb')) return; const b = h('button', { class: 'whyb', type: 'button', 'aria-expanded': 'false' }, 'why?'); b.onclick = ev => { ev.stopPropagation(); const o = w.classList.toggle('open'); b.textContent = o ? 'hide' : 'why?'; b.setAttribute('aria-expanded', o); }; m.append(b); }); }
 /* ===== ML shell: explanations + questions ===== */
