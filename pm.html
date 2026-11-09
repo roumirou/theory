@@ -386,6 +386,108 @@ svg.dgm{display:block;width:100%;max-width:640px;height:auto;color:var(--ink)}
 .pgood{color:var(--good);font-weight:700}.pmid{color:#B07400;font-weight:700}.pbad{color:var(--bad);font-weight:700}
 .qkbar{margin:6px 0 2px;padding:6px 10px;border-radius:8px;background:var(--accent-soft);line-height:1.5}
 .linkbtn{font:inherit;font-weight:700;background:none;border:0;padding:0;color:var(--accent);text-decoration:underline;cursor:pointer}
+
+/* ===== ML page ===== */
+.learn h2{margin-top:34px}
+.learn h3{margin-top:22px;color:var(--accent)}
+.fx{font-family:var(--f-mono);font-size:16px;background:var(--accent-soft);border-left:4px solid var(--accent);padding:10px 14px;margin:14px 0;border-radius:6px;overflow-x:auto;line-height:1.6}
+.fx sup,.fx sub,.wl sup,.wl sub{font-size:.72em}
+.learn .tblwrap{overflow-x:auto;margin:14px 0}
+.learn .tbl td,.learn .tbl th{padding:7px 10px;border:1px solid var(--line);vertical-align:top}
+.learn .tbl th{background:var(--accent);color:#fff;text-align:left}
+.nextbar{display:flex;flex-wrap:wrap;gap:10px;margin:30px 0 10px;padding-top:18px;border-top:2px solid var(--line)}
+.nextbar .btn{text-decoration:none}
+.mlplot{display:block;width:100%;max-width:520px;height:auto;margin:6px 0;background:var(--paper);border-radius:8px}
+.mlplot .ax{stroke:var(--muted);stroke-width:1.2}
+.mlplot .res{stroke:var(--bad);stroke-width:1.5;stroke-dasharray:3 3}
+.mlplot .pt{fill:var(--accent)}
+.mlplot .pt2{fill:var(--ngu-green);stroke:var(--ink);stroke-width:.6}
+.mlplot .ln{stroke:var(--ink);stroke-width:2.4;fill:none}
+.mlplot .cost{stroke:var(--accent);stroke-width:2;fill:none}
+.mlplot .truth{stroke:var(--ngu-green);stroke-width:2;fill:none;stroke-dasharray:6 4}
+.mlplot .thr{stroke:var(--bad);stroke-width:2;stroke-dasharray:5 4}
+.mlplot .pos{fill:var(--accent)}
+.mlplot .neg{fill:var(--ngu-green);stroke:var(--ink);stroke-width:.6}
+.mlplot .cut{fill:var(--bad-soft);opacity:.55}
+.mlplot text,.mlplot .ta{fill:var(--ink);font-size:11px;font-family:var(--f-mono)}
+.mlsl{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:8px 0;font-size:15px}
+.mlsl input[type=range]{flex:1;min-width:140px;accent-color:var(--accent)}
+.mlinfo{font-size:15px;margin:8px 0;padding:8px 12px;background:var(--bg);border-radius:8px;overflow-wrap:anywhere}
+.mlrow{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start}
+.mlrow>*{flex:1 1 260px;min-width:0}
+.tbl.cm td{text-align:center;font-family:var(--f-mono);padding:6px 10px;border:1px solid var(--line)}
+.whytoggle{display:flex;gap:8px;align-items:center;font-size:14px;color:var(--muted);margin:6px 0 14px;cursor:pointer}
+.oqsrc{font-size:11px;font-weight:700;letter-spacing:.04em;padding:2px 8px;border-radius:999px;background:var(--ngu-green);color:#1d3b1a}
+.qfig{margin:12px 0;max-width:520px}.qfig figcaption{font-size:13px;color:var(--muted);margin-top:4px}
+.fsvg{width:100%;height:auto;background:var(--paper);border:1px solid var(--line);border-radius:8px}
+.fsvg .fax{stroke:var(--ink);stroke-width:1.4}.fsvg .ftx{fill:var(--ink);font-size:12px;font-family:var(--f-body,inherit)}.fsvg .fbig{font-size:16px;font-weight:700}
+.fsvg .fl1{fill:none;stroke:#d0312d;stroke-width:2.6}.fsvg .fl2{fill:none;stroke:#3d7fc4;stroke-width:2.6}
+.fsvg .fgood{fill:var(--ngu-green);opacity:.18}.fsvg .fbadz{fill:#e88;opacity:.13}
+.fsvg .fpt{fill:#3d7fc4;opacity:.75}.fsvg .fpa{fill:none;stroke:var(--ink);stroke-width:1.2}.fsvg .fpb{fill:none;stroke:var(--ink);stroke-width:1.2}
+.fsvg .fza{fill:#8fc1e3;opacity:.55}.fsvg .fzb{fill:#c0682a;opacity:.45}.fsvg .fbd{stroke:var(--ink);stroke-width:1.5}
+.fsvg .fr1{fill:var(--paper);stroke:var(--ink)}.fsvg .fr2{fill:#5b9bd5}.fsvg .fr3{fill:var(--paper)}.fsvg .fr4{fill:#d0312d}.fsvg .fdot{fill:#1b2a6b}
+.qtbl{width:auto;margin:8px 0}.qtbl td,.qtbl th{padding:4px 12px;border:1px solid var(--line);text-align:center}
+.ltabs{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 18px;border-bottom:2px solid var(--line)}
+.ltab{font:inherit;font-weight:700;padding:10px 16px;border:0;border-bottom:3px solid transparent;background:none;color:var(--muted);cursor:pointer;margin-bottom:-2px}
+.ltab.on{color:var(--accent);border-bottom-color:var(--accent)}
+.sdeckbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin:4px 0 10px;position:sticky;top:0;z-index:5;background:var(--bg);padding:6px 0}
+.sjump{font:inherit;padding:6px 10px;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink)}
+.sdecktitle{margin-top:26px}
+.scard2{margin:0 0 22px;padding:0}.scard2 figcaption{font-size:13px;margin-bottom:4px}
+.scard2 img{display:block;width:100%;height:auto;aspect-ratio:16/9;border:1px solid var(--line);border-radius:8px;background:#fff;cursor:zoom-in;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.stxt{margin-top:6px;font-size:14px}.stxt summary{cursor:pointer;color:var(--muted);font-size:13px}
+.stxt pre{white-space:pre-wrap;font-family:var(--f-body,inherit);font-size:15px;line-height:1.5;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin:6px 0 0;overflow-wrap:anywhere}
+.slideview{position:fixed;inset:0;z-index:1000;background:rgba(15,15,15,.96);display:flex;flex-direction:column}
+.svbar{display:flex;align-items:center;gap:6px;padding:8px;color:#fff}.svcap{flex:1;font-size:13px;text-align:center}
+.svb{font:inherit;font-size:20px;min-width:44px;height:44px;border:0;border-radius:8px;background:rgba(255,255,255,.14);color:#fff;cursor:pointer}
+.svbox{flex:1;overflow:auto;display:flex;align-items:center;justify-content:center;touch-action:pan-x pan-y pinch-zoom}
+.svbox img{max-width:100%;max-height:100%;cursor:zoom-in;background:#fff}
+.slideview.zoomed .svbox{display:block}.slideview.zoomed .svbox img{max-width:none;max-height:none;width:220%;cursor:zoom-out}
+.partttl{margin-top:30px;padding-top:12px;border-top:3px solid var(--accent)}
+.simg{width:100%;aspect-ratio:16/9;background-color:#fff;background-repeat:no-repeat;border:1px solid var(--line);border-radius:8px;cursor:zoom-in;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.svimgwrap{width:100%;max-width:min(100%,calc((100vh - 70px)*16/9))}
+.slideview .simg{border:0;border-radius:0;cursor:zoom-in}
+.slideview.zoomed .svimgwrap{width:220%;max-width:none}.slideview.zoomed .simg{cursor:zoom-out}
+.sl-card{margin:0 0 26px;padding:14px 16px 10px;border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:10px;background:var(--paper)}
+.sl-section{background:var(--accent);border-color:var(--accent)}.sl-section .sl-title,.sl-section .sl-no{color:#fff}
+.sl-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.sl-no{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.04em;text-transform:uppercase}
+.sl-title{margin:0;color:var(--accent);font-size:21px}
+.sl-line{margin:0;padding:3px 0;border:0;background:none;box-shadow:none}
+.sl-line .m{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;font-size:17px;line-height:1.5}
+.sl-line .m>span:nth-child(2){flex:1 1 200px}
+.sl-bul{color:var(--accent);font-weight:700}
+.sl-line.lv1{padding-left:24px}.sl-line.lv2{padding-left:48px}.sl-line.lv3{padding-left:72px}
+.sl-line.lv1 .sl-bul,.sl-line.lv2 .sl-bul{font-size:.8em;color:var(--muted)}
+.sl-line .n{margin:4px 0 6px 18px}
+.sl-big{font-size:24px;font-weight:700;color:var(--accent);margin:8px 0}
+.sl-section .sl-big{color:#fff}
+.sl-pics{display:flex;justify-content:center;margin:10px 0}.sl-pics.row{gap:10px;flex-wrap:wrap}
+.lpic{width:100%;background-repeat:no-repeat;background-color:#fff;border-radius:6px;cursor:zoom-in}
+.sl-pics.row .lpic{flex:1 1 160px}
+.sl-side{display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap}.sl-sidetext{flex:1 1 300px;min-width:0}.sl-sidepics{flex:1 1 220px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.sl-tbl td{padding:4px 12px;border:1px solid var(--line)}
+.picview{position:fixed;inset:0;z-index:1000;background:rgba(15,15,15,.94);display:flex;align-items:center;justify-content:center;padding:12px;cursor:zoom-out}
+.picview .lpic{max-width:100%!important;max-height:100%;width:min(100%,calc(95vh * var(--ar,1.6)))}
+.sjump{max-width:100%}.sdeckbar>span{flex:1 1 200px;min-width:0}
+.sl-line .m>span{min-width:0;overflow-wrap:anywhere}.sl-card{overflow:hidden}
+@media (max-width:700px){.sdeckbar{position:static}}
+.sl-explain{margin-top:6px;padding-top:6px;border-top:1px dashed var(--line)}
+.sl-whole{margin:6px 0 4px}
+.modesw{display:flex;gap:6px;margin:10px 0 12px}
+.modesw button{flex:1;font:inherit;font-weight:700;font-size:14px;padding:9px 8px;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);cursor:pointer}
+.modesw button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.topbar{flex-wrap:wrap}.topbar .modesw{flex-basis:100%;margin:4px 0 0}
+.topbar .modesw button{padding:6px 8px;background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.25)}
+.topbar .modesw button.on{background:var(--ngu-cream);color:#3a1020;border-color:var(--ngu-cream)}
+.modecards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin:18px 0 26px}
+.modecard{display:flex;flex-direction:column;gap:6px;padding:20px;border:1px solid var(--line);border-top:6px solid var(--accent);border-radius:8px;background:var(--paper);color:var(--ink);text-decoration:none;cursor:pointer;text-align:left;font:inherit}
+.modecard:nth-child(2){border-top-color:var(--ngu-green)}
+.modecard .mi{font-size:30px}.modecard .mt{font-size:22px;font-weight:700;color:var(--accent)}.modecard .md{color:var(--ink-2);font-size:15px}
+.simg{aspect-ratio:4/3}.svimgwrap{max-width:min(100%,calc((100vh - 70px)*4/3))}
+.rail .modesw button{background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.25)}
+.rail .modesw button.on{background:var(--ngu-cream);color:#3a1020;border-color:var(--ngu-cream)}
+@media (max-width:860px){.paperbar{top:calc(env(safe-area-inset-top,0px) + 100px)}}
 .oqsrc{font-size:11px;font-weight:700;letter-spacing:.04em;padding:2px 8px;border-radius:999px;background:var(--ngu-green);color:#1d3b1a}</style>
 
 </head>
@@ -1511,6 +1613,241 @@ items: [
   E('Explain the learning curve and how it improves cost estimates.', 'Humans learn when they repeat a task: unit performance improves by a fixed percent each time total production doubles. Each time output doubles, the worker hours per unit fall to a fixed percentage of their previous value (the learning rate). Formula: <b>Tn = T1 · n<sup>r</sup></b>, r = log(learning rate)/log 2. Example: 100 h, 80% → unit 2 = 80 h, unit 4 = 64 h. Ignoring learning overestimates labor cost for repeated tasks.', ['Learning by repetition', 'Fixed % decrease each time output doubles', 'Formula Tn = T1 n^r', 'Example / use in estimating']),
   E('How can a project manager handle changes in the project budget?', '1. <b>Accept</b> a negative change and take a loss (least preferred). 2. <b>Prepare ahead</b> by including provisions for such changes in the contract (best approach). 3. For misunderstood assumptions and technological uncertainty, <b>state the assumptions</b> and note that if they change the project will be adjusted. 4. <b>Mandates</b> are the most difficult: divide the project into shorter segments and contract sequentially. Many changes can be prevented by effective planning.', ['Accept a loss (least preferred)', 'Contract provisions (best)', 'State assumptions', 'Mandates: shorter segments / effective planning']),
 ]};
+const SLIDES = {"pw1": [["pw1", 28, "Week 1 · The World of Project Management"]], "pw2a": [["pw2a", 31, "Week 2A · Types of Projects & Managing Uncertainty"]], "pw2b": [["pw2b", 27, "Week 2B · The Manager, the Organization & the Team"]], "pw3": [["pw3", 13, "Week 3 · Selection Methods"]], "pw4": [["pw4", 45, "Week 4 · Project Planning"]], "pw6": [["pw6", 48, "Week 6 · Budgeting the Project"]]};
+const SHEET = 8;
+const slideBg = (d, k) => { const c = Math.floor((k - 1) / SHEET), j = (k - 1) % SHEET; const n = SLIDES_N[d]; const rows = Math.min(SHEET, n - c * SHEET); return { url: `mls-${d}-${c + 1}.webp`, size: `100% ${rows * 100}%`, pos: `0 ${rows > 1 ? (j / (rows - 1)) * 100 : 0}%` }; };
+const SLIDES_N = {}; Object.values(SLIDES).forEach(a => a.forEach(([d, n]) => SLIDES_N[d] = n));
+const slideEl = (s, eager) => { const b = slideBg(s.d, s.k); const el = h('div', { class: 'simg', role: 'img', 'aria-label': `Slide ${s.k}` }); el.style.backgroundSize = b.size; el.style.backgroundPosition = b.pos; el.dataset.bg = b.url; if (eager) el.style.backgroundImage = `url("${b.url}")`; return el; };
+let slideIO = null;
+const lazyBg = el => { if (el.style.backgroundImage) return; if (!('IntersectionObserver' in window)) { el.style.backgroundImage = `url("${el.dataset.bg}")`; return; } if (!slideIO) slideIO = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.style.backgroundImage = `url("${e.target.dataset.bg}")`; slideIO.unobserve(e.target); } }), { rootMargin: '600px 0px' }); slideIO.observe(el); };
+function slideViewer(list, start) {
+  let i = start; const cap = h('span', { class: 'svcap' }); const holder = h('div', { class: 'svimgwrap' });
+  const box = h('div', { class: 'svbox' }, holder);
+  let zoom = false; const setZ = z => { zoom = z; ov.classList.toggle('zoomed', z); bz.textContent = z ? '−' : '+'; };
+  const show = () => { const s = list[i]; holder.innerHTML = ''; const el = slideEl(s, true); el.onclick = () => setZ(!zoom); holder.append(el); cap.textContent = s.label; setZ(false); box.scrollTo(0, 0); };
+  const close = () => { ov.remove(); document.removeEventListener('keydown', key); document.body.style.overflow = ''; };
+  const key = e => { if (e.key === 'Escape') close(); if (e.key === 'ArrowRight' && i < list.length - 1) { i++; show(); } if (e.key === 'ArrowLeft' && i > 0) { i--; show(); } };
+  const bz = h('button', { class: 'svb', type: 'button', onclick: () => setZ(!zoom) }, '+');
+  const ov = h('div', { class: 'slideview', role: 'dialog', 'aria-label': 'Slide' },
+    h('div', { class: 'svbar' }, h('button', { class: 'svb', type: 'button', onclick: () => { if (i > 0) { i--; show(); } } }, '‹'), cap, h('button', { class: 'svb', type: 'button', onclick: () => { if (i < list.length - 1) { i++; show(); } } }, '›'), bz, h('button', { class: 'svb', type: 'button', onclick: close }, '✕')), box);
+  let sx = null; box.addEventListener('touchstart', e => { sx = e.touches.length === 1 ? e.touches[0].clientX : null; }, { passive: true });
+  box.addEventListener('touchend', e => { if (sx == null || zoom) return; const dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 60) { if (dx < 0 && i < list.length - 1) i++; else if (dx > 0 && i > 0) i--; show(); } sx = null; });
+  document.body.append(ov); document.body.style.overflow = 'hidden'; document.addEventListener('keydown', key); show();
+}
+const LDATA = {"pw1": [{"id": "pw1-001", "n": 1, "title": "MGMT 313 – PROJECT MANAGEME", "blocks": [{"k": "slide", "d": "pw1", "n": 1}]}, {"id": "pw1-002", "n": 2, "title": "Welcome Happy New Academic Year", "blocks": [{"k": "slide", "d": "pw1", "n": 2}]}, {"id": "pw1-003", "n": 3, "title": "Expectations Be Professional", "blocks": [{"k": "slide", "d": "pw1", "n": 3}]}, {"id": "pw1-004", "n": 4, "title": "Assessments Assessment Tool", "blocks": [{"k": "slide", "d": "pw1", "n": 4}]}, {"id": "pw1-005", "n": 5, "title": "In-Class Participation", "blocks": [{"k": "slide", "d": "pw1", "n": 5}]}, {"id": "pw1-006", "n": 6, "title": "Textbooks “Project Management in Practice”.", "blocks": [{"k": "slide", "d": "pw1", "n": 6}]}, {"id": "pw1-007", "n": 7, "title": "Course Content Introductions & Definitions", "blocks": [{"k": "slide", "d": "pw1", "n": 7}]}, {"id": "pw1-008", "n": 8, "title": "Course Content Scheduling Tools", "blocks": [{"k": "slide", "d": "pw1", "n": 8}]}, {"id": "pw1-009", "n": 9, "title": "MGMT 313 – PROJECT MANAGEMENT", "blocks": [{"k": "slide", "d": "pw1", "n": 9}]}, {"id": "pw1-010", "n": 10, "title": "Formal Definition of", "blocks": [{"k": "slide", "d": "pw1", "n": 10}]}, {"id": "pw1-011", "n": 11, "title": "Characteristics of Projects", "blocks": [{"k": "slide", "d": "pw1", "n": 11}]}, {"id": "pw1-012", "n": 12, "title": "Other Common Character", "blocks": [{"k": "slide", "d": "pw1", "n": 12}]}, {"id": "pw1-013", "n": 13, "title": "Project Management What is Project Management?", "blocks": [{"k": "slide", "d": "pw1", "n": 13}]}, {"id": "pw1-014", "n": 14, "title": "Formal Definition of", "blocks": [{"k": "slide", "d": "pw1", "n": 14}]}, {"id": "pw1-015", "n": 15, "title": "Why the Emphasis on Project", "blocks": [{"k": "slide", "d": "pw1", "n": 15}]}, {"id": "pw1-016", "n": 16, "title": "Trends in Project Management", "blocks": [{"k": "slide", "d": "pw1", "n": 16}]}, {"id": "pw1-017", "n": 17, "title": "", "blocks": [{"k": "slide", "d": "pw1", "n": 17}]}, {"id": "pw1-018", "n": 18, "title": "Project Budgets What is the difference between", "blocks": [{"k": "slide", "d": "pw1", "n": 18}]}, {"id": "pw1-019", "n": 19, "title": "Project Budgets Project budgeting differs from standard budgeting", "blocks": [{"k": "slide", "d": "pw1", "n": 19}]}, {"id": "pw1-020", "n": 20, "title": "Project Schedules In manufacturing, the sequence of activities is", "blocks": [{"k": "slide", "d": "pw1", "n": 20}]}, {"id": "pw1-021", "n": 21, "title": "Project Organizational", "blocks": [{"k": "slide", "d": "pw1", "n": 21}]}, {"id": "pw1-022", "n": 22, "title": "Globalization For projects, globalization means", "blocks": [{"k": "slide", "d": "pw1", "n": 22}]}, {"id": "pw1-023", "n": 23, "title": "Negotiation With little authority, the project manager depends", "blocks": [{"k": "slide", "d": "pw1", "n": 23}]}, {"id": "pw1-024", "n": 24, "title": "Three Different Types of", "blocks": [{"k": "slide", "d": "pw1", "n": 24}]}, {"id": "pw1-025", "n": 25, "title": "Win-Win Negotiation Finding the", "blocks": [{"k": "slide", "d": "pw1", "n": 25}]}, {"id": "pw1-026", "n": 26, "title": "Three Goals of Project", "blocks": [{"k": "slide", "d": "pw1", "n": 26}]}, {"id": "pw1-027", "n": 27, "title": "Scope, Cost, and Time", "blocks": [{"k": "slide", "d": "pw1", "n": 27}]}, {"id": "pw1-028", "n": 28, "title": "Class Summary What is a project and what is project", "blocks": [{"k": "slide", "d": "pw1", "n": 28}]}], "pw2a": [{"id": "pw2a-001", "n": 1, "title": "MGMT 313 – PROJECT MANAGEME", "blocks": [{"k": "slide", "d": "pw2a", "n": 1}]}, {"id": "pw2a-002", "n": 2, "title": "Quick Recap What is a project?", "blocks": [{"k": "slide", "d": "pw2a", "n": 2}]}, {"id": "pw2a-003", "n": 3, "title": "Agile Project Management", "blocks": [{"k": "slide", "d": "pw2a", "n": 3}]}, {"id": "pw2a-004", "n": 4, "title": "Traditional/ Waterfall", "blocks": [{"k": "slide", "d": "pw2a", "n": 4}]}, {"id": "pw2a-005", "n": 5, "title": "Advantages of Waterfall", "blocks": [{"k": "slide", "d": "pw2a", "n": 5}]}, {"id": "pw2a-006", "n": 6, "title": "Disadvantages of Waterfall PM", "blocks": [{"k": "slide", "d": "pw2a", "n": 6}]}, {"id": "pw2a-007", "n": 7, "title": "Manifesto for Agile Software", "blocks": [{"k": "slide", "d": "pw2a", "n": 7}]}, {"id": "pw2a-008", "n": 8, "title": "Manifesto for Agile Software", "blocks": [{"k": "slide", "d": "pw2a", "n": 8}]}, {"id": "pw2a-009", "n": 9, "title": "12 Agile Principles", "blocks": [{"k": "slide", "d": "pw2a", "n": 9}]}, {"id": "pw2a-010", "n": 10, "title": "12 Agile Principles", "blocks": [{"k": "slide", "d": "pw2a", "n": 10}]}, {"id": "pw2a-011", "n": 11, "title": "12 Agile Principles continued", "blocks": [{"k": "slide", "d": "pw2a", "n": 11}]}, {"id": "pw2a-012", "n": 12, "title": "Focus of Agile Customer & Output Orientation", "blocks": [{"k": "slide", "d": "pw2a", "n": 12}]}, {"id": "pw2a-013", "n": 13, "title": "General Characteristic", "blocks": [{"k": "slide", "d": "pw2a", "n": 13}]}, {"id": "pw2a-014", "n": 14, "title": "Benefits of Agile Class Discussion:", "blocks": [{"k": "slide", "d": "pw2a", "n": 14}]}, {"id": "pw2a-015", "n": 15, "title": "Benefits of Agile Higher customer satisfaction", "blocks": [{"k": "slide", "d": "pw2a", "n": 15}]}, {"id": "pw2a-016", "n": 16, "title": "Disadvantages of Agile PM", "blocks": [{"k": "slide", "d": "pw2a", "n": 16}]}, {"id": "pw2a-017", "n": 17, "title": "In-Class Discussion When is Waterfall PM used and", "blocks": [{"k": "slide", "d": "pw2a", "n": 17}]}, {"id": "pw2a-018", "n": 18, "title": "IT Projects Examples", "blocks": [{"k": "slide", "d": "pw2a", "n": 18}]}, {"id": "pw2a-019", "n": 19, "title": "Check Which type would you select to use for each of the", "blocks": [{"k": "slide", "d": "pw2a", "n": 19}]}, {"id": "pw2a-020", "n": 20, "title": "MGMT 313 – PROJECT MANAGEME", "blocks": [{"k": "slide", "d": "pw2a", "n": 20}]}, {"id": "pw2a-021", "n": 21, "title": "Managing Uncertainty", "blocks": [{"k": "slide", "d": "pw2a", "n": 21}]}, {"id": "pw2a-022", "n": 22, "title": "Uncertainty Class Activity:", "blocks": [{"k": "slide", "d": "pw2a", "n": 22}]}, {"id": "pw2a-023", "n": 23, "title": "Uncertainties Encountered", "blocks": [{"k": "slide", "d": "pw2a", "n": 23}]}, {"id": "pw2a-024", "n": 24, "title": "Can Uncertainty be Eliminated?", "blocks": [{"k": "slide", "d": "pw2a", "n": 24}]}, {"id": "pw2a-025", "n": 25, "title": "Major Roles of Project", "blocks": [{"k": "slide", "d": "pw2a", "n": 25}]}, {"id": "pw2a-026", "n": 26, "title": "Managing Uncertainty", "blocks": [{"k": "slide", "d": "pw2a", "n": 26}]}, {"id": "pw2a-027", "n": 27, "title": "Managing Risk The first step in managing risk is to identify", "blocks": [{"k": "slide", "d": "pw2a", "n": 27}]}, {"id": "pw2a-028", "n": 28, "title": "Modeling Risk Estimates or assumptions made about", "blocks": [{"k": "slide", "d": "pw2a", "n": 28}]}, {"id": "pw2a-029", "n": 29, "title": "Modelling Risks Parameter examples include: variations", "blocks": [{"k": "slide", "d": "pw2a", "n": 29}]}, {"id": "pw2a-030", "n": 30, "title": "Selecting Projects To", "blocks": [{"k": "slide", "d": "pw2a", "n": 30}]}, {"id": "pw2a-031", "n": 31, "title": "Selection Methods There are many different methods", "blocks": [{"k": "slide", "d": "pw2a", "n": 31}]}], "pw2b": [{"id": "pw2b-001", "n": 1, "title": "Project Management MGMT - 313", "blocks": [{"k": "slide", "d": "pw2b", "n": 1}]}, {"id": "pw2b-002", "n": 2, "title": "Project Management As A", "blocks": [{"k": "slide", "d": "pw2b", "n": 2}]}, {"id": "pw2b-003", "n": 3, "title": "Career Path for the Project", "blocks": [{"k": "slide", "d": "pw2b", "n": 3}]}, {"id": "pw2b-004", "n": 4, "title": "Fitting Projects into", "blocks": [{"k": "slide", "d": "pw2b", "n": 4}]}, {"id": "pw2b-005", "n": 5, "title": "Pure Project Organization", "blocks": [{"k": "slide", "d": "pw2b", "n": 5}]}, {"id": "pw2b-006", "n": 6, "title": "Pure Project Advantages", "blocks": [{"k": "slide", "d": "pw2b", "n": 6}]}, {"id": "pw2b-007", "n": 7, "title": "Pure Project Disadvantages", "blocks": [{"k": "slide", "d": "pw2b", "n": 7}]}, {"id": "pw2b-008", "n": 8, "title": "Functional Project Organization", "blocks": [{"k": "slide", "d": "pw2b", "n": 8}]}, {"id": "pw2b-009", "n": 9, "title": "Functional Project Advantages", "blocks": [{"k": "slide", "d": "pw2b", "n": 9}]}, {"id": "pw2b-010", "n": 10, "title": "Functional Project Disadvantages", "blocks": [{"k": "slide", "d": "pw2b", "n": 10}]}, {"id": "pw2b-011", "n": 11, "title": "Matrix Project Advantages", "blocks": [{"k": "slide", "d": "pw2b", "n": 11}]}, {"id": "pw2b-012", "n": 12, "title": "Matrix Project Organization", "blocks": [{"k": "slide", "d": "pw2b", "n": 12}]}, {"id": "pw2b-013", "n": 13, "title": "Matrix Team Advantages", "blocks": [{"k": "slide", "d": "pw2b", "n": 13}]}, {"id": "pw2b-014", "n": 14, "title": "Matrix Team Problems", "blocks": [{"k": "slide", "d": "pw2b", "n": 14}]}, {"id": "pw2b-015", "n": 15, "title": "Which structure is the best?", "blocks": [{"k": "slide", "d": "pw2b", "n": 15}]}, {"id": "pw2b-016", "n": 16, "title": "Structure Selection Matrix Structures are the mostly used", "blocks": [{"k": "slide", "d": "pw2b", "n": 16}]}, {"id": "pw2b-017", "n": 17, "title": "Mixed Organizational", "blocks": [{"k": "slide", "d": "pw2b", "n": 17}]}, {"id": "pw2b-018", "n": 18, "title": "The Project Management", "blocks": [{"k": "slide", "d": "pw2b", "n": 18}]}, {"id": "pw2b-019", "n": 19, "title": "The Project Team How will you select your", "blocks": [{"k": "slide", "d": "pw2b", "n": 19}]}, {"id": "pw2b-020", "n": 20, "title": "The Project Team They must be technically competent", "blocks": [{"k": "slide", "d": "pw2b", "n": 20}]}, {"id": "pw2b-021", "n": 21, "title": "Team Development : Tuckman", "blocks": [{"k": "slide", "d": "pw2b", "n": 21}]}, {"id": "pw2b-022", "n": 22, "title": "Intrateam Conflicts Matrix projects have lots of", "blocks": [{"k": "slide", "d": "pw2b", "n": 22}]}, {"id": "pw2b-023", "n": 23, "title": "Strategies for Dealing", "blocks": [{"k": "slide", "d": "pw2b", "n": 23}]}, {"id": "pw2b-024", "n": 24, "title": "Six Signs of Excessive", "blocks": [{"k": "slide", "d": "pw2b", "n": 24}]}, {"id": "pw2b-025", "n": 25, "title": "Ways to Keep Stress Under", "blocks": [{"k": "slide", "d": "pw2b", "n": 25}]}, {"id": "pw2b-026", "n": 26, "title": "Understanding Check TRUE OR FALSE:", "blocks": [{"k": "slide", "d": "pw2b", "n": 26}]}, {"id": "pw2b-027", "n": 27, "title": "Reminder Any Questions?", "blocks": [{"k": "slide", "d": "pw2b", "n": 27}]}], "pw3": [{"id": "pw3-001", "n": 1, "title": "MGMT 313 – PROJECT MANAGEME", "blocks": [{"k": "slide", "d": "pw3", "n": 1}]}, {"id": "pw3-002", "n": 2, "title": "Categories of Projects", "blocks": [{"k": "slide", "d": "pw3", "n": 2}]}, {"id": "pw3-003", "n": 3, "title": "In Simpler Terms Improve what we have", "blocks": [{"k": "slide", "d": "pw3", "n": 3}]}, {"id": "pw3-004", "n": 4, "title": "Selecting Projects To", "blocks": [{"k": "slide", "d": "pw3", "n": 4}]}, {"id": "pw3-005", "n": 5, "title": "Selection Methods There are many different methods", "blocks": [{"k": "slide", "d": "pw3", "n": 5}]}, {"id": "pw3-006", "n": 6, "title": "Nonnumeric Selection", "blocks": [{"k": "slide", "d": "pw3", "n": 6}]}, {"id": "pw3-007", "n": 7, "title": "Q Sorting Separate the projects into 3 subsets; good, fair", "blocks": [{"k": "slide", "d": "pw3", "n": 7}]}, {"id": "pw3-008", "n": 8, "title": "Numeric Selection Methods", "blocks": [{"k": "slide", "d": "pw3", "n": 8}]}, {"id": "pw3-009", "n": 9, "title": "Project Selection – 0-1 Scoring", "blocks": [{"k": "slide", "d": "pw3", "n": 9}]}, {"id": "pw3-010", "n": 10, "title": "Project Selection – Matrix", "blocks": [{"k": "slide", "d": "pw3", "n": 10}]}, {"id": "pw3-011", "n": 11, "title": "Sorting Tip – By Elimination", "blocks": [{"k": "slide", "d": "pw3", "n": 11}]}, {"id": "pw3-012", "n": 12, "title": "In-Class Application", "blocks": [{"k": "slide", "d": "pw3", "n": 12}]}, {"id": "pw3-013", "n": 13, "title": "Class Summary Learning Check:", "blocks": [{"k": "slide", "d": "pw3", "n": 13}]}], "pw4": [{"id": "pw4-001", "n": 1, "title": "PROJECT MANAGEMENT MGT 313", "blocks": [{"k": "slide", "d": "pw4", "n": 1}]}, {"id": "pw4-002", "n": 2, "title": "Understanding Check –", "blocks": [{"k": "slide", "d": "pw4", "n": 2}]}, {"id": "pw4-003", "n": 3, "title": "Understanding Check –", "blocks": [{"k": "slide", "d": "pw4", "n": 3}]}, {"id": "pw4-004", "n": 4, "title": "Two Extremes Approaches", "blocks": [{"k": "slide", "d": "pw4", "n": 4}]}, {"id": "pw4-005", "n": 5, "title": "Target Approaches to Planning", "blocks": [{"k": "slide", "d": "pw4", "n": 5}]}, {"id": "pw4-006", "n": 6, "title": "Warm Up Make a list of all the things you need to know", "blocks": [{"k": "slide", "d": "pw4", "n": 6}]}, {"id": "pw4-007", "n": 7, "title": "Planning Tools Project Charter", "blocks": [{"k": "slide", "d": "pw4", "n": 7}]}, {"id": "pw4-008", "n": 8, "title": "Project Charter Elements", "blocks": [{"k": "slide", "d": "pw4", "n": 8}]}, {"id": "pw4-009", "n": 9, "title": "Categories of Elements", "blocks": [{"k": "slide", "d": "pw4", "n": 9}]}, {"id": "pw4-010", "n": 10, "title": "Elements of a Proper", "blocks": [{"k": "slide", "d": "pw4", "n": 10}]}, {"id": "pw4-011", "n": 11, "title": "Elements of a Proper", "blocks": [{"k": "slide", "d": "pw4", "n": 11}]}, {"id": "pw4-012", "n": 12, "title": "The Launch Meeting Once approved, project should", "blocks": [{"k": "slide", "d": "pw4", "n": 12}]}, {"id": "pw4-013", "n": 13, "title": "Results of the Launch", "blocks": [{"k": "slide", "d": "pw4", "n": 13}]}, {"id": "pw4-014", "n": 14, "title": "Sorting Out the Project-", "blocks": [{"k": "slide", "d": "pw4", "n": 14}]}, {"id": "pw4-015", "n": 15, "title": "WBS Mapping", "blocks": [{"k": "slide", "d": "pw4", "n": 15}]}, {"id": "pw4-016", "n": 16, "title": "Levels/Tree Structure", "blocks": [{"k": "slide", "d": "pw4", "n": 16}]}, {"id": "pw4-017", "n": 17, "title": "Notes on WBS Microsoft Project (MSP) will make a", "blocks": [{"k": "slide", "d": "pw4", "n": 17}]}, {"id": "pw4-018", "n": 18, "title": "Extensions of the Everyday", "blocks": [{"k": "slide", "d": "pw4", "n": 18}]}, {"id": "pw4-019", "n": 19, "title": "Exercise Discussion A Group to lead and share level 1", "blocks": [{"k": "slide", "d": "pw4", "n": 19}]}, {"id": "pw4-020", "n": 20, "title": "WBS Template Work Breakdown Structure Template", "blocks": [{"k": "slide", "d": "pw4", "n": 20}]}, {"id": "pw4-021", "n": 21, "title": "Predecessors Management", "blocks": [{"k": "slide", "d": "pw4", "n": 21}]}, {"id": "pw4-022", "n": 22, "title": "More on the Work Breakdown", "blocks": [{"k": "slide", "d": "pw4", "n": 22}]}, {"id": "pw4-023", "n": 23, "title": "The RACI Matrix Figure 3-5", "blocks": [{"k": "slide", "d": "pw4", "n": 23}]}, {"id": "pw4-024", "n": 24, "title": "PROJECT MANAGEME NT MGT 313", "blocks": [{"k": "slide", "d": "pw4", "n": 24}]}, {"id": "pw4-025", "n": 25, "title": "Planning Tools – Part II", "blocks": [{"k": "slide", "d": "pw4", "n": 25}]}, {"id": "pw4-026", "n": 26, "title": "A Whole- Brain Approach", "blocks": [{"k": "slide", "d": "pw4", "n": 26}]}, {"id": "pw4-027", "n": 27, "title": "How it works You need to start with a statement of the project", "blocks": [{"k": "slide", "d": "pw4", "n": 27}]}, {"id": "pw4-028", "n": 28, "title": "Sample Mind Map", "blocks": [{"k": "slide", "d": "pw4", "n": 28}]}, {"id": "pw4-029", "n": 29, "title": "Figure 3-9", "blocks": [{"k": "slide", "d": "pw4", "n": 29}]}, {"id": "pw4-030", "n": 30, "title": "The Design Structure", "blocks": [{"k": "slide", "d": "pw4", "n": 30}]}, {"id": "pw4-031", "n": 31, "title": "Example DSM for Project with", "blocks": [{"k": "slide", "d": "pw4", "n": 31}]}, {"id": "pw4-032", "n": 32, "title": "Managing Rework Situations", "blocks": [{"k": "slide", "d": "pw4", "n": 32}]}, {"id": "pw4-033", "n": 33, "title": "Project Planning with Scrum", "blocks": [{"k": "slide", "d": "pw4", "n": 33}]}, {"id": "pw4-034", "n": 34, "title": "What is Scrum? Scrum is a popular agile framework within which", "blocks": [{"k": "slide", "d": "pw4", "n": 34}]}, {"id": "pw4-035", "n": 35, "title": "SCRUM Advantages Product is delivered in sprints", "blocks": [{"k": "slide", "d": "pw4", "n": 35}]}, {"id": "pw4-036", "n": 36, "title": "Scrum Roles The Product Owner responsible for", "blocks": [{"k": "slide", "d": "pw4", "n": 36}]}, {"id": "pw4-037", "n": 37, "title": "Scrum Artifacts Supporting", "blocks": [{"k": "slide", "d": "pw4", "n": 37}]}, {"id": "pw4-038", "n": 38, "title": "Scrum Artifacts Product Increments", "blocks": [{"k": "slide", "d": "pw4", "n": 38}]}, {"id": "pw4-039", "n": 39, "title": "Scrum Artifacts", "blocks": [{"k": "slide", "d": "pw4", "n": 39}]}, {"id": "pw4-040", "n": 40, "title": "Example Product Backlog", "blocks": [{"k": "slide", "d": "pw4", "n": 40}]}, {"id": "pw4-041", "n": 41, "title": "Sprint Backlog Sample", "blocks": [{"k": "slide", "d": "pw4", "n": 41}]}, {"id": "pw4-042", "n": 42, "title": "Sprint Backlog Sample", "blocks": [{"k": "slide", "d": "pw4", "n": 42}]}, {"id": "pw4-043", "n": 43, "title": "Scrum Events for Project", "blocks": [{"k": "slide", "d": "pw4", "n": 43}]}, {"id": "pw4-044", "n": 44, "title": "Sequence of Scrum Planning", "blocks": [{"k": "slide", "d": "pw4", "n": 44}]}, {"id": "pw4-045", "n": 45, "title": "", "blocks": [{"k": "slide", "d": "pw4", "n": 45}]}], "pw6": [{"id": "pw6-001", "n": 1, "title": "MGT 313   - Project Manageme", "blocks": [{"k": "slide", "d": "pw6", "n": 1}]}, {"id": "pw6-002", "n": 2, "title": "Discussion 1. Which comes first;", "blocks": [{"k": "slide", "d": "pw6", "n": 2}]}, {"id": "pw6-003", "n": 3, "title": "Introductio n Must be developed to obtain the", "blocks": [{"k": "slide", "d": "pw6", "n": 3}]}, {"id": "pw6-004", "n": 4, "title": "Methods of Budgeting", "blocks": [{"k": "slide", "d": "pw6", "n": 4}]}, {"id": "pw6-005", "n": 5, "title": "Why is Project Budgeting", "blocks": [{"k": "slide", "d": "pw6", "n": 5}]}, {"id": "pw6-006", "n": 6, "title": "Budgeting Methods Top Down Budgeting", "blocks": [{"k": "slide", "d": "pw6", "n": 6}]}, {"id": "pw6-007", "n": 7, "title": "Top-Down Budgeting Based on collective judgments and", "blocks": [{"k": "slide", "d": "pw6", "n": 7}]}, {"id": "pw6-008", "n": 8, "title": "Bottom-Up Budgeting Work breakdown structure (WBS)", "blocks": [{"k": "slide", "d": "pw6", "n": 8}]}, {"id": "pw6-009", "n": 9, "title": "In-Class Exercise In pairs of 2, in 5 minutes", "blocks": [{"k": "slide", "d": "pw6", "n": 9}]}, {"id": "pw6-010", "n": 10, "title": "Work Element Costing", "blocks": [{"k": "slide", "d": "pw6", "n": 10}]}, {"id": "pw6-011", "n": 11, "title": "Work Elements Budgeting", "blocks": [{"k": "slide", "d": "pw6", "n": 11}]}, {"id": "pw6-012", "n": 12, "title": "In-Class Discussion Which is higher budget;", "blocks": [{"k": "slide", "d": "pw6", "n": 12}]}, {"id": "pw6-013", "n": 13, "title": "The Impact of Budget", "blocks": [{"k": "slide", "d": "pw6", "n": 13}]}, {"id": "pw6-014", "n": 14, "title": "The Impact of Budget", "blocks": [{"k": "slide", "d": "pw6", "n": 14}]}, {"id": "pw6-015", "n": 15, "title": "Budgeting with Agile", "blocks": [{"k": "slide", "d": "pw6", "n": 15}]}, {"id": "pw6-016", "n": 16, "title": "In-Class Discussion Which Process do you", "blocks": [{"k": "slide", "d": "pw6", "n": 16}]}, {"id": "pw6-017", "n": 17, "title": "Cost Estimating Details of the process of estimating", "blocks": [{"k": "slide", "d": "pw6", "n": 17}]}, {"id": "pw6-018", "n": 18, "title": "Basic Budget Forecasting", "blocks": [{"k": "slide", "d": "pw6", "n": 18}]}, {"id": "pw6-019", "n": 19, "title": "Typical Monthly Budget", "blocks": [{"k": "slide", "d": "pw6", "n": 19}]}, {"id": "pw6-020", "n": 20, "title": "MGT 313   - Project Manageme", "blocks": [{"k": "slide", "d": "pw6", "n": 20}]}, {"id": "pw6-021", "n": 21, "title": "Project Budget by Task", "blocks": [{"k": "slide", "d": "pw6", "n": 21}]}, {"id": "pw6-022", "n": 22, "title": "Improving Estimates and", "blocks": [{"k": "slide", "d": "pw6", "n": 22}]}, {"id": "pw6-023", "n": 23, "title": "Forms A form for project resource", "blocks": [{"k": "slide", "d": "pw6", "n": 23}]}, {"id": "pw6-024", "n": 24, "title": "Forms Forms might identify:", "blocks": [{"k": "slide", "d": "pw6", "n": 24}]}, {"id": "pw6-025", "n": 25, "title": "Form for Gatherin g Data", "blocks": [{"k": "slide", "d": "pw6", "n": 25}]}, {"id": "pw6-026", "n": 26, "title": "Learning Curves Humans learn when they repeat a", "blocks": [{"k": "slide", "d": "pw6", "n": 26}]}, {"id": "pw6-027", "n": 27, "title": "Learning Curves r n n", "blocks": [{"k": "slide", "d": "pw6", "n": 27}]}, {"id": "pw6-028", "n": 28, "title": "Budget Uncertainty and Project", "blocks": [{"k": "slide", "d": "pw6", "n": 28}]}, {"id": "pw6-029", "n": 29, "title": "Estimate of Project Costs", "blocks": [{"k": "slide", "d": "pw6", "n": 29}]}, {"id": "pw6-030", "n": 30, "title": "Estimates of Project", "blocks": [{"k": "slide", "d": "pw6", "n": 30}]}, {"id": "pw6-031", "n": 31, "title": "Estimates of Project", "blocks": [{"k": "slide", "d": "pw6", "n": 31}]}, {"id": "pw6-032", "n": 32, "title": "Estimates of Project", "blocks": [{"k": "slide", "d": "pw6", "n": 32}]}, {"id": "pw6-033", "n": 33, "title": "", "blocks": [{"k": "slide", "d": "pw6", "n": 33}]}, {"id": "pw6-034", "n": 34, "title": "Revising Budgets Changes are confined to early elements", "blocks": [{"k": "slide", "d": "pw6", "n": 34}]}, {"id": "pw6-035", "n": 35, "title": "Caption Budget (6 months)", "blocks": [{"k": "slide", "d": "pw6", "n": 35}]}, {"id": "pw6-036", "n": 36, "title": "Budget Tracking Monthly Tracking & Variance Analysis", "blocks": [{"k": "slide", "d": "pw6", "n": 36}]}, {"id": "pw6-037", "n": 37, "title": "Total Budget Budget (2mont", "blocks": [{"k": "slide", "d": "pw6", "n": 37}]}, {"id": "pw6-038", "n": 38, "title": "Handling Budget Changes", "blocks": [{"k": "slide", "d": "pw6", "n": 38}]}, {"id": "pw6-039", "n": 39, "title": "Factors Influencing the", "blocks": [{"k": "slide", "d": "pw6", "n": 39}]}, {"id": "pw6-040", "n": 40, "title": "Three Basic Causes for", "blocks": [{"k": "slide", "d": "pw6", "n": 40}]}, {"id": "pw6-041", "n": 41, "title": "Other Causes Changes or Additions in", "blocks": [{"k": "slide", "d": "pw6", "n": 41}]}, {"id": "pw6-042", "n": 42, "title": "Planning Impact Many of Budget Changes", "blocks": [{"k": "slide", "d": "pw6", "n": 42}]}, {"id": "pw6-043", "n": 43, "title": "Project Risk Simulatio", "blocks": [{"k": "slide", "d": "pw6", "n": 43}]}, {"id": "pw6-044", "n": 44, "title": "Ceramic Science s Example", "blocks": [{"k": "slide", "d": "pw6", "n": 44}]}, {"id": "pw6-045", "n": 45, "title": "Ceramic Sciences Example:", "blocks": [{"k": "slide", "d": "pw6", "n": 45}]}, {"id": "pw6-046", "n": 46, "title": "Psycho Ceramic Example:", "blocks": [{"k": "slide", "d": "pw6", "n": 46}]}, {"id": "pw6-047", "n": 47, "title": "Learning Summary Recognize the 3 different", "blocks": [{"k": "slide", "d": "pw6", "n": 47}]}, {"id": "pw6-048", "n": 48, "title": "Budgeting Summary Budgeting Methods", "blocks": [{"k": "slide", "d": "pw6", "n": 48}]}]};
+/* ===== the lecture as text: every slide, verbatim, pictures in place, why? on the lines ===== */
+const LTITLES = {"pw1": "Week 1 · The World of Project Management", "pw2a": "Week 2A · Types of Projects & Managing Uncertainty", "pw2b": "Week 2B · The Manager, the Organization & the Team", "pw3": "Week 3 · Selection Methods", "pw4": "Week 4 · Project Planning", "pw6": "Week 6 · Budgeting the Project"};
+const escT = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const nrm = s => String(s).replace(/\s+/g, ' ').trim().toLowerCase();
+function picEl(p, full) {
+  const el = h('div', { class: 'lpic', role: 'img', 'aria-label': 'picture from the slide' });
+  el.style.aspectRatio = `${p.w} / ${p.h}`;
+  el.style.maxWidth = full ? '100%' : Math.min(100, Math.max(25, Math.round(p.w / (p.pw || 1920) * 125))) + '%';
+  el.style.backgroundSize = `${(p.sw / p.w) * 100}% auto`;
+  el.style.backgroundPosition = `${p.sw > p.w ? (p.x / (p.sw - p.w)) * 100 : 0}% ${p.sh > p.h ? (p.y / (p.sh - p.h)) * 100 : 0}%`;
+  el.dataset.bg = p.a; lazyBg2(el);
+  el.onclick = () => { const ov = h('div', { class: 'picview', onclick: () => ov.remove() }, picEl(p, true)); document.body.append(ov); };
+  return el;
+}
+let picIO = null;
+function lazyBg2(el) { if (!('IntersectionObserver' in window)) { el.style.backgroundImage = `url("${el.dataset.bg}")`; return; } if (!picIO) picIO = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.style.backgroundImage = `url("${e.target.dataset.bg}")`; picIO.unobserve(e.target); } }), { rootMargin: '800px 0px' }); picIO.observe(el); }
+function lineEl(text, lvl, why, kind) {
+  const w = (why || []).find(([k]) => nrm(text).startsWith(nrm(k))) || (why || []).find(([k]) => nrm(text).includes(nrm(k)));
+  if (w) w.used = true;
+  return h('div', { class: `step wl sl-line lv${lvl || 0} ${kind || ''}` }, h('div', { class: 'm', html: (kind === 'p' ? '' : '<span class="sl-bul">•</span>') + `<span>${escT(text).replace(/([\u{1D400}-\u{1D7FF}])([0-9]+|𝑘|𝑖|𝑝|𝑗)(?![0-9])/gu, '$1<sub>$2</sub>')}</span>` }), h('div', { class: 'n', html: w ? w[1] : '' }));
+}
+function blocksEl(blocks, why) {
+  const out = []; let table = null;
+  blocks.forEach(b => {
+    if (b.k !== 'row') table = null;
+    if (b.k === 'li') out.push(lineEl(b.t, b.lvl, why));
+    else if (b.k === 'p') out.push(lineEl(b.t, 0, why, 'p'));
+    else if (b.k === 'big') out.push(h('div', { class: 'sl-big' }, b.t));
+    else if (b.k === 'row') { if (!table) { table = h('table', { class: 'tbl sl-tbl' }); out.push(h('div', { class: 'tblwrap' }, table)); } table.append(h('tr', {}, ...b.cells.map(c => h('td', {}, c)))); }
+    else if (b.k === 'pic') out.push(h('div', { class: 'sl-pics' }, picEl(b)));
+    else if (b.k === 'slide') { const el = slideEl({ d: b.d, k: b.n }, false); lazyBg(el); el.classList.add('sl-whole'); el.onclick = () => { const L = []; for (let k = 1; k <= SLIDES_N[b.d]; k++) if (!(SKIPSL[b.d] || []).includes(k) || k === b.n) L.push({ d: b.d, k, label: `${LTITLES[b.d] || ''} · slide ${k} / ${SLIDES_N[b.d]}` }); slideViewer(L, L.findIndex(x => x.k === b.n)); }; out.push(el); }
+    else if (b.k === 'pics') out.push(h('div', { class: 'sl-pics row' }, ...b.items.map(p => picEl(p))));
+    else if (b.k === 'side') out.push(h('div', { class: 'sl-side' }, h('div', { class: 'sl-sidetext' }, ...blocksEl(b.text, why)), h('div', { class: 'sl-sidepics' }, ...b.pics.map(p => picEl(p, true)))));
+  });
+  return out;
+}
+/* animation steps of the scanned slides (faded text that the next slide shows in full): hidden, their notes move to the next slide */
+const SKIPSL = {};
+function LectureText(host, lk) {
+  const S = LDATA[lk]; if (!S) { host.append(h('p', {}, 'Coming soon.')); return; }
+  const posKey = 'lpos-' + lk; const saved = store.get(posKey, 0);
+  const jump = h('select', { class: 'sjump', 'aria-label': 'Go to slide' });
+  const cards = []; let deck = '';
+  const bar = h('div', { class: 'sdeckbar' }, h('span', { class: 'small muted' }, 'Every slide exactly as in the lecture. Read the 💡 explanation under each slide. Tap a slide to enlarge it.'), jump);
+  host.append(bar);
+  let carry = [];
+  const SL = S.filter(s => { const [d, n] = s.id.split('-'); if ((SKIPSL[d] || []).includes(+n)) { carry = carry.concat((WHY[s.id] || []).filter(w => !w[0]).map(w => w[1])); return false; } if (carry.length) { const own = (WHY[s.id] || []).filter(w => !w[0]).map(w => w[1]); s._why = [['', carry.concat(own).join('<br><br>')]].concat((WHY[s.id] || []).filter(w => w[0])); carry = []; } return true; });
+  SL.forEach((s, i) => {
+    const d = s.id.split('-')[0];
+    if (d !== deck) { deck = d; host.append(h('h2', { class: 'sdecktitle' }, LTITLES[d] || d)); }
+    jump.append(h('option', { value: i }, `${SL.some(x => x.id.split('-')[0] !== d) ? d.toUpperCase() + ' · ' : ''}Slide ${s.n}${s.title ? ' – ' + s.title.slice(0, 40) : ''}`));
+    const why = (s._why || WHY[s.id] || []).map(x => x.slice());
+    const empty = !s.blocks.length;
+    const card = h('section', { class: 'sl-card' + (empty ? ' sl-section' : ''), 'data-i': i, id: 'sl-' + s.id },
+      h('div', { class: 'sl-head' }, h('span', { class: 'sl-no' }, `Slide ${s.n}`), s.title ? h('h3', { class: 'sl-title' }, s.title) : null),
+      ...blocksEl(s.blocks, why.filter(w => w[0])),
+      ...why.filter(w => !w[0]).map(w => h('div', { class: 'step wl sl-line sl-explain' }, h('div', { class: 'm', html: '<span class="sl-bul">💡</span><span><b>Explain this slide</b></span>' }), h('div', { class: 'n', html: w[1] }))));
+    host.append(card); cards.push(card);
+  });
+  addWhyIn(host);
+  jump.onchange = () => cards[+jump.value].scrollIntoView({ behavior: 'smooth', block: 'start' });
+  if ('IntersectionObserver' in window) { let t; const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { const i = +e.target.dataset.i; jump.value = i; clearTimeout(t); t = setTimeout(() => store.set(posKey, i), 400); } }), { rootMargin: '-35% 0px -60% 0px' }); cards.forEach(c => io.observe(c)); }
+  if (saved > 0 && cards[saved]) bar.after(h('div', { class: 'ctl' }, h('button', { class: 'btn ghost', type: 'button', onclick: () => cards[saved].scrollIntoView({ block: 'start' }) }, `Continue where you stopped (slide ${SL[saved].n})`)));
+}
+function addWhyIn(root) { root.querySelectorAll('.wl').forEach(w => { const m = w.querySelector(':scope > .m'), n = w.querySelector(':scope > .n'); if (!m || !n) return; if (!n.textContent.trim()) { n.remove(); return; } if (m.querySelector('.whyb')) return; const b = h('button', { class: 'whyb', type: 'button', 'aria-expanded': 'false' }, 'why?'); b.onclick = ev => { ev.stopPropagation(); const o = w.classList.toggle('open'); b.textContent = o ? 'hide' : 'why?'; b.setAttribute('aria-expanded', o); }; m.append(b); }); }
+/* ===== Project Management · slide notes ===== */
+const WHY = {};
+const N = t => [['', t]];
+// Week 1
+WHY['pw1-004'] = N('Grades: participation & in-class exercises 10%, quizzes 10%, <b>mid-term 20%</b>, assignments 10%, final project 25%, final exam 25%.');
+WHY['pw1-006'] = N('Main book: Meredith, Shafer, Mantel & Sutton, "Project Management in Practice" (7th ed.). Most exam wording comes from it (e.g. Exercise Sheet I).');
+WHY['pw1-007'] = N('The course map: definitions → planning → budget & risk → scheduling → resources → monitoring & control → evaluating and closing.');
+WHY['pw1-010'] = N('Learn the PMI definition word for word: a project is a <b>temporary</b> endeavor undertaken to create a <b>unique</b> product, service or result. Temporary = it has a start and an end; unique = it was not done in exactly this way before.');
+WHY['pw1-011'] = N('Three main characteristics: <b>unique</b>, <b>specific deliverables</b> (a clear output), <b>specific due date</b> (a deadline).');
+WHY['pw1-012'] = N('Other characteristics: <b>multidisciplinary</b> (needs people from many departments), <b>complex</b>, <b>often involves conflicts</b> (over resources and priorities), and is often <b>part of a program</b> (a group of related projects).');
+WHY['pw1-014'] = N('PMI: project management = applying <b>knowledge, skills, tools and techniques</b> to meet the project requirements.');
+WHY['pw1-015'] = N('Why projects? Many tasks do not fit "business as usual" (the routine work of departments), and organizations need one person with <b>responsibility and authority</b> to achieve a specific goal.');
+WHY['pw1-016'] = N('Three trends: using projects to achieve <b>strategic goals</b>, <b>Agile</b> project management, and <b>PMOs</b> (project management offices) to improve effectiveness.');
+WHY['pw1-017'] = N('Table 1.1 is a favorite exam question ("difference between project and general management"). Learn it row by row: unique vs routine; adapt to change vs manage by exception; planning critical vs important; budget from scratch vs modify last period; sequence must be determined vs predetermined; crosses units vs within a unit; informal vs well-defined reporting.');
+WHY['pw1-019'] = N('Regular budgets are <b>yearly</b>, usually last year\'s budget with modifications (actual based). Project budgets are <b>new for each project</b> and often cover <b>several future periods</b>.');
+WHY['pw1-020'] = N('Production lines repeat the same sequence; a project needs <b>its own schedule</b>. Past similar projects give only a rough template.');
+WHY['pw1-021'] = N('The normal organization works in departments. A project needs knowledge and skills from many of them, so it must <b>cross departmental lines</b> (multidisciplinary).');
+WHY['pw1-022'] = N('Globalization: team members can be in different countries, speak different languages and may never meet face to face.');
+WHY['pw1-023'] = N('The PM has <b>little authority</b> over the departments, which have their own objectives. The project is not their responsibility, so it gets the "leftovers". That is why the PM depends on <b>negotiation</b>.');
+WHY['pw1-024'] = N('Three outcomes: win-win (both gain), win-lose (one gains at the other\'s cost), lose-lose (both lose).');
+WHY['pw1-025'] = N('Win-win = finding the <b>3rd alternative</b>: a solution that is better for both sides than either original position. The PM needs it because he will need the same departments again and again.');
+WHY['pw1-026'] = N('The three goals (the "triple constraint"): <b>scope</b> (performance), <b>cost</b> (budget), <b>time</b> (schedule).');
+WHY['pw1-027'] = N('Figure 1-1: the target is the point where the required scope, the budget limit and the due date meet. Changing one affects the others ⇒ the PM manages trade-offs.');
+WHY['pw1-028'] = N('The 5 summary questions are the 5 exam-type questions of this lecture: definitions, characteristics, PM vs GM, win-win, the 3 dimensions.');
+// Week 2A
+WHY['pw2a-002'] = N('Quick recap answers: temporary unique endeavor; scope, cost, time; win-win (the 3rd alternative); Table 1.1.');
+WHY['pw2a-004'] = N('Waterfall = <b>linear and sequential</b>: one phase after another, following a clear plan, like water falling down steps. Each phase finishes before the next starts.');
+WHY['pw2a-005'] = N('Waterfall pros: clear, well structured, usually on time, easy to track, works with big teams.');
+WHY['pw2a-006'] = N('Waterfall cons: needs very extensive planning up front, changes are costly, needs a professional team, little flexibility, hard for new (never done) projects.');
+WHY['pw2a-008'] = N('The 4 Agile values: <b>individuals & interactions</b> over processes & tools; <b>working software</b> over documentation; <b>customer collaboration</b> over contract negotiation; <b>responding to change</b> over following a plan. The right side still has value, the left side has more.');
+WHY['pw2a-010'] = N('Principles 1–6: satisfy the customer by early, continuous delivery; <b>welcome changing requirements</b>; deliver working software frequently (weeks, not months); business people and developers work together daily; build projects around motivated individuals; <b>face-to-face conversation</b> is the best communication.');
+WHY['pw2a-011'] = N('Principles 7–12: <b>working software</b> is the primary measure of progress; sustainable pace; technical excellence; <b>simplicity</b> (maximize the work not done); <b>self-organizing teams</b>; regular reflection and adjustment. Exam traps: "avoid changing requirements" and "a detailed email" are NOT principles.');
+WHY['pw2a-012'] = N('Focus of Agile: customer & output, flexibility, simplicity & efficiency, results, people empowerment, review & continuous improvement.');
+WHY['pw2a-013'] = N('How Agile works: the project is split into <b>sprints</b> (small chunks of functionality), simple, with self-managing teams, and progress is measured by <b>working functionality</b>.');
+WHY['pw2a-015'] = N('Agile benefits: customer satisfaction, flexibility, less waste, faster delivery, higher quality, higher morale, performance visibility, predictability.');
+WHY['pw2a-016'] = N('Agile cons: hard to estimate time and cost, scope changes cause delays, difficult with large teams, needs a flexible culture, customer requirements can become unrealistic (set contractual limits).');
+WHY['pw2a-017'] = N('Rule of thumb: <b>clear, standard, fixed</b> requirements → Waterfall; <b>new, uncertain, changing</b> requirements → Agile.');
+WHY['pw2a-019'] = N('Answers: 1 new project → Agile; 2 clear repetitive requirements → Waterfall; 3 standard implementation → Waterfall; 4 multi-functional, many stakeholders → Waterfall; 5 rigid, time-restricted culture → Waterfall; 6 time & cost restricted → Waterfall.');
+WHY['pw2a-021'] = N('Every project is uncertain: it is complex, with interfaces, interdependencies and assumptions that may turn out wrong. Managing uncertainty is part of the job.');
+WHY['pw2a-023'] = N('Six sources of uncertainty: time to complete, availability & cost of resources, timing of technical solutions, the economy (macroeconomic variables), the whims of clients, competitors\' actions.');
+WHY['pw2a-024'] = N('Uncertainty <b>cannot be eliminated</b>, only managed and minimized.');
+WHY['pw2a-025'] = N('The two major roles of the PM: (1) manage the <b>trade-offs</b> between cost, time and scope; (2) <b>manage uncertainty</b>.');
+WHY['pw2a-026'] = N('For each uncertainty decide: eliminate it, trade it off, minimize it, or accept it as a risk.');
+WHY['pw2a-027'] = N('Risk analysis = identify uncertain events and their <b>likelihood</b>, make assumptions about the key parameters, and use models to judge decisions.');
+WHY['pw2a-028'] = N('Modelling risk in 3 steps: estimate the probability distributions of the key variables → build a mathematical model linking them to the outcome → generate the distribution of outcomes for the decision maker.');
+WHY['pw2a-029'] = N('The model gives the limits of variation and the <b>best and worst case</b> scenarios (e.g. for time, inflation, revenues).');
+WHY['pw2a-030'] = N('Six questions before selecting a project: profitable? required? do we have the skills? does it build strategic competencies? do we have the capacity? can it succeed economically?');
+WHY['pw2a-031'] = N('Selection methods are either <b>nonnumeric</b> (no numbers) or <b>numeric</b> (numbers). Details in Week 3.');
+// Week 2B
+WHY['pw2b-002'] = N('PMI (more than 447,000 members) publishes the <b>PMBOK</b> (Project Management Body of Knowledge).');
+WHY['pw2b-003'] = N('Career path: work on a small project → larger projects → project engineer / deputy PM → PM of a small project → larger projects → maybe a megaproject.');
+WHY['pw2b-004'] = N('How the project fits into the company is decided by <b>senior management</b> (company policy), not by the PM, but it affects the PM a lot.');
+WHY['pw2b-005'] = N('Pure project (Figure 2-5): each project is a separate unit with its <b>own</b> marketing, manufacturing, R&D, finance and personnel staff under its manager.');
+WHY['pw2b-006'] = N('Pure project pros: efficient for large projects, resources available, broad specialists, short communication lines.');
+WHY['pw2b-007'] = N('Pure project cons: expensive for small projects, limited technological depth, duplication of specialists, and <b>projectitis</b> (the team becomes too attached to the project when it lasts long).');
+WHY['pw2b-008'] = N('Functional project (Figure 2-6): the project sits <b>inside one department</b> (e.g. manufacturing).');
+WHY['pw2b-009'] = N('Functional pros: direct contact with the department\'s technology, part-time people (fractional resources), almost no projectitis.');
+WHY['pw2b-010'] = N('Functional cons: slow communication outside the department, missing technical breadth, the project rarely gets high priority.');
+WHY['pw2b-011'] = N('Matrix advantages (1): flexible interface with the parent organization, strong focus on the project, contact with functional groups minimizes projectitis.');
+WHY['pw2b-012'] = N('Matrix (Figure 2-7): the PMs (rows) borrow people from the functional departments (columns), e.g. PM₁ uses 3 people from manufacturing and 1½ from marketing.');
+WHY['pw2b-013'] = N('Matrix advantages (2): access to all the company\'s technology and resources, less duplication, resources maximized and cost optimized.');
+WHY['pw2b-014'] = N('Matrix problems: <b>two bosses</b> (PM and functional manager) ⇒ conflict on time and tasks; the PM may have no direct reports; low team loyalty; <b>more intrateam conflict</b>. Small projects tend to be a weak (functional) matrix.');
+WHY['pw2b-016'] = N('Matrix is the most used, but <b>there is no best structure</b>. It depends on complexity & size, budget, nature of the business, size of the organization, number of projects and resources.');
+WHY['pw2b-017'] = N('Mixed systems (Figure 2-8): pure projects (Project M, Project Z) next to functional departments in the same company.');
+WHY['pw2b-018'] = N('A <b>PMO</b> is a functional group that handles budgeting, scheduling, reporting, scope, governance and risk for all projects, and keeps project documents and histories. The functional units still do the technical work.');
+WHY['pw2b-020'] = N('5 qualities of team members: technically competent, politically sensitive (seniors), problem-solving oriented, goal oriented, high self-esteem.');
+WHY['pw2b-021'] = N('Tuckman: <b>Forming → Storming → Norming → Performing</b> (meet, argue, agree on rules, work well).');
+WHY['pw2b-022'] = N('Matrix projects have lots of conflict, and its sources change over the life cycle. 4 ways to reduce it: careful planning, participative management, PM–functional manager negotiation, communication with all stakeholders.');
+WHY['pw2b-023'] = N('Figure 2-4: two axes (assertive ↑, cooperative →). Competing (assertive, uncooperative), Collaborating (assertive, cooperative = win-win), Avoiding (unassertive, uncooperative), Accommodating (unassertive, cooperative), Compromising (middle).');
+WHY['pw2b-024'] = N('6 signs of excessive stress: can\'t switch off work, disturbed sleep, no pleasure in leisure, poor concentration/decisions, quick anger, lack of energy.');
+WHY['pw2b-025'] = N('6 ways to control stress: journal, prioritize tasks, time to unwind, physical activity, better surroundings, awareness of the control you have.');
+WHY['pw2b-026'] = N('Answers: T, F (PMs deal with conflict all the time), T, F (matrix has lots of conflict), T (mixed systems).');
+// Week 3
+WHY['pw3-002'] = N('4 categories: <b>derivative</b> (small improvement of what exists), <b>platform</b> (next generation, major departure, existing technology), <b>breakthrough</b> (new, possibly disruptive technology), <b>R&D</b> ("blue sky", visionary).');
+WHY['pw3-003'] = N('Memory line: improve what we have → next generation → new technology → explore the unknown.');
+WHY['pw3-004'] = N('Same 6 selection conditions as Week 2: profitable, required, skills, strategic competencies, capacity, economic success.');
+WHY['pw3-006'] = N('Nonnumeric methods: <b>sacred cow</b> (a powerful senior person wants it), <b>operating necessity</b> (needed to keep operations running, e.g. repair a flooded plant), <b>competitive necessity</b> (needed to stay competitive), <b>comparative benefits</b> (rank the projects; Q-sort when there are more than 15–20).');
+WHY['pw3-007'] = N('Q-sort: split into good / fair / poor; split again any group with more than 7–8; a committee ranks them; approve by composite rank.');
+WHY['pw3-008'] = N('Numeric methods: financial (payback period, discounted cash flow, options & opportunity costs) and scoring (unweighted 0-1, weighted factor scoring). Payback is the simplest but ignores the time value of money and later cash flows.');
+WHY['pw3-009'] = N('Unweighted 0-1: put x if the project satisfies the factor and count. Here A, B and C all score 5 ⇒ the method <b>cannot separate them</b> (all factors count the same).');
+WHY['pw3-010'] = N('Weighted scoring: multiply each score by the factor weight and add. A = 165, B = 210, <b>C = 225 → choose C</b> (e.g. C = 20×3 + 20×1 + 10×3 + 10×2 + 10×1 + 25×3 + 5×2).');
+WHY['pw3-011'] = N('Before scoring, eliminate non-viable options: those that fail key objectives (KPIs), the budget constraint or the time limit.');
+// Week 4
+WHY['pw4-003'] = N('Answers: T, F, T, F, T (same check as Week 2B).');
+WHY['pw4-004'] = N('Two extremes: "ready, fire, aim" (acting without planning) and "paralysis by analysis" (planning forever).');
+WHY['pw4-005'] = N('The middle: "Ready, steady, go" and the <b>4D model: Define it, Design it, Do it, Develop it</b>.');
+WHY['pw4-007'] = N('5 planning tools: project charter, project plan, mind mapping, WBS, RACI matrix.');
+WHY['pw4-008'] = N('Charter elements: statement of work, business case, assumptions, constraints, customer requirements, high-level risks, milestones, high-level budget, stakeholders, scope boundaries (in/out), plus approvals & signatures.');
+WHY['pw4-010'] = N('Project plan (1): change management process, communication plan, KPIs of the deliverable, <b>cost baseline</b>, HR plan, plan for monitoring and improving processes.');
+WHY['pw4-011'] = N('Project plan (2): procurement guidelines, scope management, the <b>WBS</b>, quality practices, risk management, <b>schedule baseline</b>.');
+WHY['pw4-012'] = N('After approval comes the <b>launch meeting</b>: the PM first reviews the objectives (understand them, identify key senior managers, spot anything atypical); a senior manager introduces the project; the PM chairs.');
+WHY['pw4-013'] = N('Results of the launch meeting: scope understood, functional managers commit to an initial task and resource plan, benefits/risks outside the scope noted.');
+WHY['pw4-014'] = N('WBS = break the project into all its tasks so that <b>no task is overlooked</b>. Poor up-front planning is a main cause of failure. List every task, however small, with its material and human resources.');
+WHY['pw4-016'] = N('Example tree: "Develop Website" → level 1: planning, design, content & development, testing, launching → level 2 under planning: consolidate requirements, prepare budget, approve charter, develop plan.');
+WHY['pw4-017'] = N('WBS notes: MS Project builds it automatically; tasks at the same level should have the same degree of detail; level-1 tasks can be delegated to whoever will do level 2.');
+WHY['pw4-018'] = N('The WBS is deliverable oriented; it can be extended with resources, time, responsibility and sequence (predecessors) for each task.');
+WHY['pw4-020'] = N('Template columns: task #, task, immediate predecessor, start, end, estimated resources, assigned to; plus cost, time, scope/KPI, dates, constraints, assumptions.');
+WHY['pw4-021'] = N('Predecessors decide the duration: <b>fewer predecessors and more parallel tasks = shorter project</b>. Team members tend to add predecessors to give themselves more time.');
+WHY['pw4-022'] = N('RACI matrix: WBS tasks in rows, people/departments in columns; it organizes the team and the resources.');
+WHY['pw4-023'] = N('RACI letters: <b>R</b>esponsible (does the work), <b>A</b>ccountable (approves, answers for it), <b>C</b>onsult (gives input), <b>I</b>nform (kept informed).');
+WHY['pw4-026'] = N('Mind mapping: a visual, whole-brain approach that mirrors how the brain stores information; it uses the creativity of the whole team and builds enthusiasm.');
+WHY['pw4-027'] = N('How: write the goal in the center of a big sheet, the team brainstorms the tasks around it, then breaks them down; use pictures more than words.');
+WHY['pw4-030'] = N('The DSM (Design Structure Matrix) shows the <b>information flow</b> and precedence between tasks.');
+WHY['pw4-031'] = N('In the DSM: X = information flow, O = potential <b>rework</b> (above the diagonal: a task needs information from a later task), shaded = tasks done concurrently.');
+WHY['pw4-032'] = N('To reduce rework: re-order the tasks so the O\'s move below the diagonal, or do tasks concurrently (may need the people in one place).');
+WHY['pw4-033'] = N('Agile does <b>not</b> plan less; it plans differently (people, flexibility, the Agile values) instead of big upfront plans that discourage change.');
+WHY['pw4-034'] = N('Scrum: the most popular Agile framework; breaks large complex projects into small parts, reviewing and adapting (iterative incremental). Started in software.');
+WHY['pw4-035'] = N('Scrum advantages: delivery in sprints, team unity, working product all the time, continuous client feedback, adapt along the way, flexible.');
+WHY['pw4-036'] = N('3 roles: <b>Product Owner</b> (voice of the customer, owns the product backlog), <b>Scrum Master</b> (facilitator/coach, reminds the rules), <b>Development Team</b> (builds the product).');
+WHY['pw4-037'] = N('<b>Product backlog</b>: the full list of requirements, a roadmap, always evolving. <b>Sprint backlog</b>: the part chosen for the current sprint, the real-time picture of the team\'s work.');
+WHY['pw4-038'] = N('<b>Product increment</b>: all work completed in all sprints so far. <b>Burndown chart</b>: graph of the estimated remaining work.');
+WHY['pw4-040'] = N('Example product backlog: tasks with priority and estimate in hours (total 224 h).');
+WHY['pw4-043'] = N('5 Scrum events: the sprint (with a goal), sprint planning meeting, daily scrum, sprint review, sprint retrospective.');
+WHY['pw4-044'] = N('Order (Fig. 3.12): sprint planning → daily scrum → sprint review → sprint retrospective → back to planning.');
+// Week 6
+WHY['pw6-002'] = N('Planning comes first: the budget is built from the plan (the WBS).');
+WHY['pw6-003'] = N('Why a budget: to get the resources, to allocate them to activities, to tie the project to the organization\'s objectives, and to monitor and guide the project.');
+WHY['pw6-004'] = N('Budgeting = forecasting <b>what</b> resources, <b>how much</b> of each, <b>when</b>, and <b>at what cost</b>.');
+WHY['pw6-005'] = N('Why it is hard: unique projects with no history, multi-year price escalation, company traditions (overheads, legal, accounting), and PMs see costs differently from accountants (who treat costs linearly).');
+WHY['pw6-007'] = N('<b>Top-down</b>: top and middle managers estimate the major tasks from experience. + accurate overall total; − controlled by people who do not do the work.');
+WHY['pw6-008'] = N('<b>Bottom-up</b>: the WBS lists the elemental tasks and the people doing them estimate. + accurate detail; − risk of overlooking tasks.');
+WHY['pw6-010'] = N('Work element costing: fixed costs, labor (time × rate), equipment (time × rate), facilities/capital. The PM budgets <b>direct costs</b>, which he can control.');
+WHY['pw6-011'] = N('Overheads (indirect costs) are charged by each firm\'s own rules (set by finance or law), and may differ by type of project.');
+WHY['pw6-013'] = N('Top-down budgets are usually <b>lower</b>: the job looks easier to the manager (optimistic), subordinates are pessimistic.');
+WHY['pw6-014'] = N('Resolve the gap: the subordinate explains the reality, both look for efficiencies, the rest depends on the type of project.');
+WHY['pw6-015'] = N('Agile budgeting: not a fixed scope, but the cost of the scrum team per sprint × number of sprints (from the backlog and the team\'s velocity) + extra resources.');
+WHY['pw6-018'] = N('Three forecasting bases: actual-based (last period), zero-based (from scratch), activity/task-based. For projects, combine them.');
+WHY['pw6-021'] = N('Table 4-4: the total estimate of each task is spread over the months it runs (e.g. task A 7000 = 5600 in month 1 + 1400 in month 2); the column totals give the monthly budget (total 75,000).');
+WHY['pw6-022'] = N('Improve estimates with <b>forms</b> and <b>learning curves</b>, and learn from similar past projects ("seek & re-apply").');
+WHY['pw6-023'] = N('A resource form covers people, materials (facilities, equipment, tools, space), special services and fixed expenses…');
+WHY['pw6-024'] = N('…and for each: contact person, when needed, how much, and whether available.');
+WHY['pw6-026'] = N('Learning curve: each time total output <b>doubles</b>, the hours per unit fall to a fixed percentage (the learning rate) of the previous value. 80% rate: 100 h → 80 h (2nd) → 64 h (4th) → 51.2 h (8th).');
+WHY['pw6-027'] = N('Formula: <b>Tₙ = T₁ · nʳ</b>, r = log(learning rate) / log 2. For 80%: r = log 0.8 / log 2 ≈ −0.322.');
+WHY['pw6-028'] = N('The budget is an estimate under uncertainty; risk touches performance, schedule and budget.');
+WHY['pw6-029'] = N('The band around the cost curve = uncertainty. It is wide at the start…');
+WHY['pw6-031'] = N('…and narrows as the project goes on (t₀ → t₁ → t₂), because more costs become actual.');
+WHY['pw6-034'] = N('Revising budgets: (1) early, isolated change: new = old + changes; (2) systemic change: costs to date + previous estimate of the rest × correction factor; (3) change to specific remaining tasks: actual costs to date + expected cost of the remaining tasks.');
+WHY['pw6-035'] = N('Example: direct costs 3,000,000 + 750,000 + 500,000 + 150,000 = 4,300,000; indirect = 30% = 1,290,000; contingency = 10% of salaries = 300,000; total = 5,890,000. Actuals after 2 months 2,480,000 ⇒ remaining 3,510,000.');
+WHY['pw6-036'] = N('Track monthly: <b>commitments</b> + <b>actual expenditures</b> (and cash) ⇒ variance analysis, together with the finance team.');
+WHY['pw6-038'] = N('Handling changes: accept a loss (worst); contract provisions in advance (best); state assumptions; mandates are hardest ⇒ split the project into shorter sequential contracts.');
+WHY['pw6-039'] = N('Factors affecting the budget: resource price changes, waste & spoilage, turnover, "mythical man-months" (adding people does not cut time proportionally), climate, luck.');
+WHY['pw6-040'] = N('3 basic causes of change: estimator errors, new knowledge about the goal or setting, and a mandate (new law or standard).');
+WHY['pw6-041'] = N('Other causes: new requirements, approval delays (prices rise), team/management changes, consultants\' rate increases (variation orders).');
+WHY['pw6-042'] = N('Many budget changes can be prevented by <b>effective planning</b>.');
+WHY['pw6-043'] = N('Risk simulation (Crystal Ball): build a model, run it many times with random inputs, get statistical distributions (risk profiles) to support the decision.');
+WHY['pw6-045'] = N('The NPV histogram from 1,000 trials: most results are positive, but some are negative.');
+WHY['pw6-046'] = N('Base case NPV $17,997, but the simulated mean is $14,817, with min −$12,810 and max $39,199 ⇒ a single estimate hides the risk.');
+WHY['pw6-047'] = N('Summary of Week 6: cost perspectives (commitment, actual, cash), learning curves, budget risk, uncertainty shrinking over time, handling changes.');
 /* ===== Project Management page ===== */
 const PMG = { groupOf: x => x.t === 'write' ? 'essay' : x.t === 'tf' ? 'tf' : 'mc', titles: { tf: 'True or False? Then explain why', mc: 'Choose the correct answer (MCQ / choose all)', essay: 'Essay questions' }, order: ['tf', 'mc', 'essay'] };
 function bootPM() {
@@ -1535,6 +1872,7 @@ function bootPM() {
   const REG = {}; [...ALL, ...MOCK.qs.flatMap(q => q.items)].forEach(it => REG[it.id] = it);
   const secs = [
     { id: 'start', grp: 'Begin', ln: '—', name: 'Start here' },
+    ...Object.keys(SLIDES).map(d => ({ id: 'learn-' + d, grp: 'The lectures, slide by slide', ln: d.replace('pw', 'W').toUpperCase(), name: LTITLES[d].replace(/^Week [0-9A-Z]+ · /, '') })),
     ...LK.map(k => ({ id: k, grp: 'Questions per lecture', ln: LECT[k].ln, name: LECT[k].name })),
     { id: 'ex1', grp: 'From the course', ln: 'Ex I', name: 'Exercise Sheet I (all 36 questions)' },
     { id: 'all', grp: 'All lectures together', ln: 'Mix', name: 'Mixed review' },
@@ -1542,7 +1880,13 @@ function bootPM() {
     { id: 'mistakes', grp: 'Review', ln: 'Redo', name: 'Mistakes notebook' }
   ];
   const nav = $('#nav'), sel = $('#navsel'); let g = '';
-  secs.forEach(s => { if (s.grp !== g) { g = s.grp; nav.append(h('div', { class: 'grp' }, g)); sel.append(h('option', { disabled: true }, '— ' + g)); } nav.append(h('a', { href: '#' + s.id, 'data-id': s.id }, h('span', { class: 'ln' }, s.ln), h('span', {}, s.name), s.id === 'mistakes' ? h('span', { class: 'mbadge' }) : h('span'))); sel.append(h('option', { value: s.id }, `${s.ln} · ${s.name}`)); });
+  const modeOf = s => s.id === 'start' ? 'both' : s.id.startsWith('learn-') ? 'learn' : 'practice';
+  secs.forEach(s => { if (s.grp !== g) { g = s.grp; nav.append(h('div', { class: 'grp', 'data-mode': modeOf(s) }, g)); } nav.append(h('a', { href: '#' + s.id, 'data-id': s.id, 'data-mode': modeOf(s) }, h('span', { class: 'ln' }, s.ln), h('span', {}, s.name), s.id === 'mistakes' ? h('span', { class: 'mbadge' }) : h('span'))); });
+  let mode = store.get('mode', 'learn'); const swb = [];
+  const fillSel = () => { sel.innerHTML = ''; let gg = ''; secs.filter(s => modeOf(s) === 'both' || modeOf(s) === mode).forEach(s => { if (s.grp !== gg) { gg = s.grp; sel.append(h('option', { disabled: true }, '— ' + gg)); } sel.append(h('option', { value: s.id }, `${s.ln} · ${s.name}`)); }); };
+  const setMode = (m, go) => { mode = m; store.set('mode', m); $$('#nav [data-mode]').forEach(a => a.hidden = !(a.dataset.mode === 'both' || a.dataset.mode === m)); swb.forEach(b => b.classList.toggle('on', b.dataset.m === m)); fillSel(); if (go) location.hash = m === 'learn' ? '#learn-pw1' : '#p1'; };
+  const mkSw = () => { const w = h('div', { class: 'modesw' }); [['learn', '📖 Explanation'], ['practice', '✍️ Questions']].forEach(([m, t]) => { const b = h('button', { type: 'button', 'data-m': m }, t); b.onclick = () => setMode(m, true); swb.push(b); w.append(b); }); return w; };
+  nav.before(mkSw()); $('.topbar').append(mkSw()); setMode(mode);
   sel.onchange = () => location.hash = sel.value;
   const main = $('main');
   const headEl = (eyebrow, title, lead) => h('div', { class: 'ch-head' }, h('div', { class: 'eyebrow' }, eyebrow), h('h1', {}, title), lead ? h('p', { class: 'lead', html: lead }) : null);
@@ -1551,6 +1895,7 @@ function bootPM() {
     const L = LECT[id];
     if (id === 'start') {
       sec.append(headEl('MGMT 313 · Project Management', 'Questions only.', `${ALL.length} questions on every section of the slides, in the three exam types: <b>True/False with explanation</b>, <b>MCQ</b> (one answer or choose all) and <b>essay</b>. The questions of Exercise Sheet I are inside, marked with a green badge.`));
+      sec.append(h('div', { class: 'modecards' }, h('button', { type: 'button', class: 'modecard', onclick: () => setMode('learn', true) }, h('span', { class: 'mi' }, '📖'), h('span', { class: 'mt' }, 'Explanation'), h('span', { class: 'md' }, 'The lectures exactly as in the slides, slide by slide, with a short simple explanation under each slide.')), h('button', { type: 'button', class: 'modecard', onclick: () => setMode('practice', true) }, h('span', { class: 'mi' }, '✍️'), h('span', { class: 'mt' }, 'Questions'), h('span', { class: 'md' }, 'True/False with explanation, MCQ and essays on every slide, Exercise Sheet I, the mock midterm and your mistakes.'))));
       const pr = store.get('prog', {});
       const tb = h('table', { class: 'tbl progt' }, h('tr', {}, h('th', {}, 'Week'), h('th', {}, 'Topic'), h('th', {}, 'Questions'), h('th', {}, 'Answered'), h('th', {}, 'Correct')));
       const row = (href, ln, name, its) => { const ids = its.map(x => x.id); const done = ids.filter(x => pr[x] != null); const ok = done.filter(x => pr[x] === 1).length; const pct = done.length ? Math.round(100 * ok / done.length) : null; const cov = Math.round(100 * done.length / ids.length);
@@ -1560,6 +1905,9 @@ function bootPM() {
       row('#mock', 'Mock', 'Mock midterm', MOCK.qs.flatMap(q => q.items));
       sec.append(h('h2', {}, 'Your progress'), h('p', { class: 'small muted' }, 'Answered = questions you checked at least once. Correct = of those, how many were right the last time. Red or orange = go back to that week.'), h('div', { class: 'tblwrap' }, tb));
       sec.append(h('h2', {}, 'How to use it'), h('ol', {}, h('li', { html: 'Do the weeks in order. Each page covers <b>every slide</b> of that lecture, in the order of the slides.' }), h('li', { html: '<b>True/False:</b> choose, then read the explanation: in the exam you must <b>explain why</b>, especially when it is False.' }), h('li', { html: '<b>Essays:</b> ⚡ Quick mode — say the answer in your head, open the points and tick what you remembered.' }), h('li', { html: 'Then do <b>Exercise Sheet I</b>, the <b>Mixed review</b>, and the <b>Mock midterm</b> with the clock.' }), h('li', { html: 'Anything you get wrong goes to the <b>Mistakes notebook</b>.' })));
+    } else if (id.startsWith('learn-')) {
+      sec.append(headEl('MGMT 313 · Project Management · explanation', LTITLES[id.slice(6)], 'The lecture slide by slide, exactly as in the slides, with a short simple explanation under each slide.'));
+      LectureText(sec, id.slice(6));
     } else if (L) {
       sec.append(headEl(`${L.ln} · MGMT 313 Project Management`, L.name, `${L.items.length} questions. Covers: ${L.covers}.`));
       Practice(sec, L.items, PMG);
@@ -1581,7 +1929,7 @@ function bootPM() {
       if (!ids.length) sec.append(h('div', { class: 'banner ok' }, 'Empty. Nothing to redo right now.'));
       else { sec.append(h('p', {}, `${ids.length} question(s).`)); ids.forEach((x, i) => Item(sec, REG[x], i + 1, 'practice')); }
     }
-    $$('#nav a').forEach(a => a.classList.toggle('cur', a.dataset.id === id)); sel.value = id; badge();
+    { const sm = secs.find(x => x.id === id); if (sm && modeOf(sm) !== 'both' && modeOf(sm) !== mode) setMode(modeOf(sm)); } $$('#nav a').forEach(a => a.classList.toggle('cur', a.dataset.id === id)); sel.value = id; badge();
     window.scrollTo({ top: 0, behavior: 'instant' });
   }
   const show = () => { const id = (location.hash || '#start').slice(1); render(secs.some(s => s.id === id) ? id : 'start'); };
