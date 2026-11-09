@@ -384,6 +384,8 @@ svg.dgm{display:block;width:100%;max-width:640px;height:auto;color:var(--ink)}
 .lblgrid label{display:flex;gap:8px;align-items:center}.lblgrid .txt{flex:1;width:auto}
 .pbar{height:6px;background:var(--powder);border-radius:6px;overflow:hidden;width:100px;margin:4px 0}.pbar i{display:block;height:100%;background:var(--good)}
 .pgood{color:var(--good);font-weight:700}.pmid{color:#B07400;font-weight:700}.pbad{color:var(--bad);font-weight:700}
+.qkbar{margin:6px 0 2px;padding:6px 10px;border-radius:8px;background:var(--accent-soft);line-height:1.5}
+.linkbtn{font:inherit;font-weight:700;background:none;border:0;padding:0;color:var(--accent);text-decoration:underline;cursor:pointer}
 </style>
 
 </head>
@@ -922,10 +924,18 @@ function Item(host, it, num, mode, onScore) {
   else if (it.t === 'write' || it.t === 'diff') {
     card.append(h('div', { class: 'oqt', html: it.q }));
     const k = `${id}-w`; const ta = h('textarea', { class: 'ta', rows: it.t === 'diff' ? 5 : 3, 'aria-label': 'your answer', placeholder: 'Type your answer here, or use the pencil above, or write on paper.' }); ta.value = store.get(k, ''); ta.oninput = () => store.set(k, ta.value);
-    const reveal = h('button', { class: 'btn ghost', type: 'button' }, 'I wrote it. Show the model answer');
+    // quick mode (practice only): answer in your head or out loud, then open the points and tick what you remembered
+    let quick = mode === 'practice' && store.get('quickw', true);
+    const showTxt = () => quick ? 'Show the answer points' : 'I wrote it. Show the model answer';
+    const reveal = h('button', { class: 'btn ghost', type: 'button' }, showTxt());
     const sheet = h('div', { class: 'sheet', hidden: true });
-    PenToggle(card, `${id}-pen`);
-    card.append(ta, ...(mode === 'practice' ? [h('div', { class: 'ctl' }, reveal)] : []), sheet);
+    const wbox = h('div', { class: 'wbox' }); PenToggle(wbox, `${id}-pen`); wbox.append(ta);
+    const qlink = h('button', { class: 'linkbtn', type: 'button' });
+    const qset = () => { wbox.hidden = quick; qlink.textContent = quick ? '✍ Write this one instead' : '⚡ Answer in my head instead'; if (sheet.hidden) reveal.textContent = showTxt(); };
+    qlink.onclick = () => { quick = !quick; qset(); };
+    const qbar = h('div', { class: 'qkbar small muted' }, h('span', {}, '⚡ Quick: say the answer in your head (or out loud), then open the points and tick the ones you remembered. '), qlink);
+    if (mode === 'practice') { card.append(qbar); qset(); }
+    card.append(wbox, ...(mode === 'practice' ? [h('div', { class: 'ctl' }, reveal)] : []), sheet);
     const build = () => {
       if (sheet.dataset.ready) { sheet.hidden = false; return; } sheet.dataset.ready = 1; sheet.hidden = false;
       sheet.append(h('div', { class: 'sheet-h' }, 'Model answer'));
@@ -935,7 +945,7 @@ function Item(host, it, num, mode, onScore) {
         sheet.append(h('div', { class: 'tblwrap' }, tb)); if (it.extra) sheet.append(h('p', { class: 'small', html: it.extra }));
       } else sheet.append(h('div', { html: it.model }));
       const pts = it.t === 'diff' ? it.rows.slice(0, max).map(r => `${r[0]}: ${r[1].replace(/<[^>]+>/g, '')} vs ${r[2].replace(/<[^>]+>/g, '')}`) : it.points;
-      const rb = h('div', { class: 'rubric' }, h('div', { class: 'sub' }, 'Mark yourself honestly: tick each point your answer has.'));
+      const rb = h('div', { class: 'rubric' }, h('div', { class: 'sub' }, quick ? 'Tick each point you remembered (honestly), then press Save my mark.' : 'Mark yourself honestly: tick each point your answer has.'));
       const ticks = pts.map((p, i) => { const kk = `${k}-r${i}`; const c = h('input', { type: 'checkbox' }); c.checked = store.get(kk, false); c.onchange = () => { store.set(kk, c.checked); upd(); }; rb.append(h('label', { class: 'rbi' }, c, h('span', { html: ' ' + p }))); return c; });
       const sc = h('span', { class: 'pill' }); const saved = h('span', { class: 'small muted' });
       const bSave = h('button', { class: 'btn primary', type: 'button' }, 'Save my mark');
@@ -947,7 +957,7 @@ function Item(host, it, num, mode, onScore) {
         else { noteMistake(id); saved.textContent = 'Saved. Not full marks, so it is in your Mistakes notebook to redo.'; } };
       upd();
     };
-    reveal.onclick = () => { if (!sheet.hidden && sheet.dataset.ready) { sheet.hidden = true; reveal.textContent = 'I wrote it. Show the model answer'; store.set(`${id}-chk`, 0); return; } build(); reveal.textContent = 'Hide the model answer'; store.set(`${id}-chk`, 1); };
+    reveal.onclick = () => { if (!sheet.hidden && sheet.dataset.ready) { sheet.hidden = true; reveal.textContent = showTxt(); store.set(`${id}-chk`, 0); return; } build(); reveal.textContent = 'Hide the model answer'; store.set(`${id}-chk`, 1); };
     api.selfMarked = true;
     api.grade = () => { build(); reveal.textContent = 'Hide the model answer'; };
   }

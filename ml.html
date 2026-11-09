@@ -384,6 +384,8 @@ svg.dgm{display:block;width:100%;max-width:640px;height:auto;color:var(--ink)}
 .lblgrid label{display:flex;gap:8px;align-items:center}.lblgrid .txt{flex:1;width:auto}
 .pbar{height:6px;background:var(--powder);border-radius:6px;overflow:hidden;width:100px;margin:4px 0}.pbar i{display:block;height:100%;background:var(--good)}
 .pgood{color:var(--good);font-weight:700}.pmid{color:#B07400;font-weight:700}.pbad{color:var(--bad);font-weight:700}
+.qkbar{margin:6px 0 2px;padding:6px 10px;border-radius:8px;background:var(--accent-soft);line-height:1.5}
+.linkbtn{font:inherit;font-weight:700;background:none;border:0;padding:0;color:var(--accent);text-decoration:underline;cursor:pointer}
 
 /* ===== ML page ===== */
 .learn h2{margin-top:34px}
@@ -1011,10 +1013,18 @@ function Item(host, it, num, mode, onScore) {
   else if (it.t === 'write' || it.t === 'diff') {
     card.append(h('div', { class: 'oqt', html: it.q }));
     const k = `${id}-w`; const ta = h('textarea', { class: 'ta', rows: it.t === 'diff' ? 5 : 3, 'aria-label': 'your answer', placeholder: 'Type your answer here, or use the pencil above, or write on paper.' }); ta.value = store.get(k, ''); ta.oninput = () => store.set(k, ta.value);
-    const reveal = h('button', { class: 'btn ghost', type: 'button' }, 'I wrote it. Show the model answer');
+    // quick mode (practice only): answer in your head or out loud, then open the points and tick what you remembered
+    let quick = mode === 'practice' && store.get('quickw', true);
+    const showTxt = () => quick ? 'Show the answer points' : 'I wrote it. Show the model answer';
+    const reveal = h('button', { class: 'btn ghost', type: 'button' }, showTxt());
     const sheet = h('div', { class: 'sheet', hidden: true });
-    PenToggle(card, `${id}-pen`);
-    card.append(ta, ...(mode === 'practice' ? [h('div', { class: 'ctl' }, reveal)] : []), sheet);
+    const wbox = h('div', { class: 'wbox' }); PenToggle(wbox, `${id}-pen`); wbox.append(ta);
+    const qlink = h('button', { class: 'linkbtn', type: 'button' });
+    const qset = () => { wbox.hidden = quick; qlink.textContent = quick ? '✍ Write this one instead' : '⚡ Answer in my head instead'; if (sheet.hidden) reveal.textContent = showTxt(); };
+    qlink.onclick = () => { quick = !quick; qset(); };
+    const qbar = h('div', { class: 'qkbar small muted' }, h('span', {}, '⚡ Quick: say the answer in your head (or out loud), then open the points and tick the ones you remembered. '), qlink);
+    if (mode === 'practice') { card.append(qbar); qset(); }
+    card.append(wbox, ...(mode === 'practice' ? [h('div', { class: 'ctl' }, reveal)] : []), sheet);
     const build = () => {
       if (sheet.dataset.ready) { sheet.hidden = false; return; } sheet.dataset.ready = 1; sheet.hidden = false;
       sheet.append(h('div', { class: 'sheet-h' }, 'Model answer'));
@@ -1024,7 +1034,7 @@ function Item(host, it, num, mode, onScore) {
         sheet.append(h('div', { class: 'tblwrap' }, tb)); if (it.extra) sheet.append(h('p', { class: 'small', html: it.extra }));
       } else sheet.append(h('div', { html: it.model }));
       const pts = it.t === 'diff' ? it.rows.slice(0, max).map(r => `${r[0]}: ${r[1].replace(/<[^>]+>/g, '')} vs ${r[2].replace(/<[^>]+>/g, '')}`) : it.points;
-      const rb = h('div', { class: 'rubric' }, h('div', { class: 'sub' }, 'Mark yourself honestly: tick each point your answer has.'));
+      const rb = h('div', { class: 'rubric' }, h('div', { class: 'sub' }, quick ? 'Tick each point you remembered (honestly), then press Save my mark.' : 'Mark yourself honestly: tick each point your answer has.'));
       const ticks = pts.map((p, i) => { const kk = `${k}-r${i}`; const c = h('input', { type: 'checkbox' }); c.checked = store.get(kk, false); c.onchange = () => { store.set(kk, c.checked); upd(); }; rb.append(h('label', { class: 'rbi' }, c, h('span', { html: ' ' + p }))); return c; });
       const sc = h('span', { class: 'pill' }); const saved = h('span', { class: 'small muted' });
       const bSave = h('button', { class: 'btn primary', type: 'button' }, 'Save my mark');
@@ -1036,7 +1046,7 @@ function Item(host, it, num, mode, onScore) {
         else { noteMistake(id); saved.textContent = 'Saved. Not full marks, so it is in your Mistakes notebook to redo.'; } };
       upd();
     };
-    reveal.onclick = () => { if (!sheet.hidden && sheet.dataset.ready) { sheet.hidden = true; reveal.textContent = 'I wrote it. Show the model answer'; store.set(`${id}-chk`, 0); return; } build(); reveal.textContent = 'Hide the model answer'; store.set(`${id}-chk`, 1); };
+    reveal.onclick = () => { if (!sheet.hidden && sheet.dataset.ready) { sheet.hidden = true; reveal.textContent = showTxt(); store.set(`${id}-chk`, 0); return; } build(); reveal.textContent = 'Hide the model answer'; store.set(`${id}-chk`, 1); };
     api.selfMarked = true;
     api.grade = () => { build(); reveal.textContent = 'Hide the model answer'; };
   }
@@ -4002,12 +4012,26 @@ function bootML() {
     const perm = shuffle(it.opts.map((_, i) => i), seed); it.opts = perm.map(i => it.opts[i]); it.a = perm.indexOf(it.a); it._sh = 1; });
   const REG = {}; [...Object.values(LECT).flatMap(L => L.items), ...Object.values(LECT0).flatMap(L => L.items), ...ALLX, ...ALLX0, ...ALLP.flatMap(p => p.qs.flatMap(q => q.items))].forEach(it => REG[it.id] = it);
   const LK = Object.keys(LECT);
+  /* the high-yield set: per lecture, real-exam questions first, then the key ideas, a balance of every exam type */
+  const typ = x => x.t === 'num' ? 'num' : (x.t === 'write' || x.t === 'diff') ? 'essay' : x.t === 'tf' ? 'tf' : 'mc';
+  const QUOTA = { mc: 4, tf: 2, essay: 3, num: 2 };
+  function HIGH(k) {
+    const its = LECT[k].items, got = [], n = { mc: 0, tf: 0, essay: 0, num: 0 }, per = {};
+    /* weights from the real midterms (Fall 2022 + Fall 2024 marks): L5 ≈ 40%, L6 ≈ 17%, L2/L3 ≈ 14% each, L1/L4 ≈ 8% each */
+    const W8 = { l1: 0.6, l2: 0.9, l3: 1.1, l4: 0.8, l5: 1.7, l6: 1.6 }[k] || 1;
+    const q = {}; for (const t in QUOTA) q[t] = Math.max(1, Math.round(QUOTA[t] * W8 + (k === 'l6' && t === 'num' ? 1 : 0)));
+    const take = x => { if (got.includes(x)) return; const t = typ(x); if (n[t] >= q[t]) return; const key = (x.src || '') + t; if (x.src && (per[key] || 0) >= 2) return; per[key] = (per[key] || 0) + 1; n[t]++; got.push(x); };
+    its.filter(x => x.src).forEach(take); its.filter(x => !x.src).forEach(take);
+    return got;
+  }
+  const HIGHALL = () => [...LK.flatMap(HIGH), ...ALLX.filter(x => x.t === 'diff' || x.t === 'ms' || x.t === 'tf').slice(0, 10)];
+
   const secs = [
     { id: 'start', grp: 'Begin', ln: '—', name: 'Start here' },
     ...LK.map(k => ({ id: 'learn-' + k, grp: '① Learn (explanations)', ln: LECT[k].ln, name: LECT[k].name })),
     ...PAPERS_REAL.map(p => ({ id: p.id, grp: '② Real university exams', ln: p.ln, name: p.title })),
     ...LK.map(k => ({ id: k, grp: '③ Exam-style questions per lecture', ln: LECT[k].ln, name: LECT[k].name })),
-    { id: 'all', grp: 'All lectures together', ln: 'Mix', name: 'Mixed review & model comparisons' },
+    { id: 'all', grp: 'All lectures together', ln: 'Mix', name: 'Most important questions (all 6 lectures)' },
     { id: 'diffs', grp: 'All lectures together', ln: 'Cmp', name: 'All "difference / pros vs cons" questions' },
     { id: 'lab', grp: 'All lectures together', ln: 'Calc', name: 'Numerical problems (unlimited)' },
     ...PAPERS.map(p => ({ id: p.id, grp: '④ Mock exams in the same format', ln: p.ln, name: p.title })),
@@ -4032,7 +4056,7 @@ function bootML() {
         tb.append(h('tr', {}, h('td', {}, h('a', { href }, ln)), h('td', {}, name), h('td', { class: 'mono' }, String(ids.length)), h('td', {}, h('div', { class: 'pbar' }, h('i', { style: `width:${cov}%` })), h('span', { class: 'small muted' }, `${done.length} (${cov}%)`)), h('td', { class: 'mono ' + (pct == null ? '' : pct >= 80 ? 'pgood' : pct >= 60 ? 'pmid' : 'pbad') }, pct == null ? '—' : pct + '%'))); };
       PAPERS_REAL.forEach(P => row('#' + P.id, P.ln, P.title, P.qs.flatMap(q => q.items)));
       LK.forEach(k => row('#' + k, LECT[k].ln, LECT[k].name, BANK(k)));
-      row('#all', 'Mix', 'Mixed review & comparisons', [...ALLX, ...ALLX0]);
+      row('#all', 'Mix', 'Most important questions', HIGHALL());
       PAPERS.forEach(P => row('#' + P.id, P.ln, P.title, P.qs.flatMap(q => q.items)));
       sec.append(h('h2', {}, 'Your progress'), h('p', { class: 'small muted' }, 'Answered = questions you checked at least once. Correct = of those, how many were right the last time. Red or orange = go back to that lecture.'), h('div', { class: 'tblwrap' }, tb));
       sec.append(h('h2', {}, 'How to use it'), h('ol', {},
@@ -4062,8 +4086,11 @@ function bootML() {
       sec.append(h('h2', { class: 'partttl' }, 'Part B · Slide by slide: every line of the lecture (same exam format)'), h('p', { class: 'small muted' }, 'Same format as the midterm: choose the correct answer, true or false (why?), essay questions and numerical problems.'));
       Practice(sec, L0, EXAM_GROUPS);
     } else if (id === 'all') {
-      sec.append(headEl('All lectures together', 'Mixed review & model comparisons', 'Questions that connect the lectures: which model, which loss, which solver, and the pros and cons of each. Then a random shuffle of everything.'));
-      Practice(sec, [...ALLX, ...ALLX0], EXAM_GROUPS);
+      const HI = HIGHALL();
+      sec.append(headEl('All lectures together', 'Most important questions (all 6 lectures)', `The ${HI.length} questions to do if there is no time for everything: the real exam and quiz questions first, then the key idea of every lecture, in the same format as the midterm (choose, true/false why, essay, numerical), plus the model comparisons.`));
+      Practice(sec, HI, EXAM_GROUPS);
+      const more = h('details', { class: 'stxt' }, h('summary', {}, `More comparison questions between the lectures (${ALLX.length + ALLX0.length})`));
+      sec.append(more); let built = false; more.ontoggle = () => { if (more.open && !built) { built = true; Practice(more, [...ALLX, ...ALLX0].filter(x => !HI.includes(x)), EXAM_GROUPS); } };
       sec.append(h('h2', {}, 'Shuffle 20 questions from all six lectures'));
       const area = h('div'); const go = () => { area.innerHTML = ''; const pool = [...Object.values(LECT), ...Object.values(LECT0)].flatMap(L => L.items).filter(x => ['mc', 'ms', 'tf', 'fill'].includes(x.t)); shuffle(pool).slice(0, 20).forEach((it, i) => Item(area, it, i + 1, 'practice')); };
       sec.append(h('div', { class: 'ctl' }, h('button', { class: 'btn primary', type: 'button', onclick: go }, 'Give me 20 new questions')), area); go();
