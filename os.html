@@ -959,12 +959,12 @@ function Item(host, it, num, mode, onScore) {
 }
 
 /* ================= a group of items (practice) ================= */
-const PART_TITLE = { mc: 'Choose the correct answer', tf: 'True or False (correct the false ones)', fill: 'Complete the sentences', match: 'Matching', order: 'Put in order', label: 'Label the diagram', Define: 'Definitions', 'What happens if': 'What happens if …?', 'Advantages & disadvantages': 'Advantages and disadvantages', 'Give an example': 'Give an example', 'Find the mistake': 'Find the mistake', 'Trace the code': 'Trace the code', write: 'List, explain, write', diff: 'Differentiate between', num: 'Problems', sched: 'Scheduling problems' };
+const PART_TITLE = { mc: 'Choose the correct answer', ms: 'Choose ALL the correct answers', tf: 'True or False (correct the false ones)', fill: 'Complete the sentences', match: 'Matching', order: 'Put in order', label: 'Label the diagram', Define: 'Definitions', 'What happens if': 'What happens if …?', 'Advantages & disadvantages': 'Advantages and disadvantages', 'Give an example': 'Give an example', 'Find the mistake': 'Find the mistake', 'Trace the code': 'Trace the code', write: 'List, explain, write', diff: 'Differentiate between', num: 'Problems', sched: 'Scheduling problems' };
 const WKINDS = ['Define', 'What happens if', 'Advantages & disadvantages', 'Give an example', 'Find the mistake', 'Trace the code'];
 const groupOf = x => x.t === 'write' ? (WKINDS.includes(x.kind) ? x.kind : 'write') : x.t;
 function Practice(host, items, opts = {}) {
   const gof = opts.groupOf || groupOf; const TT = Object.assign({}, PART_TITLE, opts.titles || {});
-  const order = opts.order || ['mc', 'tf', 'fill', 'match', 'order', 'label', 'Define', 'write', 'diff', 'What happens if', 'Advantages & disadvantages', 'Give an example', 'Find the mistake', 'Trace the code', 'num', 'sched'];
+  const order = opts.order || ['mc', 'ms', 'tf', 'fill', 'match', 'order', 'label', 'Define', 'write', 'diff', 'What happens if', 'Advantages & disadvantages', 'Give an example', 'Find the mistake', 'Trace the code', 'num', 'sched'];
   let letter = 0;
   order.forEach(t => {
     const its = items.filter(x => gof(x) === t); if (!its.length) return;
