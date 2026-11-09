@@ -474,6 +474,20 @@ svg.dgm{display:block;width:100%;max-width:640px;height:auto;color:var(--ink)}
 @media (max-width:700px){.sdeckbar{position:static}}
 .sl-explain{margin-top:6px;padding-top:6px;border-top:1px dashed var(--line)}
 .sl-whole{margin:6px 0 4px}
+.modesw{display:flex;gap:6px;margin:10px 0 12px}
+.modesw button{flex:1;font:inherit;font-weight:700;font-size:14px;padding:9px 8px;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);cursor:pointer}
+.modesw button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.topbar{flex-wrap:wrap}.topbar .modesw{flex-basis:100%;margin:4px 0 0}
+.topbar .modesw button{padding:6px 8px;background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.25)}
+.topbar .modesw button.on{background:var(--ngu-cream);color:#3a1020;border-color:var(--ngu-cream)}
+.modecards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin:18px 0 26px}
+.modecard{display:flex;flex-direction:column;gap:6px;padding:20px;border:1px solid var(--line);border-top:6px solid var(--accent);border-radius:8px;background:var(--paper);color:var(--ink);text-decoration:none;cursor:pointer;text-align:left;font:inherit}
+.modecard:nth-child(2){border-top-color:var(--ngu-green)}
+.modecard .mi{font-size:30px}.modecard .mt{font-size:22px;font-weight:700;color:var(--accent)}.modecard .md{color:var(--ink-2);font-size:15px}
+
+.rail .modesw button{background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.25)}
+.rail .modesw button.on{background:var(--ngu-cream);color:#3a1020;border-color:var(--ngu-cream)}
+@media (max-width:860px){.paperbar{top:calc(env(safe-area-inset-top,0px) + 100px)}}
 </style>
 
 </head>
@@ -516,8 +530,8 @@ svg.dgm{display:block;width:100%;max-width:640px;height:auto;color:var(--ink)}
   const CAN_SYNC = /(^|\.)github\.io$/.test(location.hostname) || location.hostname === 'localhost' || window.SYNC_FORCE;
   const SDK = window.SYNC_SDK || 'https://cdn.jsdelivr.net/npm/firebase@10.12.2/';
   const NOTES = 'study-notes';
-  const PAGES = { toc: 'theory.html', os: 'os.html', ml: 'ml.html' };
-  const SUBJ_NAME = { toc: 'Theory of Computing', os: 'Operating Systems', ml: 'Machine Learning', home: 'Front page' };
+  const PAGES = { toc: 'theory.html', os: 'os.html', ml: 'ml.html', pm: 'pm.html' };
+  const SUBJ_NAME = { toc: 'Theory of Computing', os: 'Operating Systems', ml: 'Machine Learning', pm: 'Project Management', home: 'Front page' };
   const LS = window.localStorage;
   const set0 = Storage.prototype.setItem, rem0 = Storage.prototype.removeItem;
   const raw = (k, d) => { try { const v = LS.getItem(k); return v == null ? d : v; } catch (e) { return d; } };
@@ -4038,7 +4052,13 @@ function bootML() {
     { id: 'mistakes', grp: 'Review', ln: 'Redo', name: 'Mistakes notebook' }
   ];
   const nav = $('#nav'), sel = $('#navsel'); let g = '';
-  secs.forEach(s => { if (s.grp !== g) { g = s.grp; nav.append(h('div', { class: 'grp' }, g)); sel.append(h('option', { disabled: true }, '— ' + g)); } nav.append(h('a', { href: '#' + s.id, 'data-id': s.id }, h('span', { class: 'ln' }, s.ln), h('span', {}, s.name), s.id === 'mistakes' ? h('span', { class: 'mbadge' }) : h('span'))); sel.append(h('option', { value: s.id }, `${s.ln} · ${s.name}${s.id.startsWith('learn-') ? ' (slides & explanation)' : LECT[s.id] ? ' (questions)' : ''}`)); });
+  const modeOf = s => s.id === 'start' ? 'both' : s.id.startsWith('learn-') ? 'learn' : 'practice';
+  secs.forEach(s => { if (s.grp !== g) { g = s.grp; nav.append(h('div', { class: 'grp', 'data-mode': modeOf(s) }, g)); } nav.append(h('a', { href: '#' + s.id, 'data-id': s.id, 'data-mode': modeOf(s) }, h('span', { class: 'ln' }, s.ln), h('span', {}, s.name), s.id === 'mistakes' ? h('span', { class: 'mbadge' }) : h('span'))); });
+  let mode = store.get('mode', 'learn'); const swb = [];
+  const fillSel = () => { sel.innerHTML = ''; let gg = ''; secs.filter(s => modeOf(s) === 'both' || modeOf(s) === mode).forEach(s => { if (s.grp !== gg) { gg = s.grp; sel.append(h('option', { disabled: true }, '— ' + gg)); } sel.append(h('option', { value: s.id }, `${s.ln} · ${s.name}`)); }); };
+  const setMode = (m, go) => { mode = m; store.set('mode', m); $$('#nav [data-mode]').forEach(a => a.hidden = !(a.dataset.mode === 'both' || a.dataset.mode === m)); swb.forEach(b => b.classList.toggle('on', b.dataset.m === m)); fillSel(); if (go) location.hash = m === 'learn' ? '#learn-' + LK[0] : '#all'; };
+  const mkSw = () => { const w = h('div', { class: 'modesw' }); [['learn', '📖 Explanation'], ['practice', '✍️ Questions']].forEach(([m, t]) => { const b = h('button', { type: 'button', 'data-m': m }, t); b.onclick = () => setMode(m, true); swb.push(b); w.append(b); }); return w; };
+  nav.before(mkSw()); $('.topbar').append(mkSw()); window.SETMODE = setMode; setMode(mode);
   sel.onchange = () => location.hash = sel.value;
   const main = $('main');
   const headEl = (eyebrow, title, lead) => h('div', { class: 'ch-head' }, h('div', { class: 'eyebrow' }, eyebrow), h('h1', {}, title), lead ? h('p', { class: 'lead', html: lead }) : null);
@@ -4050,6 +4070,7 @@ function bootML() {
     const lk = id.startsWith('learn-') ? id.slice(6) : null;
     if (id === 'start') {
       sec.append(headEl('CSAI 420 · Machine Learning', 'Understand it, then practise exactly the university\'s kind of questions.', 'First read the <b>explanation</b> of a lecture (every step has a <b>why?</b> button). Then practise with the <b>real NGU papers</b> (two quizzes, the Fall 2022 and Fall 2024 midterms and the doctor\'s numerical examples) and with <b>new questions written in exactly the same format</b>: choose the correct answer (sometimes more than one), essay questions (explain / why / difference, pros vs cons) and numerical gradient-descent problems. SVM and perceptrons are not in the midterm, so they are left out.'));
+      sec.append(h('div', { class: 'modecards' }, h('button', { type: 'button', class: 'modecard', onclick: () => setMode('learn', true) }, h('span', { class: 'mi' }, '📖'), h('span', { class: 'mt' }, 'Explanation'), h('span', { class: 'md' }, 'The 6 lectures exactly as in the slides, with a "why?" and a simple explanation on every line and slide.')), h('button', { type: 'button', class: 'modecard', onclick: () => setMode('practice', true) }, h('span', { class: 'mi' }, '✍️'), h('span', { class: 'mt' }, 'Questions'), h('span', { class: 'md' }, 'The most important questions, the real exams, questions per lecture, numerical problems, mock exams and your mistakes.'))));
       const pr = store.get('prog', {});
       const tb = h('table', { class: 'tbl progt' }, h('tr', {}, h('th', {}, 'Lecture'), h('th', {}, 'Topic'), h('th', {}, 'Questions'), h('th', {}, 'Answered'), h('th', {}, 'Correct')));
       const row = (href, ln, name, its) => { const ids = its.map(x => x.id); const done = ids.filter(x => pr[x] != null); const ok = done.filter(x => pr[x] === 1).length; const pct = done.length ? Math.round(100 * ok / done.length) : null; const cov = Math.round(100 * done.length / ids.length);
@@ -4113,7 +4134,7 @@ function bootML() {
       else { sec.append(h('p', {}, `${ids.length} question(s).`)); ids.forEach((x, i) => Item(sec, REG[x], i + 1, 'practice')); }
     }
     if (!lk) document.body.classList.remove('whyall');
-    $$('#nav a').forEach(a => a.classList.toggle('cur', a.dataset.id === id)); sel.value = id; badge();
+    { const sm = secs.find(x => x.id === id); if (sm && modeOf(sm) !== 'both' && modeOf(sm) !== mode) setMode(modeOf(sm)); } $$('#nav a').forEach(a => a.classList.toggle('cur', a.dataset.id === id)); sel.value = id; badge();
     window.scrollTo({ top: 0, behavior: 'instant' });
   }
   const show = () => { const id = (location.hash || '#start').slice(1); render(secs.some(s => s.id === id) ? id : 'start'); };

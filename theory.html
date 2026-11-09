@@ -342,6 +342,108 @@ h2::after{content:"NEWGIZA UNIVERSITY";position:absolute;right:0;bottom:12px;fon
 @media (max-width:860px){.topbar{background:var(--ngu);border-bottom:3px solid var(--ngu-green)}.topbar .brand{color:#fff}}
 .btn,.chip,.whyb{border-radius:6px}
 .box{border-left:5px solid var(--accent)}
+
+/* ===== ML page ===== */
+.learn h2{margin-top:34px}
+.learn h3{margin-top:22px;color:var(--accent)}
+.fx{font-family:var(--f-mono);font-size:16px;background:var(--accent-soft);border-left:4px solid var(--accent);padding:10px 14px;margin:14px 0;border-radius:6px;overflow-x:auto;line-height:1.6}
+.fx sup,.fx sub,.wl sup,.wl sub{font-size:.72em}
+.learn .tblwrap{overflow-x:auto;margin:14px 0}
+.learn .tbl td,.learn .tbl th{padding:7px 10px;border:1px solid var(--line);vertical-align:top}
+.learn .tbl th{background:var(--accent);color:#fff;text-align:left}
+.nextbar{display:flex;flex-wrap:wrap;gap:10px;margin:30px 0 10px;padding-top:18px;border-top:2px solid var(--line)}
+.nextbar .btn{text-decoration:none}
+.mlplot{display:block;width:100%;max-width:520px;height:auto;margin:6px 0;background:var(--paper);border-radius:8px}
+.mlplot .ax{stroke:var(--muted);stroke-width:1.2}
+.mlplot .res{stroke:var(--bad);stroke-width:1.5;stroke-dasharray:3 3}
+.mlplot .pt{fill:var(--accent)}
+.mlplot .pt2{fill:var(--ngu-green);stroke:var(--ink);stroke-width:.6}
+.mlplot .ln{stroke:var(--ink);stroke-width:2.4;fill:none}
+.mlplot .cost{stroke:var(--accent);stroke-width:2;fill:none}
+.mlplot .truth{stroke:var(--ngu-green);stroke-width:2;fill:none;stroke-dasharray:6 4}
+.mlplot .thr{stroke:var(--bad);stroke-width:2;stroke-dasharray:5 4}
+.mlplot .pos{fill:var(--accent)}
+.mlplot .neg{fill:var(--ngu-green);stroke:var(--ink);stroke-width:.6}
+.mlplot .cut{fill:var(--bad-soft);opacity:.55}
+.mlplot text,.mlplot .ta{fill:var(--ink);font-size:11px;font-family:var(--f-mono)}
+.mlsl{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:8px 0;font-size:15px}
+.mlsl input[type=range]{flex:1;min-width:140px;accent-color:var(--accent)}
+.mlinfo{font-size:15px;margin:8px 0;padding:8px 12px;background:var(--bg);border-radius:8px;overflow-wrap:anywhere}
+.mlrow{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start}
+.mlrow>*{flex:1 1 260px;min-width:0}
+.tbl.cm td{text-align:center;font-family:var(--f-mono);padding:6px 10px;border:1px solid var(--line)}
+.whytoggle{display:flex;gap:8px;align-items:center;font-size:14px;color:var(--muted);margin:6px 0 14px;cursor:pointer}
+.oqsrc{font-size:11px;font-weight:700;letter-spacing:.04em;padding:2px 8px;border-radius:999px;background:var(--ngu-green);color:#1d3b1a}
+.qfig{margin:12px 0;max-width:520px}.qfig figcaption{font-size:13px;color:var(--muted);margin-top:4px}
+.fsvg{width:100%;height:auto;background:var(--paper);border:1px solid var(--line);border-radius:8px}
+.fsvg .fax{stroke:var(--ink);stroke-width:1.4}.fsvg .ftx{fill:var(--ink);font-size:12px;font-family:var(--f-body,inherit)}.fsvg .fbig{font-size:16px;font-weight:700}
+.fsvg .fl1{fill:none;stroke:#d0312d;stroke-width:2.6}.fsvg .fl2{fill:none;stroke:#3d7fc4;stroke-width:2.6}
+.fsvg .fgood{fill:var(--ngu-green);opacity:.18}.fsvg .fbadz{fill:#e88;opacity:.13}
+.fsvg .fpt{fill:#3d7fc4;opacity:.75}.fsvg .fpa{fill:none;stroke:var(--ink);stroke-width:1.2}.fsvg .fpb{fill:none;stroke:var(--ink);stroke-width:1.2}
+.fsvg .fza{fill:#8fc1e3;opacity:.55}.fsvg .fzb{fill:#c0682a;opacity:.45}.fsvg .fbd{stroke:var(--ink);stroke-width:1.5}
+.fsvg .fr1{fill:var(--paper);stroke:var(--ink)}.fsvg .fr2{fill:#5b9bd5}.fsvg .fr3{fill:var(--paper)}.fsvg .fr4{fill:#d0312d}.fsvg .fdot{fill:#1b2a6b}
+.qtbl{width:auto;margin:8px 0}.qtbl td,.qtbl th{padding:4px 12px;border:1px solid var(--line);text-align:center}
+.ltabs{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 18px;border-bottom:2px solid var(--line)}
+.ltab{font:inherit;font-weight:700;padding:10px 16px;border:0;border-bottom:3px solid transparent;background:none;color:var(--muted);cursor:pointer;margin-bottom:-2px}
+.ltab.on{color:var(--accent);border-bottom-color:var(--accent)}
+.sdeckbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin:4px 0 10px;position:sticky;top:0;z-index:5;background:var(--bg);padding:6px 0}
+.sjump{font:inherit;padding:6px 10px;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink)}
+.sdecktitle{margin-top:26px}
+.scard2{margin:0 0 22px;padding:0}.scard2 figcaption{font-size:13px;margin-bottom:4px}
+.scard2 img{display:block;width:100%;height:auto;aspect-ratio:16/9;border:1px solid var(--line);border-radius:8px;background:#fff;cursor:zoom-in;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.stxt{margin-top:6px;font-size:14px}.stxt summary{cursor:pointer;color:var(--muted);font-size:13px}
+.stxt pre{white-space:pre-wrap;font-family:var(--f-body,inherit);font-size:15px;line-height:1.5;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin:6px 0 0;overflow-wrap:anywhere}
+.slideview{position:fixed;inset:0;z-index:1000;background:rgba(15,15,15,.96);display:flex;flex-direction:column}
+.svbar{display:flex;align-items:center;gap:6px;padding:8px;color:#fff}.svcap{flex:1;font-size:13px;text-align:center}
+.svb{font:inherit;font-size:20px;min-width:44px;height:44px;border:0;border-radius:8px;background:rgba(255,255,255,.14);color:#fff;cursor:pointer}
+.svbox{flex:1;overflow:auto;display:flex;align-items:center;justify-content:center;touch-action:pan-x pan-y pinch-zoom}
+.svbox img{max-width:100%;max-height:100%;cursor:zoom-in;background:#fff}
+.slideview.zoomed .svbox{display:block}.slideview.zoomed .svbox img{max-width:none;max-height:none;width:220%;cursor:zoom-out}
+.partttl{margin-top:30px;padding-top:12px;border-top:3px solid var(--accent)}
+.simg{width:100%;aspect-ratio:16/9;background-color:#fff;background-repeat:no-repeat;border:1px solid var(--line);border-radius:8px;cursor:zoom-in;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.svimgwrap{width:100%;max-width:min(100%,calc((100vh - 70px)*16/9))}
+.slideview .simg{border:0;border-radius:0;cursor:zoom-in}
+.slideview.zoomed .svimgwrap{width:220%;max-width:none}.slideview.zoomed .simg{cursor:zoom-out}
+.sl-card{margin:0 0 26px;padding:14px 16px 10px;border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:10px;background:var(--paper)}
+.sl-section{background:var(--accent);border-color:var(--accent)}.sl-section .sl-title,.sl-section .sl-no{color:#fff}
+.sl-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.sl-no{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.04em;text-transform:uppercase}
+.sl-title{margin:0;color:var(--accent);font-size:21px}
+.sl-line{margin:0;padding:3px 0;border:0;background:none;box-shadow:none}
+.sl-line .m{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;font-size:17px;line-height:1.5}
+.sl-line .m>span:nth-child(2){flex:1 1 200px}
+.sl-bul{color:var(--accent);font-weight:700}
+.sl-line.lv1{padding-left:24px}.sl-line.lv2{padding-left:48px}.sl-line.lv3{padding-left:72px}
+.sl-line.lv1 .sl-bul,.sl-line.lv2 .sl-bul{font-size:.8em;color:var(--muted)}
+.sl-line .n{margin:4px 0 6px 18px}
+.sl-big{font-size:24px;font-weight:700;color:var(--accent);margin:8px 0}
+.sl-section .sl-big{color:#fff}
+.sl-pics{display:flex;justify-content:center;margin:10px 0}.sl-pics.row{gap:10px;flex-wrap:wrap}
+.lpic{width:100%;background-repeat:no-repeat;background-color:#fff;border-radius:6px;cursor:zoom-in}
+.sl-pics.row .lpic{flex:1 1 160px}
+.sl-side{display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap}.sl-sidetext{flex:1 1 300px;min-width:0}.sl-sidepics{flex:1 1 220px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.sl-tbl td{padding:4px 12px;border:1px solid var(--line)}
+.picview{position:fixed;inset:0;z-index:1000;background:rgba(15,15,15,.94);display:flex;align-items:center;justify-content:center;padding:12px;cursor:zoom-out}
+.picview .lpic{max-width:100%!important;max-height:100%;width:min(100%,calc(95vh * var(--ar,1.6)))}
+.sjump{max-width:100%}.sdeckbar>span{flex:1 1 200px;min-width:0}
+.sl-line .m>span{min-width:0;overflow-wrap:anywhere}.sl-card{overflow:hidden}
+@media (max-width:700px){.sdeckbar{position:static}}
+.sl-explain{margin-top:6px;padding-top:6px;border-top:1px dashed var(--line)}
+.sl-whole{margin:6px 0 4px}
+.modesw{display:flex;gap:6px;margin:10px 0 12px}
+.modesw button{flex:1;font:inherit;font-weight:700;font-size:14px;padding:9px 8px;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);cursor:pointer}
+.modesw button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.topbar{flex-wrap:wrap}.topbar .modesw{flex-basis:100%;margin:4px 0 0}
+.topbar .modesw button{padding:6px 8px;background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.25)}
+.topbar .modesw button.on{background:var(--ngu-cream);color:#3a1020;border-color:var(--ngu-cream)}
+.modecards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin:18px 0 26px}
+.modecard{display:flex;flex-direction:column;gap:6px;padding:20px;border:1px solid var(--line);border-top:6px solid var(--accent);border-radius:8px;background:var(--paper);color:var(--ink);text-decoration:none;cursor:pointer;text-align:left;font:inherit}
+.modecard:nth-child(2){border-top-color:var(--ngu-green)}
+.modecard .mi{font-size:30px}.modecard .mt{font-size:22px;font-weight:700;color:var(--accent)}.modecard .md{color:var(--ink-2);font-size:15px}
+.simg{aspect-ratio:4/3}.svimgwrap{max-width:min(100%,calc((100vh - 70px)*4/3))}
+.rail .modesw button{background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.25)}
+.rail .modesw button.on{background:var(--ngu-cream);color:#3a1020;border-color:var(--ngu-cream)}
+@media (max-width:860px){.paperbar{top:calc(env(safe-area-inset-top,0px) + 100px)}}
 </style>
 </head>
 <body>
@@ -383,8 +485,8 @@ h2::after{content:"NEWGIZA UNIVERSITY";position:absolute;right:0;bottom:12px;fon
   const CAN_SYNC = /(^|\.)github\.io$/.test(location.hostname) || location.hostname === 'localhost' || window.SYNC_FORCE;
   const SDK = window.SYNC_SDK || 'https://cdn.jsdelivr.net/npm/firebase@10.12.2/';
   const NOTES = 'study-notes';
-  const PAGES = { toc: 'theory.html', os: 'os.html', ml: 'ml.html' };
-  const SUBJ_NAME = { toc: 'Theory of Computing', os: 'Operating Systems', ml: 'Machine Learning', home: 'Front page' };
+  const PAGES = { toc: 'theory.html', os: 'os.html', ml: 'ml.html', pm: 'pm.html' };
+  const SUBJ_NAME = { toc: 'Theory of Computing', os: 'Operating Systems', ml: 'Machine Learning', pm: 'Project Management', home: 'Front page' };
   const LS = window.localStorage;
   const set0 = Storage.prototype.setItem, rem0 = Storage.prototype.removeItem;
   const raw = (k, d) => { try { const v = LS.getItem(k); return v == null ? d : v; } catch (e) { return d; } };
@@ -629,6 +731,10 @@ h2::after{content:"NEWGIZA UNIVERSITY";position:absolute;right:0;bottom:12px;fon
 <div class="eyebrow">CSAI 335 · Theory of Computing · Fall 2026</div>
 <h1>The whole course is one question</h1>
 <p class="lead">Which machine can check whether a word belongs to a club? Every lecture, from 1 to 12, adds a little more memory to the machine and asks what it can do now.</p>
+</div>
+<div class="modecards">
+<button type="button" class="modecard" onclick="SETMODE('learn',true)"><span class="mi">📖</span><span class="mt">Explanation</span><span class="md">The lectures exactly as in the slides, slide by slide, with a short simple explanation under each slide.</span></button>
+<button type="button" class="modecard" onclick="SETMODE('practice',true)"><span class="mi">✍️</span><span class="mt">Questions & practice</span><span class="md">Step-by-step chapters with machines you build, True/False drills, the real midterms 2022–2025, mock exams and your mistakes notebook.</span></button>
 </div>
 
 <div class="box one"><div class="bt">In one sentence</div><p>A <b>language</b> is a set of strings. A <b>machine</b> reads a string and says <b>accept</b> or <b>reject</b>. The course compares machines by how much they can remember.</p></div>
@@ -3434,14 +3540,22 @@ const W = {
 function boot() {
   const chapters = $$('section.ch');
   const nav = $('#nav'), sel = $('#navsel');
-  const groups = { start: 'Begin', l1: 'Regular languages', l7: 'Context-free languages', l11: 'Turing machines', lab: 'Practice', exam: 'Exam room' };
-  const labelOf = sec => ({ start: '—', l1: 'L1–2', l3: 'L3–4', l5: 'L5', l6: 'L6', l7: 'L7', l8: 'L8', l9: 'L9', l10: 'L10', l11: 'L11', l12: 'L12', exam: 'T/F', lab: 'Draw', drill: 'Drill', notebook: 'Redo', mt2022: '2022', mt2023: '2023', mt2024: '2024', mt2025: '2025', 'mock-a': 'Mock A', 'mock-b': 'Mock B', 'quiz-5-10': 'Quiz', 'quiz-machines': 'Quiz M' }[sec.id] || '');
+  const groups = { start: 'Begin', 's-t01': 'The lectures, slide by slide', l1: 'Step by step: regular languages', l7: 'Step by step: context-free', l11: 'Step by step: Turing machines', lab: 'Practice', exam: 'Exam room' };
+  // two sections: the explanation (the slides) and the questions (everything else)
+  const modeOf = sec => sec.id === 'start' ? 'both' : sec.dataset.slides ? 'learn' : 'practice';
+  const labelOf = sec => sec.dataset.slides ? ({ t01: 'L1–2', t03: 'L3–4' }[sec.dataset.slides] || 'L' + (+sec.dataset.slides.slice(1))) : ({ start: '—', l1: 'L1–2', l3: 'L3–4', l5: 'L5', l6: 'L6', l7: 'L7', l8: 'L8', l9: 'L9', l10: 'L10', l11: 'L11', l12: 'L12', exam: 'T/F', lab: 'Draw', drill: 'Drill', notebook: 'Redo', mt2022: '2022', mt2023: '2023', mt2024: '2024', mt2025: '2025', 'mock-a': 'Mock A', 'mock-b': 'Mock B', 'quiz-5-10': 'Quiz', 'quiz-machines': 'Quiz M' }[sec.id] || '');
   const done = store.get('done', {});
   chapters.forEach(sec => {
-    if (groups[sec.id]) nav.append(h('div', { class: 'grp' }, groups[sec.id]));
-    nav.append(h('a', { href: '#' + sec.id, 'data-id': sec.id }, h('span', { class: 'ln' }, labelOf(sec)), h('span', {}, sec.dataset.title), h('span', { class: 'ck' }, done[sec.id] ? '✓' : '')));
-    sel.append(h('option', { value: sec.id }, `${labelOf(sec)} · ${sec.dataset.title}`));
+    if (groups[sec.id]) nav.append(h('div', { class: 'grp', 'data-mode': modeOf(sec) }, groups[sec.id]));
+    nav.append(h('a', { href: '#' + sec.id, 'data-id': sec.id, 'data-mode': modeOf(sec) }, h('span', { class: 'ln' }, labelOf(sec)), h('span', {}, sec.dataset.title), h('span', { class: 'ck' }, done[sec.id] ? '✓' : '')));
   });
+  let mode = store.get('mode', 'learn');
+  const fillSel = () => { sel.innerHTML = ''; chapters.filter(c => modeOf(c) === 'both' || modeOf(c) === mode).forEach(c => sel.append(h('option', { value: c.id }, `${labelOf(c)} · ${c.dataset.title}`))); };
+  const swb = [];
+  const setMode = (m, go) => { mode = m; store.set('mode', m); $$('#nav [data-mode]').forEach(a => a.hidden = !(a.dataset.mode === 'both' || a.dataset.mode === m)); swb.forEach(b => b.classList.toggle('on', b.dataset.m === m)); fillSel(); if (go) location.hash = m === 'learn' ? '#s-t01' : '#l1'; };
+  const mkSw = () => { const w = h('div', { class: 'modesw', role: 'tablist' }); [['learn', '📖 Explanation'], ['practice', '✍️ Questions']].forEach(([m, t]) => { const b = h('button', { type: 'button', 'data-m': m }, t); b.onclick = () => setMode(m, true); swb.push(b); w.append(b); }); return w; };
+  nav.before(mkSw()); $('.topbar').append(mkSw());
+  window.SETMODE = setMode;
   // footers
   chapters.forEach((sec, i) => {
     const cb = h('input', { type: 'checkbox', id: 'got-' + sec.id });
@@ -3462,6 +3576,7 @@ function boot() {
   const mounted = new Set();
   function mount(sec) {
     if (mounted.has(sec.id)) return; mounted.add(sec.id);
+    if (sec.dataset.slides) { LectureText(sec, sec.dataset.slides); }
     if (sec.dataset.paper) { const body = h('div'); sec.prepend(body); Paper(body, PAPERS.find(p => p.id === sec.dataset.paper)); }
     $$('[data-w]', sec).forEach(el => {
       const k = el.dataset.w;
@@ -3476,6 +3591,7 @@ function boot() {
     const id = (location.hash || '#start').slice(1);
     const sec = chapters.find(c => c.id === id) || chapters[0];
     chapters.forEach(c => c.hidden = c !== sec);
+    if (modeOf(sec) !== 'both' && modeOf(sec) !== mode) setMode(modeOf(sec));
     mount(sec);
     $$('#nav a').forEach(a => a.classList.toggle('cur', a.dataset.id === sec.id));
     sel.value = sec.id;
@@ -3492,7 +3608,7 @@ function boot() {
   const setAll = on => { document.body.classList.toggle('whyall', on); wa.checked = on; wm.textContent = on ? 'why: on' : 'why: off'; wm.setAttribute('aria-pressed', on); store.set('whyall', on); };
   wa.onchange = () => setAll(wa.checked); wm.onclick = () => setAll(!document.body.classList.contains('whyall'));
   setAll(store.get('whyall', false));
-  updProg(); show(); addWhy();
+  setMode(mode); updProg(); show(); addWhy();
 }
 /* ================= EXAM PAPERS DATA ================= */
 const rev = w => [...w].reverse().join('');
@@ -3864,6 +3980,244 @@ PAPERS.unshift({ id: 'quiz-machines', title: 'Machines Quiz · Lectures 5–10',
     sheet: lines([['q<sub>start</sub> —ε,ε→S$→ q<sub>loop</sub>', 'Push $ then S.'], ['Loops ε,S→aSb and ε,S→bb', 'One per rule.'], ['Loops a,a→ε and b,b→ε', 'One per terminal.'], ['q<sub>loop</sub> —ε,$→ε→ q<sub>accept</sub>', 'Language: aⁿbⁿ⁺².']]) },
   { n: 'Q.9', marks: 4, L: [9], title: 'Stack trace', q: 'For the same grammar S → aSb | bb, show the stack of the PDA at every step on input <b>aabbbb</b>.', type: 'trace', grammar: GQM, sentence: 'aabbbb' }
 ] });
+/* ===== theory slides as pictures ===== */
+const SLIDES = {"t01": [["t01", 38, "Lectures 1–2 · Introduction & Finite Automata"]], "t03": [["t03", 40, "Lectures 3–4 · Nondeterminism (NFA)"]], "t05": [["t05", 21, "Lecture 5 · Regular Expressions"]], "t06": [["t06", 14, "Lecture 6 · Non-regular languages"]], "t07": [["t07", 29, "Lecture 7 · Context-Free Grammars"]], "t08": [["t08", 16, "Lecture 8 · Pushdown Automata"]], "t09": [["t09", 16, "Lecture 9 · CFG ⇄ PDA"]], "t10": [["t10", 18, "Lecture 10 · Non-context-free languages"]], "t11": [["t11", 22, "Lecture 11 · Turing Machines"]], "t12": [["t12", 17, "Lecture 12 · Turing Machines II"]]};
+const SHEET = 8;
+const slideBg = (d, k) => { const c = Math.floor((k - 1) / SHEET), j = (k - 1) % SHEET; const n = SLIDES_N[d]; const rows = Math.min(SHEET, n - c * SHEET); return { url: `mls-${d}-${c + 1}.webp`, size: `100% ${rows * 100}%`, pos: `0 ${rows > 1 ? (j / (rows - 1)) * 100 : 0}%` }; };
+const SLIDES_N = {}; Object.values(SLIDES).forEach(a => a.forEach(([d, n]) => SLIDES_N[d] = n));
+const slideEl = (s, eager) => { const b = slideBg(s.d, s.k); const el = h('div', { class: 'simg', role: 'img', 'aria-label': `Slide ${s.k}` }); el.style.backgroundSize = b.size; el.style.backgroundPosition = b.pos; el.dataset.bg = b.url; if (eager) el.style.backgroundImage = `url("${b.url}")`; return el; };
+let slideIO = null;
+const lazyBg = el => { if (el.style.backgroundImage) return; if (!('IntersectionObserver' in window)) { el.style.backgroundImage = `url("${el.dataset.bg}")`; return; } if (!slideIO) slideIO = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.style.backgroundImage = `url("${e.target.dataset.bg}")`; slideIO.unobserve(e.target); } }), { rootMargin: '600px 0px' }); slideIO.observe(el); };
+function slideViewer(list, start) {
+  let i = start; const cap = h('span', { class: 'svcap' }); const holder = h('div', { class: 'svimgwrap' });
+  const box = h('div', { class: 'svbox' }, holder);
+  let zoom = false; const setZ = z => { zoom = z; ov.classList.toggle('zoomed', z); bz.textContent = z ? '−' : '+'; };
+  const show = () => { const s = list[i]; holder.innerHTML = ''; const el = slideEl(s, true); el.onclick = () => setZ(!zoom); holder.append(el); cap.textContent = s.label; setZ(false); box.scrollTo(0, 0); };
+  const close = () => { ov.remove(); document.removeEventListener('keydown', key); document.body.style.overflow = ''; };
+  const key = e => { if (e.key === 'Escape') close(); if (e.key === 'ArrowRight' && i < list.length - 1) { i++; show(); } if (e.key === 'ArrowLeft' && i > 0) { i--; show(); } };
+  const bz = h('button', { class: 'svb', type: 'button', onclick: () => setZ(!zoom) }, '+');
+  const ov = h('div', { class: 'slideview', role: 'dialog', 'aria-label': 'Slide' },
+    h('div', { class: 'svbar' }, h('button', { class: 'svb', type: 'button', onclick: () => { if (i > 0) { i--; show(); } } }, '‹'), cap, h('button', { class: 'svb', type: 'button', onclick: () => { if (i < list.length - 1) { i++; show(); } } }, '›'), bz, h('button', { class: 'svb', type: 'button', onclick: close }, '✕')), box);
+  let sx = null; box.addEventListener('touchstart', e => { sx = e.touches.length === 1 ? e.touches[0].clientX : null; }, { passive: true });
+  box.addEventListener('touchend', e => { if (sx == null || zoom) return; const dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 60) { if (dx < 0 && i < list.length - 1) i++; else if (dx > 0 && i > 0) i--; show(); } sx = null; });
+  document.body.append(ov); document.body.style.overflow = 'hidden'; document.addEventListener('keydown', key); show();
+}
+const LDATA = {"t01": [{"id": "t01-001", "n": 1, "title": "CSCI 335 Theory of", "blocks": [{"k": "slide", "d": "t01", "n": 1}]}, {"id": "t01-002", "n": 2, "title": "Course Description", "blocks": [{"k": "slide", "d": "t01", "n": 2}]}, {"id": "t01-003", "n": 3, "title": "Course Textbook", "blocks": [{"k": "slide", "d": "t01", "n": 3}]}, {"id": "t01-004", "n": 4, "title": "Other Course Resources (1/4)", "blocks": [{"k": "slide", "d": "t01", "n": 4}]}, {"id": "t01-005", "n": 5, "title": "Other Course Resources (2/4)", "blocks": [{"k": "slide", "d": "t01", "n": 5}]}, {"id": "t01-006", "n": 6, "title": "Other Course Resources (3/4)", "blocks": [{"k": "slide", "d": "t01", "n": 6}]}, {"id": "t01-007", "n": 7, "title": "Other Course Resources (4/4)", "blocks": [{"k": "slide", "d": "t01", "n": 7}]}, {"id": "t01-008", "n": 8, "title": "Course Team", "blocks": [{"k": "slide", "d": "t01", "n": 8}]}, {"id": "t01-009", "n": 9, "title": "Learning Outcomes", "blocks": [{"k": "slide", "d": "t01", "n": 9}]}, {"id": "t01-010", "n": 10, "title": "Course Learning Outcomes (CLOs)", "blocks": [{"k": "slide", "d": "t01", "n": 10}]}, {"id": "t01-011", "n": 11, "title": "Outline", "blocks": [{"k": "slide", "d": "t01", "n": 11}]}, {"id": "t01-012", "n": 12, "title": "Key questions in the theory of", "blocks": [{"k": "slide", "d": "t01", "n": 12}]}, {"id": "t01-013", "n": 13, "title": "Key questions in the theory of computing", "blocks": [{"k": "slide", "d": "t01", "n": 13}]}, {"id": "t01-014", "n": 14, "title": "What Is a Computational Model?", "blocks": [{"k": "slide", "d": "t01", "n": 14}]}, {"id": "t01-015", "n": 15, "title": "Historical development of the theory of computing", "blocks": [{"k": "slide", "d": "t01", "n": 15}]}, {"id": "t01-016", "n": 16, "title": "Historical development of the theory of computing", "blocks": [{"k": "slide", "d": "t01", "n": 16}]}, {"id": "t01-017", "n": 17, "title": "Why you should learn the theory", "blocks": [{"k": "slide", "d": "t01", "n": 17}]}, {"id": "t01-018", "n": 18, "title": "Why you should learn the theory of computing", "blocks": [{"k": "slide", "d": "t01", "n": 18}]}, {"id": "t01-019", "n": 19, "title": "Motivation: man, wolf, goat, and", "blocks": [{"k": "slide", "d": "t01", "n": 19}]}, {"id": "t01-020", "n": 20, "title": "Motivation: man, wolf, goat, and cabbage", "blocks": [{"k": "slide", "d": "t01", "n": 20}]}, {"id": "t01-021", "n": 21, "title": "Motivation: Man, wolf, goat, and cabbage", "blocks": [{"k": "slide", "d": "t01", "n": 21}]}, {"id": "t01-022", "n": 22, "title": "Motivation: Man, wolf, goat, and cabbage", "blocks": [{"k": "slide", "d": "t01", "n": 22}]}, {"id": "t01-023", "n": 23, "title": "Finite automata: Examples and", "blocks": [{"k": "slide", "d": "t01", "n": 23}]}, {"id": "t01-024", "n": 24, "title": "Finite automata: Examples", "blocks": [{"k": "slide", "d": "t01", "n": 24}]}, {"id": "t01-025", "n": 25, "title": "Finite automata: Formal Definition", "blocks": [{"k": "slide", "d": "t01", "n": 25}]}, {"id": "t01-026", "n": 26, "title": "Finite automata: Formal Definition", "blocks": [{"k": "slide", "d": "t01", "n": 26}]}, {"id": "t01-027", "n": 27, "title": "Finite automata: Computations", "blocks": [{"k": "slide", "d": "t01", "n": 27}]}, {"id": "t01-028", "n": 28, "title": "Regular Languages", "blocks": [{"k": "slide", "d": "t01", "n": 28}]}, {"id": "t01-029", "n": 29, "title": "Regular Languages: Examples", "blocks": [{"k": "slide", "d": "t01", "n": 29}]}, {"id": "t01-030", "n": 30, "title": "Regular Expressions", "blocks": [{"k": "slide", "d": "t01", "n": 30}]}, {"id": "t01-031", "n": 31, "title": "Closure of Regular Languages under Union", "blocks": [{"k": "slide", "d": "t01", "n": 31}]}, {"id": "t01-032", "n": 32, "title": "Closure of Regular Languages under Union", "blocks": [{"k": "slide", "d": "t01", "n": 32}]}, {"id": "t01-033", "n": 33, "title": "Closure of Regular Languages under Union", "blocks": [{"k": "slide", "d": "t01", "n": 33}]}, {"id": "t01-034", "n": 34, "title": "Closure of Regular Languages under Concatenation", "blocks": [{"k": "slide", "d": "t01", "n": 34}]}, {"id": "t01-035", "n": 35, "title": "Closure of Regular Languages under Concatenation", "blocks": [{"k": "slide", "d": "t01", "n": 35}]}, {"id": "t01-036", "n": 36, "title": "Summary", "blocks": [{"k": "slide", "d": "t01", "n": 36}]}, {"id": "t01-037", "n": 37, "title": "Summary", "blocks": [{"k": "slide", "d": "t01", "n": 37}]}, {"id": "t01-038", "n": 38, "title": "Readings", "blocks": [{"k": "slide", "d": "t01", "n": 38}]}], "t03": [{"id": "t03-001", "n": 1, "title": "CSCI 335 Theory of", "blocks": [{"k": "slide", "d": "t03", "n": 1}]}, {"id": "t03-002", "n": 2, "title": "Learning Outcomes", "blocks": [{"k": "slide", "d": "t03", "n": 2}]}, {"id": "t03-003", "n": 3, "title": "Learning Outcomes", "blocks": [{"k": "slide", "d": "t03", "n": 3}]}, {"id": "t03-004", "n": 4, "title": "Outline", "blocks": [{"k": "slide", "d": "t03", "n": 4}]}, {"id": "t03-005", "n": 5, "title": "Nondeterministic finite automata", "blocks": [{"k": "slide", "d": "t03", "n": 5}]}, {"id": "t03-006", "n": 6, "title": "Nondeterministic finite automata – Example 1", "blocks": [{"k": "slide", "d": "t03", "n": 6}]}, {"id": "t03-007", "n": 7, "title": "Nondeterministic finite automata – Formal definition", "blocks": [{"k": "slide", "d": "t03", "n": 7}]}, {"id": "t03-008", "n": 8, "title": "Nondeterministic finite automata – Intuition", "blocks": [{"k": "slide", "d": "t03", "n": 8}]}, {"id": "t03-009", "n": 9, "title": "Nondeterministic finite automata – Example 2", "blocks": [{"k": "slide", "d": "t03", "n": 9}]}, {"id": "t03-010", "n": 10, "title": "Nondeterministic finite automata – Example 3", "blocks": [{"k": "slide", "d": "t03", "n": 10}]}, {"id": "t03-011", "n": 11, "title": "Equivalence of deterministic and", "blocks": [{"k": "slide", "d": "t03", "n": 11}]}, {"id": "t03-012", "n": 12, "title": "NFA-to-DFA Conversion", "blocks": [{"k": "slide", "d": "t03", "n": 12}]}, {"id": "t03-013", "n": 13, "title": "NFA-to-DFA Conversion", "blocks": [{"k": "slide", "d": "t03", "n": 13}]}, {"id": "t03-014", "n": 14, "title": "NFA-to-DFA Conversion", "blocks": [{"k": "slide", "d": "t03", "n": 14}]}, {"id": "t03-015", "n": 15, "title": "NFA-to-DFA Conversion: Example 1.41 (Sipser)", "blocks": [{"k": "slide", "d": "t03", "n": 15}]}, {"id": "t03-016", "n": 16, "title": "NFA-to-DFA Conversion: Example 1", "blocks": [{"k": "slide", "d": "t03", "n": 16}]}, {"id": "t03-017", "n": 17, "title": "NFA-to-DFA Conversion: Example 1", "blocks": [{"k": "slide", "d": "t03", "n": 17}]}, {"id": "t03-018", "n": 18, "title": "NFA-to-DFA Conversion: Example 1", "blocks": [{"k": "slide", "d": "t03", "n": 18}]}, {"id": "t03-019", "n": 19, "title": "NFA-to-DFA Conversion: Example 1", "blocks": [{"k": "slide", "d": "t03", "n": 19}]}, {"id": "t03-020", "n": 20, "title": "NFA-to-DFA Conversion: Example 1", "blocks": [{"k": "slide", "d": "t03", "n": 20}]}, {"id": "t03-021", "n": 21, "title": "NFA-to-DFA Conversion: Example 1", "blocks": [{"k": "slide", "d": "t03", "n": 21}]}, {"id": "t03-022", "n": 22, "title": "NFA-to-DFA Conversion: Example 1", "blocks": [{"k": "slide", "d": "t03", "n": 22}]}, {"id": "t03-023", "n": 23, "title": "NFA-to-DFA Conversion: Example 1", "blocks": [{"k": "slide", "d": "t03", "n": 23}]}, {"id": "t03-024", "n": 24, "title": "NFA-to-DFA Conversion: Example 1", "blocks": [{"k": "slide", "d": "t03", "n": 24}]}, {"id": "t03-025", "n": 25, "title": "NFA-to-DFA Conversion: Example 1", "blocks": [{"k": "slide", "d": "t03", "n": 25}]}, {"id": "t03-026", "n": 26, "title": "NFA-to-DFA Conversion: Example 1", "blocks": [{"k": "slide", "d": "t03", "n": 26}]}, {"id": "t03-027", "n": 27, "title": "NFA-to-DFA Conversion: Example 1", "blocks": [{"k": "slide", "d": "t03", "n": 27}]}, {"id": "t03-028", "n": 28, "title": "NFA-to-DFA Conversion: Example 1", "blocks": [{"k": "slide", "d": "t03", "n": 28}]}, {"id": "t03-029", "n": 29, "title": "NFA-to-DFA Conversion: Example 1", "blocks": [{"k": "slide", "d": "t03", "n": 29}]}, {"id": "t03-030", "n": 30, "title": "NFA-to-DFA Conversion: Example 1", "blocks": [{"k": "slide", "d": "t03", "n": 30}]}, {"id": "t03-031", "n": 31, "title": "NFA-to-DFA Conversion: Example 1", "blocks": [{"k": "slide", "d": "t03", "n": 31}]}, {"id": "t03-032", "n": 32, "title": "NFA-to-DFA Conversion: Example 1", "blocks": [{"k": "slide", "d": "t03", "n": 32}]}, {"id": "t03-033", "n": 33, "title": "NFA-to-DFA Conversion: Example 1", "blocks": [{"k": "slide", "d": "t03", "n": 33}]}, {"id": "t03-034", "n": 34, "title": "Closure of regular languages", "blocks": [{"k": "slide", "d": "t03", "n": 34}]}, {"id": "t03-035", "n": 35, "title": "Closure of Regular Languages under Union", "blocks": [{"k": "slide", "d": "t03", "n": 35}]}, {"id": "t03-036", "n": 36, "title": "Closure of Regular Languages under Concatenation", "blocks": [{"k": "slide", "d": "t03", "n": 36}]}, {"id": "t03-037", "n": 37, "title": "Closure of Regular Languages under Star", "blocks": [{"k": "slide", "d": "t03", "n": 37}]}, {"id": "t03-038", "n": 38, "title": "Summary", "blocks": [{"k": "slide", "d": "t03", "n": 38}]}, {"id": "t03-039", "n": 39, "title": "Summary", "blocks": [{"k": "slide", "d": "t03", "n": 39}]}, {"id": "t03-040", "n": 40, "title": "Readings", "blocks": [{"k": "slide", "d": "t03", "n": 40}]}], "t05": [{"id": "t05-001", "n": 1, "title": "CSCI 335 Theory of", "blocks": [{"k": "slide", "d": "t05", "n": 1}]}, {"id": "t05-002", "n": 2, "title": "Learning Outcomes", "blocks": [{"k": "slide", "d": "t05", "n": 2}]}, {"id": "t05-003", "n": 3, "title": "Learning Outcomes", "blocks": [{"k": "slide", "d": "t05", "n": 3}]}, {"id": "t05-004", "n": 4, "title": "Outline", "blocks": [{"k": "slide", "d": "t05", "n": 4}]}, {"id": "t05-005", "n": 5, "title": "Equivalence of finite automata", "blocks": [{"k": "slide", "d": "t05", "n": 5}]}, {"id": "t05-006", "n": 6, "title": "Regular Expressions", "blocks": [{"k": "slide", "d": "t05", "n": 6}]}, {"id": "t05-007", "n": 7, "title": "Nondeterministic finite automata", "blocks": [{"k": "slide", "d": "t05", "n": 7}]}, {"id": "t05-008", "n": 8, "title": "Regular Expressions → NFA", "blocks": [{"k": "slide", "d": "t05", "n": 8}]}, {"id": "t05-009", "n": 9, "title": "Regular Expressions → NFA", "blocks": [{"k": "slide", "d": "t05", "n": 9}]}, {"id": "t05-010", "n": 10, "title": "Regular Expressions → NFA", "blocks": [{"k": "slide", "d": "t05", "n": 10}]}, {"id": "t05-011", "n": 11, "title": "DFA → Regular Expressions", "blocks": [{"k": "slide", "d": "t05", "n": 11}]}, {"id": "t05-012", "n": 12, "title": "DFA → Regular Expressions", "blocks": [{"k": "slide", "d": "t05", "n": 12}]}, {"id": "t05-013", "n": 13, "title": "DFA → Regular Expressions", "blocks": [{"k": "slide", "d": "t05", "n": 13}]}, {"id": "t05-014", "n": 14, "title": "Generalized NFA Defn: A Generalized Nondeterministic Finite Automaton (GNFA) is", "blocks": [{"k": "slide", "d": "t05", "n": 14}]}, {"id": "t05-015", "n": 15, "title": "GNFA → Regular Expression", "blocks": [{"k": "slide", "d": "t05", "n": 15}]}, {"id": "t05-016", "n": 16, "title": "𝑘-state GNFA → (𝑘—1)-state GNFA", "blocks": [{"k": "slide", "d": "t05", "n": 16}]}, {"id": "t05-017", "n": 17, "title": "Nonregular Languages", "blocks": [{"k": "slide", "d": "t05", "n": 17}]}, {"id": "t05-018", "n": 18, "title": "Summary", "blocks": [{"k": "slide", "d": "t05", "n": 18}]}, {"id": "t05-019", "n": 19, "title": "Summary", "blocks": [{"k": "slide", "d": "t05", "n": 19}]}, {"id": "t05-020", "n": 20, "title": "Summary", "blocks": [{"k": "slide", "d": "t05", "n": 20}]}, {"id": "t05-021", "n": 21, "title": "Readings", "blocks": [{"k": "slide", "d": "t05", "n": 21}]}], "t06": [{"id": "t06-001", "n": 1, "title": "CSCI 335 Theory of", "blocks": [{"k": "slide", "d": "t06", "n": 1}]}, {"id": "t06-002", "n": 2, "title": "Learning Outcomes", "blocks": [{"k": "slide", "d": "t06", "n": 2}]}, {"id": "t06-003", "n": 3, "title": "Learning Outcomes", "blocks": [{"k": "slide", "d": "t06", "n": 3}]}, {"id": "t06-004", "n": 4, "title": "Outline", "blocks": [{"k": "slide", "d": "t06", "n": 4}]}, {"id": "t06-005", "n": 5, "title": "Equivalence of finite automata", "blocks": [{"k": "slide", "d": "t06", "n": 5}]}, {"id": "t06-006", "n": 6, "title": "Non-Regular Languages", "blocks": [{"k": "slide", "d": "t06", "n": 6}]}, {"id": "t06-007", "n": 7, "title": "How to Prove Non-regularity", "blocks": [{"k": "slide", "d": "t06", "n": 7}]}, {"id": "t06-008", "n": 8, "title": "How to Prove Non-regularity", "blocks": [{"k": "slide", "d": "t06", "n": 8}]}, {"id": "t06-009", "n": 9, "title": "Non-regularity: Example 1", "blocks": [{"k": "slide", "d": "t06", "n": 9}]}, {"id": "t06-010", "n": 10, "title": "Non-regularity: Example 2", "blocks": [{"k": "slide", "d": "t06", "n": 10}]}, {"id": "t06-011", "n": 11, "title": "Non-regularity: Example 3", "blocks": [{"k": "slide", "d": "t06", "n": 11}]}, {"id": "t06-012", "n": 12, "title": "Summary", "blocks": [{"k": "slide", "d": "t06", "n": 12}]}, {"id": "t06-013", "n": 13, "title": "Summary", "blocks": [{"k": "slide", "d": "t06", "n": 13}]}, {"id": "t06-014", "n": 14, "title": "Readings", "blocks": [{"k": "slide", "d": "t06", "n": 14}]}], "t07": [{"id": "t07-001", "n": 1, "title": "CSCI 335 Theory of", "blocks": [{"k": "slide", "d": "t07", "n": 1}]}, {"id": "t07-002", "n": 2, "title": "Learning Outcomes", "blocks": [{"k": "slide", "d": "t07", "n": 2}]}, {"id": "t07-003", "n": 3, "title": "Learning Outcomes", "blocks": [{"k": "slide", "d": "t07", "n": 3}]}, {"id": "t07-004", "n": 4, "title": "Outline", "blocks": [{"k": "slide", "d": "t07", "n": 4}]}, {"id": "t07-005", "n": 5, "title": "Grammer", "blocks": [{"k": "slide", "d": "t07", "n": 5}]}, {"id": "t07-006", "n": 6, "title": "Grammer", "blocks": [{"k": "slide", "d": "t07", "n": 6}]}, {"id": "t07-007", "n": 7, "title": "Grammer: Example 1", "blocks": [{"k": "slide", "d": "t07", "n": 7}]}, {"id": "t07-008", "n": 8, "title": "Chomsky Grammar Hierarchy", "blocks": [{"k": "slide", "d": "t07", "n": 8}]}, {"id": "t07-009", "n": 9, "title": "Grammar Subtypes", "blocks": [{"k": "slide", "d": "t07", "n": 9}]}, {"id": "t07-010", "n": 10, "title": "Regular Grammar", "blocks": [{"k": "slide", "d": "t07", "n": 10}]}, {"id": "t07-011", "n": 11, "title": "Regular Grammar", "blocks": [{"k": "slide", "d": "t07", "n": 11}]}, {"id": "t07-012", "n": 12, "title": "Regular Grammar", "blocks": [{"k": "slide", "d": "t07", "n": 12}]}, {"id": "t07-013", "n": 13, "title": "Linear Grammar", "blocks": [{"k": "slide", "d": "t07", "n": 13}]}, {"id": "t07-014", "n": 14, "title": "Derivations from a Grammar", "blocks": [{"k": "slide", "d": "t07", "n": 14}]}, {"id": "t07-015", "n": 15, "title": "Derivations from a Grammar", "blocks": [{"k": "slide", "d": "t07", "n": 15}]}, {"id": "t07-016", "n": 16, "title": "Derivations from a Grammar", "blocks": [{"k": "slide", "d": "t07", "n": 16}]}, {"id": "t07-017", "n": 17, "title": "Context-Free Grammars", "blocks": [{"k": "slide", "d": "t07", "n": 17}]}, {"id": "t07-018", "n": 18, "title": "Context-Free Grammars (CFGs)", "blocks": [{"k": "slide", "d": "t07", "n": 18}]}, {"id": "t07-019", "n": 19, "title": "CFG Parse Trees", "blocks": [{"k": "slide", "d": "t07", "n": 19}]}, {"id": "t07-020", "n": 20, "title": "CFG Parse Trees }", "blocks": [{"k": "slide", "d": "t07", "n": 20}]}, {"id": "t07-021", "n": 21, "title": "Formal Definition of Context-", "blocks": [{"k": "slide", "d": "t07", "n": 21}]}, {"id": "t07-022", "n": 22, "title": "Context-Free Grammars: Formal Definition", "blocks": [{"k": "slide", "d": "t07", "n": 22}]}, {"id": "t07-023", "n": 23, "title": "Context-Free Grammars: Formal Definition", "blocks": [{"k": "slide", "d": "t07", "n": 23}]}, {"id": "t07-024", "n": 24, "title": "Ambiguity in Context-Free", "blocks": [{"k": "slide", "d": "t07", "n": 24}]}, {"id": "t07-025", "n": 25, "title": "Ambiguity", "blocks": [{"k": "slide", "d": "t07", "n": 25}]}, {"id": "t07-026", "n": 26, "title": "Ambiguity", "blocks": [{"k": "slide", "d": "t07", "n": 26}]}, {"id": "t07-027", "n": 27, "title": "Summary", "blocks": [{"k": "slide", "d": "t07", "n": 27}]}, {"id": "t07-028", "n": 28, "title": "Summary", "blocks": [{"k": "slide", "d": "t07", "n": 28}]}, {"id": "t07-029", "n": 29, "title": "Readings", "blocks": [{"k": "slide", "d": "t07", "n": 29}]}], "t08": [{"id": "t08-001", "n": 1, "title": "CSCI 335 Theory of", "blocks": [{"k": "slide", "d": "t08", "n": 1}]}, {"id": "t08-002", "n": 2, "title": "Learning Outcomes", "blocks": [{"k": "slide", "d": "t08", "n": 2}]}, {"id": "t08-003", "n": 3, "title": "Learning Outcomes", "blocks": [{"k": "slide", "d": "t08", "n": 3}]}, {"id": "t08-004", "n": 4, "title": "Outline", "blocks": [{"k": "slide", "d": "t08", "n": 4}]}, {"id": "t08-005", "n": 5, "title": "Pushdown automata (PDAs): The", "blocks": [{"k": "slide", "d": "t08", "n": 5}]}, {"id": "t08-006", "n": 6, "title": "Pushdown Automata (PDAs)", "blocks": [{"k": "slide", "d": "t08", "n": 6}]}, {"id": "t08-007", "n": 7, "title": "Formal definition of PDAs", "blocks": [{"k": "slide", "d": "t08", "n": 7}]}, {"id": "t08-008", "n": 8, "title": "Pushdown Automata: Formal Definition", "blocks": [{"k": "slide", "d": "t08", "n": 8}]}, {"id": "t08-009", "n": 9, "title": "Pushdown Automata: Formal Definition", "blocks": [{"k": "slide", "d": "t08", "n": 9}]}, {"id": "t08-010", "n": 10, "title": "Examples of PDAs", "blocks": [{"k": "slide", "d": "t08", "n": 10}]}, {"id": "t08-011", "n": 11, "title": "Pushdown Automata: Example 1", "blocks": [{"k": "slide", "d": "t08", "n": 11}]}, {"id": "t08-012", "n": 12, "title": "Pushdown Automata: Example 2", "blocks": [{"k": "slide", "d": "t08", "n": 12}]}, {"id": "t08-013", "n": 13, "title": "Pushdown Automata: Example 3", "blocks": [{"k": "slide", "d": "t08", "n": 13}]}, {"id": "t08-014", "n": 14, "title": "Summary", "blocks": [{"k": "slide", "d": "t08", "n": 14}]}, {"id": "t08-015", "n": 15, "title": "Summary", "blocks": [{"k": "slide", "d": "t08", "n": 15}]}, {"id": "t08-016", "n": 16, "title": "Readings", "blocks": [{"k": "slide", "d": "t08", "n": 16}]}], "t09": [{"id": "t09-001", "n": 1, "title": "CSCI 335 Theory of", "blocks": [{"k": "slide", "d": "t09", "n": 1}]}, {"id": "t09-002", "n": 2, "title": "Learning Outcomes", "blocks": [{"k": "slide", "d": "t09", "n": 2}]}, {"id": "t09-003", "n": 3, "title": "Learning Outcomes", "blocks": [{"k": "slide", "d": "t09", "n": 3}]}, {"id": "t09-004", "n": 4, "title": "Outline", "blocks": [{"k": "slide", "d": "t09", "n": 4}]}, {"id": "t09-005", "n": 5, "title": "Converting CFGs into PDAs", "blocks": [{"k": "slide", "d": "t09", "n": 5}]}, {"id": "t09-006", "n": 6, "title": "Converting CFGs into PDAs Theorem: If 𝐴 is a CFL then some PDA recognizes 𝐴", "blocks": [{"k": "slide", "d": "t09", "n": 6}]}, {"id": "t09-007", "n": 7, "title": "Converting CFGs into PDAs", "blocks": [{"k": "slide", "d": "t09", "n": 7}]}, {"id": "t09-008", "n": 8, "title": "Converting CFGs into PDAs Theorem: If 𝐴 is a CFL then some PDA recognizes 𝐴", "blocks": [{"k": "slide", "d": "t09", "n": 8}]}, {"id": "t09-009", "n": 9, "title": "CFG-to-PDA Conversion: Example 1", "blocks": [{"k": "slide", "d": "t09", "n": 9}]}, {"id": "t09-010", "n": 10, "title": "Equivalence of CFGs and PDAs", "blocks": [{"k": "slide", "d": "t09", "n": 10}]}, {"id": "t09-011", "n": 11, "title": "Equivalence of CFGs and PDAs Theorem: 𝐴 is a CFL iff* some PDA recognizes 𝐴", "blocks": [{"k": "slide", "d": "t09", "n": 11}]}, {"id": "t09-012", "n": 12, "title": "The relation between regular and", "blocks": [{"k": "slide", "d": "t09", "n": 12}]}, {"id": "t09-013", "n": 13, "title": "Recap", "blocks": [{"k": "slide", "d": "t09", "n": 13}]}, {"id": "t09-014", "n": 14, "title": "Summary", "blocks": [{"k": "slide", "d": "t09", "n": 14}]}, {"id": "t09-015", "n": 15, "title": "Summary", "blocks": [{"k": "slide", "d": "t09", "n": 15}]}, {"id": "t09-016", "n": 16, "title": "Readings", "blocks": [{"k": "slide", "d": "t09", "n": 16}]}], "t10": [{"id": "t10-001", "n": 1, "title": "CSCI 335 Theory of", "blocks": [{"k": "slide", "d": "t10", "n": 1}]}, {"id": "t10-002", "n": 2, "title": "Learning Outcomes", "blocks": [{"k": "slide", "d": "t10", "n": 2}]}, {"id": "t10-003", "n": 3, "title": "Learning Outcomes", "blocks": [{"k": "slide", "d": "t10", "n": 3}]}, {"id": "t10-004", "n": 4, "title": "Outline", "blocks": [{"k": "slide", "d": "t10", "n": 4}]}, {"id": "t10-005", "n": 5, "title": "Pumping lemma for CFLs", "blocks": [{"k": "slide", "d": "t10", "n": 5}]}, {"id": "t10-006", "n": 6, "title": "Pumping lemma for CFLs", "blocks": [{"k": "slide", "d": "t10", "n": 6}]}, {"id": "t10-007", "n": 7, "title": "Proving the CFL pumping lemma", "blocks": [{"k": "slide", "d": "t10", "n": 7}]}, {"id": "t10-008", "n": 8, "title": "Proving the CFL pumping lemma", "blocks": [{"k": "slide", "d": "t10", "n": 8}]}, {"id": "t10-009", "n": 9, "title": "Proving the CFL pumping lemma", "blocks": [{"k": "slide", "d": "t10", "n": 9}]}, {"id": "t10-010", "n": 10, "title": "Proving the CFL pumping lemma", "blocks": [{"k": "slide", "d": "t10", "n": 10}]}, {"id": "t10-011", "n": 11, "title": "Proving that a language isn’t", "blocks": [{"k": "slide", "d": "t10", "n": 11}]}, {"id": "t10-012", "n": 12, "title": "Proving that a language isn’t context-free: Example 1", "blocks": [{"k": "slide", "d": "t10", "n": 12}]}, {"id": "t10-013", "n": 13, "title": "Proving that a language isn’t context-free: Example 1", "blocks": [{"k": "slide", "d": "t10", "n": 13}]}, {"id": "t10-014", "n": 14, "title": "Proving that a language isn’t context-free: Example 2", "blocks": [{"k": "slide", "d": "t10", "n": 14}]}, {"id": "t10-015", "n": 15, "title": "Proving that a language isn’t context-free: Example 2", "blocks": [{"k": "slide", "d": "t10", "n": 15}]}, {"id": "t10-016", "n": 16, "title": "Summary", "blocks": [{"k": "slide", "d": "t10", "n": 16}]}, {"id": "t10-017", "n": 17, "title": "Summary", "blocks": [{"k": "slide", "d": "t10", "n": 17}]}, {"id": "t10-018", "n": 18, "title": "Readings", "blocks": [{"k": "slide", "d": "t10", "n": 18}]}], "t11": [{"id": "t11-001", "n": 1, "title": "CSCI 335 Theory of", "blocks": [{"k": "slide", "d": "t11", "n": 1}]}, {"id": "t11-002", "n": 2, "title": "Learning Outcomes", "blocks": [{"k": "slide", "d": "t11", "n": 2}]}, {"id": "t11-003", "n": 3, "title": "Learning Outcomes", "blocks": [{"k": "slide", "d": "t11", "n": 3}]}, {"id": "t11-004", "n": 4, "title": "Outline", "blocks": [{"k": "slide", "d": "t11", "n": 4}]}, {"id": "t11-005", "n": 5, "title": "TM underlying assumptions", "blocks": [{"k": "slide", "d": "t11", "n": 5}]}, {"id": "t11-006", "n": 6, "title": "TM underlying assumptions", "blocks": [{"k": "slide", "d": "t11", "n": 6}]}, {"id": "t11-007", "n": 7, "title": "Practical and mathematical views of a TM", "blocks": [{"k": "slide", "d": "t11", "n": 7}]}, {"id": "t11-008", "n": 8, "title": "TM example", "blocks": [{"k": "slide", "d": "t11", "n": 8}]}, {"id": "t11-009", "n": 9, "title": "TM example", "blocks": [{"k": "slide", "d": "t11", "n": 9}]}, {"id": "t11-010", "n": 10, "title": "TM example", "blocks": [{"k": "slide", "d": "t11", "n": 10}]}, {"id": "t11-011", "n": 11, "title": "TM formal definition", "blocks": [{"k": "slide", "d": "t11", "n": 11}]}, {"id": "t11-012", "n": 12, "title": "TM formal definition", "blocks": [{"k": "slide", "d": "t11", "n": 12}]}, {"id": "t11-013", "n": 13, "title": "TM formal definition", "blocks": [{"k": "slide", "d": "t11", "n": 13}]}, {"id": "t11-014", "n": 14, "title": "TM configurations", "blocks": [{"k": "slide", "d": "t11", "n": 14}]}, {"id": "t11-015", "n": 15, "title": "TM configurations", "blocks": [{"k": "slide", "d": "t11", "n": 15}]}, {"id": "t11-016", "n": 16, "title": "TM configurations", "blocks": [{"k": "slide", "d": "t11", "n": 16}]}, {"id": "t11-017", "n": 17, "title": "Turing-recognizable and Turing-", "blocks": [{"k": "slide", "d": "t11", "n": 17}]}, {"id": "t11-018", "n": 18, "title": "Turing-recognizable and Turing- decidable languages", "blocks": [{"k": "slide", "d": "t11", "n": 18}]}, {"id": "t11-019", "n": 19, "title": "Turing-recognizable and Turing- decidable languages", "blocks": [{"k": "slide", "d": "t11", "n": 19}]}, {"id": "t11-020", "n": 20, "title": "Summary", "blocks": [{"k": "slide", "d": "t11", "n": 20}]}, {"id": "t11-021", "n": 21, "title": "Summary", "blocks": [{"k": "slide", "d": "t11", "n": 21}]}, {"id": "t11-022", "n": 22, "title": "Readings", "blocks": [{"k": "slide", "d": "t11", "n": 22}]}], "t12": [{"id": "t12-001", "n": 1, "title": "CSCI 335 Theory of", "blocks": [{"k": "slide", "d": "t12", "n": 1}]}, {"id": "t12-002", "n": 2, "title": "Learning Outcomes", "blocks": [{"k": "slide", "d": "t12", "n": 2}]}, {"id": "t12-003", "n": 3, "title": "Learning Outcomes", "blocks": [{"k": "slide", "d": "t12", "n": 3}]}, {"id": "t12-004", "n": 4, "title": "Outline", "blocks": [{"k": "slide", "d": "t12", "n": 4}]}, {"id": "t12-005", "n": 5, "title": "TM example 2", "blocks": [{"k": "slide", "d": "t12", "n": 5}]}, {"id": "t12-006", "n": 6, "title": "TM example 2 (Example 3.7 p. 171)", "blocks": [{"k": "slide", "d": "t12", "n": 6}]}, {"id": "t12-007", "n": 7, "title": "TM example 2 (Example 3.7 p. 171)", "blocks": [{"k": "slide", "d": "t12", "n": 7}]}, {"id": "t12-008", "n": 8, "title": "TM example 2 (Example 3.7 p. 171)", "blocks": [{"k": "slide", "d": "t12", "n": 8}]}, {"id": "t12-009", "n": 9, "title": "TM example 2 (Example 3.7 p. 171)", "blocks": [{"k": "slide", "d": "t12", "n": 9}]}, {"id": "t12-010", "n": 10, "title": "TM example 3", "blocks": [{"k": "slide", "d": "t12", "n": 10}]}, {"id": "t12-011", "n": 11, "title": "TM example 3 (Example 3.9 p. 173)", "blocks": [{"k": "slide", "d": "t12", "n": 11}]}, {"id": "t12-012", "n": 12, "title": "TM example 3 (Example 3.9 p. 173)", "blocks": [{"k": "slide", "d": "t12", "n": 12}]}, {"id": "t12-013", "n": 13, "title": "TM example 3 (Example 3.9 p. 173)", "blocks": [{"k": "slide", "d": "t12", "n": 13}]}, {"id": "t12-014", "n": 14, "title": "TM example 3 (Example 3.9 p. 173)", "blocks": [{"k": "slide", "d": "t12", "n": 14}]}, {"id": "t12-015", "n": 15, "title": "Summary", "blocks": [{"k": "slide", "d": "t12", "n": 15}]}, {"id": "t12-016", "n": 16, "title": "Summary", "blocks": [{"k": "slide", "d": "t12", "n": 16}]}, {"id": "t12-017", "n": 17, "title": "Readings", "blocks": [{"k": "slide", "d": "t12", "n": 17}]}]};
+/* ===== Theory · Lecture 1–2 slide notes ===== */
+const WHY = {};
+const N = t => [['', t]];
+WHY['t01-002'] = N('The whole course in one line: we build <b>mathematical models of computers</b> (automata, Turing machines) to find out what computers can and cannot do. Three areas: <b>automata</b> (models), <b>computability</b> (what can be solved at all) and <b>complexity</b> (how hard it is).');
+WHY['t01-003'] = N('The main book is <b>Sipser</b>. The MIT course 18.404J (same book) is free online if you want videos.');
+WHY['t01-010'] = N('Learning outcomes = what the exam can ask: languages, grammars, automata, Turing machines, decidability, complexity.');
+WHY['t01-011'] = N('The plan for Lectures 1–2: key questions → why study theory → the man/wolf/goat/cabbage puzzle → finite automata → regular languages.');
+WHY['t01-013'] = N('Three questions = three parts of the course. <b>Computability</b>: can it be computed at all? <b>Complexity</b>: how quickly / with how much memory? <b>Automata & languages</b>: which model of computer should we use?');
+WHY['t01-014'] = N('A computational model is an <b>idealized computer on paper</b>. We drop the details (chips, voltage) and keep only: what it can store, what operations it can do, how its state changes, which problems it solves.');
+WHY['t01-015'] = N('1930s–1950s: <b>computability theory</b> asked "what is computable at all?". Finite automata and Turing machines come from here.');
+WHY['t01-016'] = N('1960s–today: <b>complexity theory</b> asks "how hard?". Example: factoring 15 = 3 × 5 is easy, but a number with hundreds of digits is very hard to factor. Key point: a problem can be <b>computable</b> (solvable) but still <b>hard</b> (takes too long).');
+WHY['t01-018'] = N('Three reasons: big ideas, it is useful in practice (e.g. designing a programming language, compilers, text search), and it trains you to think and write precisely.');
+WHY['t01-020'] = N('The puzzle: wolf eats goat, goat eats cabbage if left alone. The idea: every situation (who is on which bank) is a <b>state</b>, every crossing is a <b>transition</b>. Solving the puzzle = finding a path from the start state to the goal state. That is exactly a finite automaton.');
+WHY['t01-021'] = N('The goat must go first: if the man takes the wolf, the goat eats the cabbage; if he takes the cabbage, the wolf eats the goat.');
+WHY['t01-022'] = N('Adding the wrong moves gives a full diagram of states and transitions; the solution is a path that never enters a "bad" state. This diagram <b>is</b> a finite automaton.');
+WHY['t01-024'] = N('How a finite automaton (FA) runs: start at the start state (arrow), read the input <b>one symbol at a time</b>, follow the arrow for that symbol. At the end: in an accept state (double circle) → <b>accept</b>; otherwise → <b>reject</b>. Try 01101: q1 –0→ q1 –1→ q2 –1→ q3 –0→ q3 –1→ q3 ⇒ accept. M₁ accepts exactly the strings that contain <b>11</b>.');
+WHY['t01-025'] = N('Learn the 5-tuple by heart: <b>(Q, Σ, δ, q₀, F)</b> = states, alphabet, transition function, start state, accept states. δ: Q × Σ → Q means: (current state, symbol read) → next state. δ(q, a) = r is the arrow q —a→ r.');
+WHY['t01-026'] = N('Writing M₁ formally: Q = {q1, q2, q3}, Σ = {0, 1}, start = q1, F = {q3}, and δ as a table (rows = states, columns = symbols). Every state has <b>exactly one</b> arrow for every symbol (that is what makes it deterministic).');
+WHY['t01-027'] = N('String = finite sequence of symbols; language = a set of strings. <b>ε</b> = the empty string (length 0); <b>∅</b> = the empty language (no strings). Careful: {ε} is not ∅ — it has one string. M accepts w if there is a sequence of states starting at q₀, following δ on each symbol, and ending in F. L(M) = the language M recognizes.');
+WHY['t01-029'] = N('<b>A language is regular if some finite automaton recognizes it.</b> A = "contains 11" is regular (M₁). B = "even number of 1s" is regular (2 states). C = "equal numbers of 0s and 1s" is <b>not</b> regular: an FA has finite memory and cannot count without limit (proved later with the pumping lemma).');
+WHY['t01-030'] = N('The three regular operations: <b>union</b> A ∪ B (in A or in B), <b>concatenation</b> AB (a string of A followed by a string of B), <b>star</b> A* (0 or more strings of A glued together). Note: ε ∈ A* always (taking zero strings). Example: {good, bad}{boy, girl} = {goodboy, goodgirl, badboy, badgirl}.');
+WHY['t01-031'] = N('Closure under union: if A₁ and A₂ are regular, A₁ ∪ A₂ is regular. Idea: build one machine M that runs M₁ and M₂ <b>at the same time</b> ("in parallel") on the same input.');
+WHY['t01-032'] = N('The product construction: states of M are <b>pairs (q, r)</b> = (state of M₁, state of M₂). Start = (q₁, q₂). δ((q, r), a) = (δ₁(q, a), δ₂(r, a)). Accept if <b>either</b> is accepting: F = (F₁ × Q₂) ∪ (Q₁ × F₂). Careful: F₁ × F₂ (both accepting) would give the <b>intersection</b>, not the union.');
+WHY['t01-033'] = N('Check-in 1.1: M has <b>k₁ × k₂</b> states (one for every pair).');
+WHY['t01-034'] = N('Closure under concatenation: A₁A₂ = strings x y with x ∈ A₁ and y ∈ A₂.');
+WHY['t01-035'] = N('The problem: M does not know <b>where to split w</b> into x and y. A deterministic FA cannot "guess". The fix comes in the next lecture: <b>nondeterminism (NFA)</b>, which can guess the split point.');
+WHY['t01-037'] = N('Summary: FA examples and the 5-tuple definition; regular language = recognized by some FA; regular languages are closed under union (product construction); concatenation needs NFAs.');
+/* ===== Theory · Lectures 3–4 slide notes ===== */
+WHY['t03-003'] = N('Three goals: understand <b>nondeterminism</b>, prove <b>NFA = DFA</b> in power, and prove closure under <b>union, concatenation and star</b>.');
+WHY['t03-006'] = N('An NFA can have <b>0, 1 or many</b> arrows for the same symbol, and <b>ε-arrows</b> (move for free, without reading a symbol). It accepts if <b>at least one</b> possible path ends in an accept state. You cannot build it as a real machine, but it makes designs much easier.');
+WHY['t03-007'] = N('Same 5-tuple as the DFA; only δ changes: <b>δ: Q × Σ<sub>ε</sub> → P(Q)</b>. Σ<sub>ε</sub> = Σ ∪ {ε} (ε-moves allowed), and the result is a <b>set of states</b> (an element of the power set P(Q)), possibly ∅. Example: δ(q1, a) = {q1, q2}, δ(q1, b) = ∅.');
+WHY['t03-008'] = N('Three ways to imagine it: <b>parallel threads</b> (split at every choice, accept if any thread accepts); a <b>tree</b> of branches (accept if any branch reaches accept); <b>magic guessing</b> (it always guesses right if a right path exists).');
+WHY['t03-009'] = N('"1 in the 3rd position from the end": the NFA <b>guesses</b> when it is at that 1, then checks that exactly 2 symbols follow (4 states). A DFA must remember the last 3 symbols = 2³ = 8 states. NFAs are often much smaller.');
+WHY['t03-010'] = N('Length a multiple of 2 <b>or</b> 3: from the start, two ε-arrows into two cycles: a cycle of 2 states and a cycle of 3 states. The NFA guesses which condition holds. This is the union trick.');
+WHY['t03-012'] = N('Big theorem: <b>every NFA has an equivalent DFA</b>, so NFAs recognize exactly the regular languages. The idea: the DFA remembers the <b>set</b> of states the NFA could be in right now (e.g. {q3, q7}).');
+WHY['t03-013'] = N('Check-in 2.2: if the NFA has n states, the DFA can need up to <b>2ⁿ</b> states (one for every subset).');
+WHY['t03-014'] = N('The subset construction: Q′ = P(Q) (all subsets); δ′(R, a) = all states reachable from any state in R by a; start = {q₀} (with ε: its ε-closure); <b>F′ = every subset that contains at least one accept state</b> of the NFA.');
+WHY['t03-015'] = N('Sipser Example 1.41: the same NFA drawn as a DFA. The DFA has more states but no choices.');
+WHY['t03-016'] = N('Exam method in 3 steps: (1) transition table of the NFA, (2) transition table of the DFA, starting from the start state and adding only the subsets you reach, (3) draw the DFA.');
+WHY['t03-017'] = N('Step 1: copy the NFA arrows into a table. Here: q1: a → Φ, b → q2; q2: a → {q2, q3}, b → q3; q3: a → q1, b → Φ. Φ = no arrow (empty set).');
+WHY['t03-018'] = N('Step 2 starts with the start state q1. Every new set that appears in a cell becomes a new row.');
+WHY['t03-019'] = N('qΦ is the <b>dead (trap) state</b>: once there, every symbol keeps you there. It must be included so that the DFA has an arrow for every symbol.');
+WHY['t03-020'] = N('From q2: a gives {q2, q3} (a new state "q2q3"), b gives q3 (new).');
+WHY['t03-021'] = N('From {q2, q3} on a: q2 –a→ {q2, q3} and q3 –a→ q1, so together {q1, q2, q3}. On b: q2 –b→ q3, q3 –b→ Φ ⇒ {q3}. <b>Take the union of the arrows of every state in the set.</b>');
+WHY['t03-022'] = N('From q3: a → q1, b → Φ.');
+WHY['t03-023'] = N('From {q1, q2, q3}: a → Φ ∪ {q2, q3} ∪ {q1} = {q1, q2, q3}; b → {q2} ∪ {q3} ∪ Φ = {q2, q3}. No new sets appear, so the table is complete.');
+WHY['t03-025'] = N('Step 3: draw one state per row. The accept states of the DFA are the sets that contain an accept state of the NFA. Check that every state has exactly one a-arrow and one b-arrow.');
+WHY['t03-026'] = N('With ε-arrows, add an ε column. The <b>ε-closure</b> E(q) = q plus every state reachable by ε-arrows only.');
+WHY['t03-027'] = N('Rule 1: the DFA start state = <b>ε-closure of the NFA start state</b>. Here q1 –ε→ q3, so the start is {q1, q3}.');
+WHY['t03-028'] = N('Rule 2: after each move on a symbol, take the ε-closure of the result. Move first, then close.');
+WHY['t03-031'] = N('Same method as before: keep adding rows until no new set appears.');
+WHY['t03-033'] = N('The final DFA, including the dead state qΦ. Common mistakes: forgetting the ε-closure at the start, and forgetting the dead state.');
+WHY['t03-035'] = N('Union is now easy with an NFA: a new start state with <b>ε-arrows to the start states of N₁ and N₂</b>. The NFA "guesses" which machine will accept (or runs both in parallel).');
+WHY['t03-036'] = N('Concatenation: ε-arrows from <b>every accept state of N₁ to the start of N₂</b>; only N₂\'s accept states stay accepting. The NFA guesses where x ends and y begins, which the DFA could not do.');
+WHY['t03-037'] = N('Star: a <b>new start state that is also accepting</b> (so ε ∈ A*), with an ε-arrow to N₁\'s start, plus ε-arrows from N₁\'s accept states back to N₁\'s start (to repeat). Why a new start? If you just made the old start accepting, you could accept wrong strings.');
+WHY['t03-039'] = N('Summary: NFA definition, NFA = DFA (subset construction, up to 2ⁿ states), closure under ∪, ∘ and * using NFAs.');
+/* ===== Theory · Lectures 5–6 slide notes ===== */
+WHY['t05-003'] = N('Goals: regular expressions, and the big result <b>regex = NFA = DFA</b> (they describe exactly the same languages: the regular languages).');
+WHY['t05-006'] = N('A regular expression is built from single symbols, ε and ∅ using the three regular operations: <b>∪</b> (or), <b>∘</b> (followed by) and <b>*</b> (repeat 0 or more times). Example: (0 ∪ 1)*1 = all strings that end in 1.');
+WHY['t05-008'] = N('Regex → NFA, piece by piece. Atomic: <b>a</b> = two states with one a-arrow; <b>ε</b> = one state that is start and accept; <b>∅</b> = one state, not accepting. Composite: use the closure constructions of Lecture 4 (∪: new start with ε-arrows; ∘: ε from accepts of the first to the start of the second; *: new accepting start + ε-loops back).');
+WHY['t05-009'] = N('Example a ∪ ab*: build NFAs for a, b, then ab (concatenate with ε), then a ∪ ab (new start with two ε-arrows), then star it (new accepting start, ε back from the accept states). Go from the <b>inside out</b>, exactly like evaluating the expression.');
+WHY['t05-010'] = N('(a ∪ b)*aba: NFA for a ∪ b, star it, then concatenate a, b, a. A simpler NFA by hand: a start state with an a,b self-loop, then the path a → b → a to the accept state (the NFA guesses where "aba" starts).');
+WHY['t05-011'] = N('DFA → regex: read the language from the diagram. The systematic method (GNFA, next slides) always works.');
+WHY['t05-013'] = N('We already have regex → NFA → DFA. Now the other direction, <b>DFA → regex</b>, which proves that every regular language has a regular expression. For it we need a new tool: the GNFA.');
+WHY['t05-014'] = N('A <b>GNFA</b> is an NFA whose arrows are labeled with <b>regular expressions</b> instead of single symbols. Special form: one start state with only outgoing arrows, one separate accept state with only incoming arrows, and an arrow between every other pair of states (use ∅ if there was none).');
+WHY['t05-015'] = N('Idea of the proof: remove states one at a time. With only 2 states left (start and accept), the label r on the single arrow <b>is</b> the regular expression.');
+WHY['t05-016'] = N('Removing state x: for every pair qᵢ → qⱼ, the new label is <b>r₁(r₂)*r₃ ∪ r₄</b>: r₁ = qᵢ → x, r₂ = the loop on x, r₃ = x → qⱼ, r₄ = the direct arrow qᵢ → qⱼ. In words: go through x (looping there any number of times) <b>or</b> go directly. Repeat until 2 states remain. Hence <b>DFAs and regular expressions are equivalent</b>.');
+WHY['t05-018'] = N('Summary: regex definition, regex → NFA (closure constructions), DFA → GNFA → regex (remove states). All three models describe the regular languages.');
+WHY['t06-003'] = N('Goal: prove that a language is <b>not</b> regular, using the pumping lemma and a proof by contradiction.');
+WHY['t06-006'] = N('To show "regular", you give a DFA. To show "not regular", "I could not find a DFA" is <b>not</b> a proof. You must prove it. Examples: "equal numbers of 0s and 1s" is not regular; but "equal numbers of 01 and 10 substrings" <b>is</b> regular (surprise!). Intuition is not enough.');
+WHY['t06-007'] = N('<b>Pumping lemma</b>: if A is regular, there is a p such that every s ∈ A with |s| ≥ p can be split s = xyz with (1) xyⁱz ∈ A for all i ≥ 0, (2) y ≠ ε, (3) |xy| ≤ p. Why it is true: a DFA with p states reading p symbols must <b>repeat a state</b> (pigeonhole). The loop between the repeats is y: you can go around it 0, 1, 2… times.');
+WHY['t06-008'] = N('Check-in 3.2: the fact "p states and more than p steps ⇒ some state repeats" is the <b>pigeonhole principle</b>.');
+WHY['t06-009'] = N('The standard proof (learn the 5 steps): 1) assume D = {0ᵏ1ᵏ} is regular; 2) let p be the pumping length; 3) choose s = 0ᵖ1ᵖ ∈ D (length ≥ p); 4) since |xy| ≤ p, x and y contain <b>only 0s</b>, so xyyz has more 0s than 1s ⇒ xyyz ∉ D; 5) contradiction ⇒ D is not regular.');
+WHY['t06-010'] = N('F = {ww}. Choosing s matters: s = 0ᵖ0ᵖ can be pumped and stay in F (bad choice). Choose s = <b>0ᵖ1 0ᵖ1</b>: y is inside the first 0s (|xy| ≤ p), so pumping changes only the first half ⇒ not of the form ww ⇒ contradiction. Pick an s where y is forced into a part you can break.');
+WHY['t06-011'] = N('A shortcut: use closure. If B (equal 0s and 1s) were regular, then B ∩ 0*1* would be regular (closure under intersection). But B ∩ 0*1* = {0ᵏ1ᵏ} = D, which we proved is not regular. Contradiction ⇒ B is not regular.');
+WHY['t06-013'] = N('Summary: pumping lemma (with its 3 conditions) and proof by contradiction. In the exam: assume regular → p → choose s → show every split fails for some i → contradiction.');
+/* ===== Theory · Lectures 7–8 slide notes ===== */
+WHY['t07-003'] = N('Goals: CFG examples, the formal definition, and ambiguity.');
+WHY['t07-005'] = N('Two ways to describe a language: a <b>grammar generates</b> its strings (rules that build them); an <b>automaton analyzes</b> (reads a string and says yes/no). Programming languages: the grammar (BNF) defines them, the compiler\'s parser recognizes them.');
+WHY['t07-006'] = N('A grammar = <b>(V, T, S, P)</b>: V = variables (non-terminals, capital letters), T = terminals (the letters of the strings), S = start symbol, P = production rules.');
+WHY['t07-007'] = N('S → A | B, A → aA | ε, B → bB | ε. A makes aⁿ, B makes bⁿ, so L = a* ∪ b* (only a\'s or only b\'s).');
+WHY['t07-008'] = N('Chomsky hierarchy (learn the table): Type 0 unrestricted ↔ recursively enumerable ↔ <b>Turing machine</b>; Type 1 context-sensitive ↔ linear bounded automaton; Type 2 <b>context-free ↔ pushdown automaton</b>; Type 3 <b>regular ↔ finite automaton</b>. Each type is inside the one above it.');
+WHY['t07-009'] = N('<b>Right-linear</b>: A → xB or A → x (the variable is at the right end). <b>Left-linear</b>: A → Bx or A → x (the variable is at the left end). x = a string of terminals.');
+WHY['t07-010'] = N('A <b>regular grammar</b> is right-linear OR left-linear (not a mix). At most one variable on the right side, always at the same end. Regular grammars generate exactly the regular languages.');
+WHY['t07-011'] = N('S → abS | a is right-linear (variable at the right end) ⇒ regular. A grammar with all rules of the form S → S₁ab… with the variable at the left is left-linear ⇒ regular.');
+WHY['t07-012'] = N('S → A, A → aB | ε, B → Ab: A → aB is right-linear but B → Ab is left-linear. Mixing both ⇒ <b>not a regular grammar</b> (it is linear, and it generates aⁿbⁿ, which is not regular).');
+WHY['t07-013'] = N('<b>Linear grammar</b>: at most one variable on the right side, anywhere. Every regular grammar is linear, but not every linear grammar is regular (as in the example above).');
+WHY['t07-014'] = N('The language of a grammar = all terminal strings derivable from S. Derivation: replace one variable at a time using a rule, until only terminals remain. Here: S ⇒ aAb ⇒ aaAbb ⇒ aaaAbbb ⇒ aaabbb (by A → ε).');
+WHY['t07-015'] = N('S → AB, A → a, B → b: only one derivation S ⇒ AB ⇒ ab, so L = {ab}.');
+WHY['t07-016'] = N('Try it: S ⇒ A ⇒ aB ⇒ aAb ⇒ aaBb ⇒ aaAbb ⇒ aabb (A → ε). Every a comes with one b ⇒ L = {aⁿbⁿ | n ≥ 0}.');
+WHY['t07-018'] = N('CFG: every rule has <b>one variable on the left</b> (that is "context-free": the variable is replaced no matter what surrounds it). To generate: write the start variable, pick a variable and replace it using a rule, repeat until no variables are left.');
+WHY['t07-019'] = N('G₁: S → 0S1 | R, R → ε. S ⇒ 0S1 ⇒ 00S11 ⇒ 00R11 ⇒ 0011. The <b>parse tree</b> shows the substitutions. L(G₁) = {0ᵏ1ᵏ}: a CFG can do what no DFA can (count and match).');
+WHY['t07-020'] = N('Check-in 3.3: G₂: S → RR, R → 0R1 | ε. R makes 0ᵏ1ᵏ, so L(G₂) = 0ᵃ1ᵃ0ᵇ1ᵇ. (a) 001101 = 0011·01 ✓ (b) 000111 = 000111·ε ✓ (c) 1010 ✗ (d) ε = ε·ε ✓. Answer: a, b, d.');
+WHY['t07-022'] = N('CFG = 4-tuple <b>(V, Σ, R, S)</b>: variables, terminals, rules (variable → string of variables and terminals), start variable. u ⇒ v: one substitution step; u ⇒* v: zero or more steps. L(G) = {w ∈ Σ* | S ⇒* w}.');
+WHY['t07-023'] = N('Check-in 4.1: a rule is valid only if its left side is a <b>single variable</b>. A rule like aS → … or AB → … is not context-free.');
+WHY['t07-025'] = N('E → E+T | T, T → T×F | F, F → (E) | a. The parse tree also shows meaning, e.g. that × binds tighter than +. <b>Ambiguous</b> = some string has <b>two different parse trees</b> (equivalently two different leftmost derivations).');
+WHY['t07-026'] = N('G₂ and G₃ generate the same language, but G₃ (E → E+E | E×E | (E) | a) is ambiguous: a+a×a has two trees, (a+a)×a and a+(a×a). G₂ is unambiguous because its layers E/T/F force the precedence. Ambiguity is a property of the <b>grammar</b>, not of the language.');
+WHY['t07-028'] = N('Summary: CFG definition, derivations and parse trees, regular vs linear grammars, the Chomsky hierarchy, ambiguity.');
+WHY['t08-003'] = N('Goals: PDA examples and the formal definition.');
+WHY['t08-006'] = N('A PDA = an NFA <b>plus a stack</b>. It can <b>push</b> a symbol on top or <b>pop</b> the top symbol. Only the top is visible (like a pile of plates). The stack gives unlimited memory, but only last-in-first-out.');
+WHY['t08-008'] = N('PDA = 6-tuple <b>(Q, Σ, Γ, δ, q₀, F)</b>; new: Γ = stack alphabet. δ: Q × Σ<sub>ε</sub> × Γ<sub>ε</sub> → P(Q × Γ<sub>ε</sub>). An arrow label "a, c → d" means: read a, pop c, push d (any of them can be ε). Nondeterministic: accept if some thread is in an accept state at the end of the input.');
+WHY['t08-009'] = N('Reading an arrow: <b>input, pop → push</b>. "ε, ε → $" = at the beginning push the marker $ (bottom of stack). "ε, $ → ε" = the stack is empty again (we see the $).');
+WHY['t08-011'] = N('PDA for 0ᵏ1ᵏ: push $, push a 0 for every 0 read; when 1s start, pop one 0 for every 1; if $ is on top at the end (stack empty) → accept. The stack counts the 0s, which a DFA cannot do.');
+WHY['t08-012'] = N('wwᴿ (a string followed by its reverse): push every symbol; <b>guess</b> nondeterministically the middle; then pop and compare with each input symbol; accept if the stack empties exactly at the end. The guessing is essential.');
+WHY['t08-013'] = N('Each nondeterministic fork gets its own copy of the stack. wwᴿ needs nondeterminism: deterministic PDAs are weaker than nondeterministic ones (unlike DFA = NFA).');
+WHY['t08-015'] = N('Summary: PDA = NFA + stack, the 6-tuple, arrows "read, pop → push", examples 0ᵏ1ᵏ and wwᴿ.');
+/* ===== Theory · Lectures 9–12 slide notes ===== */
+WHY['t09-003'] = N('Goals: convert a CFG into a PDA, know that <b>CFG = PDA</b> in power, and see how regular and context-free languages relate.');
+WHY['t09-006'] = N('Idea: the PDA <b>simulates a derivation</b>. It starts with the start variable, guesses which rule to apply at each step (nondeterminism), keeps the string being built on the stack, and in the end compares it with the input.');
+WHY['t09-007'] = N('Problem: the PDA can only touch the <b>top</b> of the stack. Fix: substitute a variable only when it is on top; when a <b>terminal</b> is on top, match it with the next input symbol and pop it. This way the input is checked from left to right as the string is generated.');
+WHY['t09-008'] = N('The construction (learn the 4 steps): 1) push $ and the start variable S; 2) top is a <b>variable</b> → pop it and push the right side of one of its rules (guess which); 3) top is a <b>terminal</b> → read the same symbol from the input and pop it (mismatch → this thread dies); 4) top is <b>$</b> → pop it and accept (if all input is read). In the diagram: q<sub>start</sub> –ε,ε→S$→ q<sub>loop</sub>, self-loops "ε, A → w" for every rule and "a, a → ε" for every terminal, then q<sub>loop</sub> –ε,$→ε→ q<sub>accept</sub>.');
+WHY['t09-009'] = N('Exam practice: draw the 3 main states (start, loop, accept), one loop arrow for <b>every rule</b> and one loop arrow for <b>every terminal</b>. (Practice with the "Build it yourself" section: it checks your PDA.)');
+WHY['t09-011'] = N('<b>A is context-free ⟺ some PDA recognizes A.</b> "iff" means both directions: CFG → PDA (shown above) and PDA → CFG (in the book). You must know the theorem is true, not the proof of the second direction.');
+WHY['t09-013'] = N('The big table: regular = recognized by DFA/NFA, generated by regex; context-free = recognized by PDA, generated by CFG. Every regular language is context-free (a DFA is a PDA that ignores its stack), but not the other way (0ᵏ1ᵏ).');
+WHY['t09-015'] = N('Summary: CFG → PDA construction, CFG ⟺ PDA, regular ⊂ context-free.');
+WHY['t10-003'] = N('Goals: the pumping lemma for CFLs, and proving that a language is <b>not</b> context-free.');
+WHY['t10-006'] = N('CFL pumping lemma: every long s ∈ A splits into <b>s = uvxyz</b> with (1) uvⁱxyⁱz ∈ A for all i ≥ 0, (2) vy ≠ ε, (3) |vxy| ≤ p. Difference from the regular one: we pump <b>two</b> pieces (v and y) <b>together</b>, and the window vxy has length ≤ p (it can be anywhere in s).');
+WHY['t10-007'] = N('Why it is true: a long string needs a <b>tall parse tree</b>; on a long path from the root some variable R must repeat (pigeonhole on the variables).');
+WHY['t10-008'] = N('The repeated R gives the pumping: replace the lower R-subtree by the upper one → uv²xy²z ("pumping up"); replace the upper by the lower → uxz = uv⁰xy⁰z ("cutting").');
+WHY['t10-009'] = N('Details: b = the longest right side of a rule (max branching). A tree of height h has at most bʰ leaves.');
+WHY['t10-010'] = N('Choose p = b<sup>|V|</sup> + 1. Then any s with |s| ≥ p has a tree of height > |V|, so some path has more than |V| variables and one must repeat.');
+WHY['t10-012'] = N('Proof for B = {0ᵏ1ᵏ2ᵏ}: assume B is a CFL, take p, choose s = 0ᵖ1ᵖ2ᵖ, split s = uvxyz.');
+WHY['t10-013'] = N('Key: |vxy| ≤ p, so vxy <b>cannot contain both 0s and 2s</b> (there are p 1s between them). Pumping up changes at most two of the three counts ⇒ the counts are no longer equal ⇒ uv²xy²z ∉ B ⇒ contradiction. (If v or y mixes symbols, the order 0…1…2 breaks.)');
+WHY['t10-014'] = N('F = {ww}: s₁ = 0ᵖ1 0ᵖ1 is a bad choice here (it can be pumped and stay in F, e.g. v and y around the middle). Choosing s is the hard part.');
+WHY['t10-015'] = N('Choose s₂ = <b>0ᵖ1ᵖ0ᵖ1ᵖ</b>. Since |vxy| ≤ p, vxy lies in at most two neighboring blocks; pumping breaks the equality of the two halves ⇒ not of the form ww ⇒ F is not context-free. (Note: F was also not regular.)');
+WHY['t10-017'] = N('Summary: CFL pumping lemma (u v x y z, pump v and y together, |vxy| ≤ p), proofs for 0ᵏ1ᵏ2ᵏ and ww.');
+WHY['t11-003'] = N('Goals: the assumptions of a Turing machine (vs DFA and PDA), the 7-tuple, configurations, and recognizable vs decidable.');
+WHY['t11-006'] = N('What makes a TM different: (1) the head can <b>read and write</b>; (2) it moves <b>left or right</b>; (3) the tape is <b>infinite</b> to the right; (4) blanks ˽ follow the input; (5) it can accept or reject <b>at any time</b> (it does not have to read the whole input, and it may never stop).');
+WHY['t11-007'] = N('A TM is the mathematical model of <b>any computer program</b>: the tape is the memory, the finite control is the program.');
+WHY['t11-009'] = N('TM for aᵏbᵏcᵏ (not context-free!): 1) check the form a*b*c*; 2) go back to the left; 3) cross off one a, one b and one c; 4) if all were the last ones → accept; 5) if one runs out before the others → reject; 6) otherwise repeat. Crossing off = writing over the symbols, which a PDA cannot do.');
+WHY['t11-012'] = N('TM = 7-tuple <b>(Q, Σ, Γ, δ, q₀, q<sub>acc</sub>, q<sub>rej</sub>)</b>; Γ = tape alphabet, contains Σ and the blank ˽. δ: Q × Γ → Q × Γ × {L, R}: δ(q, a) = (r, b, R) means "in state q reading a: write b, move right, go to r". On an input a TM can <b>accept</b>, <b>reject</b> or <b>loop forever</b>.');
+WHY['t11-013'] = N('Arrow labels in TM diagrams: "a → b, R" = read a, write b, move right. "a → R" = read a, leave it, move right.');
+WHY['t11-015'] = N('A <b>configuration</b> = current state + tape contents + head position, written <b>u q v</b>: the tape is uv, the machine is in state q, and the head is on the first symbol of v. Example: 1011q₇01111.');
+WHY['t11-016'] = N('C₁ yields C₂ if one step of δ goes from C₁ to C₂. Start configuration: q₀w. Accepting / rejecting configurations: the state is q<sub>acc</sub> / q<sub>rej</sub> (halting configurations).');
+WHY['t11-018'] = N('<b>Turing-recognizable</b>: some TM accepts exactly the strings of A (on other strings it may reject <b>or loop</b>). <b>Decider</b>: a TM that halts on every input. <b>Turing-decidable</b>: some decider recognizes A. Every decidable language is recognizable, not necessarily the other way.');
+WHY['t11-019'] = N('The nested picture to remember: <b>regular ⊂ context-free ⊂ decidable ⊂ recognizable</b>.');
+WHY['t11-021'] = N('Summary: TM assumptions, 7-tuple, configurations, recognizable vs decidable.');
+WHY['t12-003'] = N('Goals: more TM examples, drawing state diagrams, writing implementation-level descriptions.');
+WHY['t12-006'] = N('Example 3.7: A = {0^(2ⁿ)} (the number of 0s is a power of 2). Idea: sweep left to right <b>crossing off every other 0</b> (halving). If there was 1 zero left → accept; if the number of 0s was odd and > 1 → reject; otherwise return to the left and repeat.');
+WHY['t12-007'] = N('Formal description: Q, Σ = {0}, Γ = {0, x, ˽}, the start, accept and reject states, and δ given by the diagram.');
+WHY['t12-008'] = N('The state diagram: the first 0 is replaced by a blank (it marks the left end); q₃/q₄ alternate between "cross off" and "skip" to halve; q₅ walks back to the left end.');
+WHY['t12-009'] = N('Sample run on 0000 as a sequence of configurations: each sweep halves the 0s: 4 → 2 → 1 ⇒ accept.');
+WHY['t12-011'] = N('Example 3.9: B = {w#w}. Zig-zag: cross off the first symbol of w, remember it (in the state), go past # and check the first uncrossed symbol on the right is the same, cross it off, go back. When all symbols left of # are crossed, check nothing is left on the right ⇒ accept.');
+WHY['t12-012'] = N('The diagram has two branches (one remembers 0, one remembers 1). That is how a TM "remembers" a symbol: with different states.');
+WHY['t12-014'] = N('Snapshots on 011000#011000: crossed symbols become x, the head goes back and forth across #.');
+WHY['t12-016'] = N('Summary: TM examples, low-level state diagrams, implementation-level descriptions. In the exam: describe the steps in words and/or draw the diagram.');
+/* ===== the lecture as text: every slide, verbatim, pictures in place, why? on the lines ===== */
+const LTITLES = {"t01": "Lectures 1–2 · Introduction & Finite Automata", "t03": "Lectures 3–4 · Nondeterminism (NFA)", "t05": "Lecture 5 · Regular Expressions", "t06": "Lecture 6 · Non-regular languages", "t07": "Lecture 7 · Context-Free Grammars", "t08": "Lecture 8 · Pushdown Automata", "t09": "Lecture 9 · CFG ⇄ PDA", "t10": "Lecture 10 · Non-context-free languages", "t11": "Lecture 11 · Turing Machines", "t12": "Lecture 12 · Turing Machines II"};
+const escT = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const nrm = s => String(s).replace(/\s+/g, ' ').trim().toLowerCase();
+function picEl(p, full) {
+  const el = h('div', { class: 'lpic', role: 'img', 'aria-label': 'picture from the slide' });
+  el.style.aspectRatio = `${p.w} / ${p.h}`;
+  el.style.maxWidth = full ? '100%' : Math.min(100, Math.max(25, Math.round(p.w / (p.pw || 1920) * 125))) + '%';
+  el.style.backgroundSize = `${(p.sw / p.w) * 100}% auto`;
+  el.style.backgroundPosition = `${p.sw > p.w ? (p.x / (p.sw - p.w)) * 100 : 0}% ${p.sh > p.h ? (p.y / (p.sh - p.h)) * 100 : 0}%`;
+  el.dataset.bg = p.a; lazyBg2(el);
+  el.onclick = () => { const ov = h('div', { class: 'picview', onclick: () => ov.remove() }, picEl(p, true)); document.body.append(ov); };
+  return el;
+}
+let picIO = null;
+function lazyBg2(el) { if (!('IntersectionObserver' in window)) { el.style.backgroundImage = `url("${el.dataset.bg}")`; return; } if (!picIO) picIO = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.style.backgroundImage = `url("${e.target.dataset.bg}")`; picIO.unobserve(e.target); } }), { rootMargin: '800px 0px' }); picIO.observe(el); }
+function lineEl(text, lvl, why, kind) {
+  const w = (why || []).find(([k]) => nrm(text).startsWith(nrm(k))) || (why || []).find(([k]) => nrm(text).includes(nrm(k)));
+  if (w) w.used = true;
+  return h('div', { class: `step wl sl-line lv${lvl || 0} ${kind || ''}` }, h('div', { class: 'm', html: (kind === 'p' ? '' : '<span class="sl-bul">•</span>') + `<span>${escT(text).replace(/([\u{1D400}-\u{1D7FF}])([0-9]+|𝑘|𝑖|𝑝|𝑗)(?![0-9])/gu, '$1<sub>$2</sub>')}</span>` }), h('div', { class: 'n', html: w ? w[1] : '' }));
+}
+function blocksEl(blocks, why) {
+  const out = []; let table = null;
+  blocks.forEach(b => {
+    if (b.k !== 'row') table = null;
+    if (b.k === 'li') out.push(lineEl(b.t, b.lvl, why));
+    else if (b.k === 'p') out.push(lineEl(b.t, 0, why, 'p'));
+    else if (b.k === 'big') out.push(h('div', { class: 'sl-big' }, b.t));
+    else if (b.k === 'row') { if (!table) { table = h('table', { class: 'tbl sl-tbl' }); out.push(h('div', { class: 'tblwrap' }, table)); } table.append(h('tr', {}, ...b.cells.map(c => h('td', {}, c)))); }
+    else if (b.k === 'pic') out.push(h('div', { class: 'sl-pics' }, picEl(b)));
+    else if (b.k === 'slide') { const el = slideEl({ d: b.d, k: b.n }, false); lazyBg(el); el.classList.add('sl-whole'); el.onclick = () => { const L = []; for (let k = 1; k <= SLIDES_N[b.d]; k++) if (!(SKIPSL[b.d] || []).includes(k) || k === b.n) L.push({ d: b.d, k, label: `${LTITLES[b.d] || ''} · slide ${k} / ${SLIDES_N[b.d]}` }); slideViewer(L, L.findIndex(x => x.k === b.n)); }; out.push(el); }
+    else if (b.k === 'pics') out.push(h('div', { class: 'sl-pics row' }, ...b.items.map(p => picEl(p))));
+    else if (b.k === 'side') out.push(h('div', { class: 'sl-side' }, h('div', { class: 'sl-sidetext' }, ...blocksEl(b.text, why)), h('div', { class: 'sl-sidepics' }, ...b.pics.map(p => picEl(p, true)))));
+  });
+  return out;
+}
+/* animation steps of the scanned slides (faded text that the next slide shows in full): hidden, their notes move to the next slide */
+const SKIPSL = {};
+function LectureText(host, lk) {
+  const S = LDATA[lk]; if (!S) { host.append(h('p', {}, 'Coming soon.')); return; }
+  const posKey = 'lpos-' + lk; const saved = store.get(posKey, 0);
+  const jump = h('select', { class: 'sjump', 'aria-label': 'Go to slide' });
+  const cards = []; let deck = '';
+  const bar = h('div', { class: 'sdeckbar' }, h('span', { class: 'small muted' }, 'Every slide, word for word, with its pictures. Press why? next to a line for the explanation. Tap a picture to enlarge it.'), jump);
+  host.append(bar);
+  let carry = [];
+  const SL = S.filter(s => { const [d, n] = s.id.split('-'); if ((SKIPSL[d] || []).includes(+n)) { carry = carry.concat((WHY[s.id] || []).filter(w => !w[0]).map(w => w[1])); return false; } if (carry.length) { const own = (WHY[s.id] || []).filter(w => !w[0]).map(w => w[1]); s._why = [['', carry.concat(own).join('<br><br>')]].concat((WHY[s.id] || []).filter(w => w[0])); carry = []; } return true; });
+  SL.forEach((s, i) => {
+    const d = s.id.split('-')[0];
+    if (d !== deck) { deck = d; host.append(h('h2', { class: 'sdecktitle' }, LTITLES[d] || d)); }
+    jump.append(h('option', { value: i }, `${SL.some(x => x.id.split('-')[0] !== d) ? d.toUpperCase() + ' · ' : ''}Slide ${s.n}${s.title ? ' – ' + s.title.slice(0, 40) : ''}`));
+    const why = (s._why || WHY[s.id] || []).map(x => x.slice());
+    const empty = !s.blocks.length;
+    const card = h('section', { class: 'sl-card' + (empty ? ' sl-section' : ''), 'data-i': i, id: 'sl-' + s.id },
+      h('div', { class: 'sl-head' }, h('span', { class: 'sl-no' }, `Slide ${s.n}`), s.title ? h('h3', { class: 'sl-title' }, s.title) : null),
+      ...blocksEl(s.blocks, why.filter(w => w[0])),
+      ...why.filter(w => !w[0]).map(w => h('div', { class: 'step wl sl-line sl-explain' }, h('div', { class: 'm', html: '<span class="sl-bul">💡</span><span><b>Explain this slide</b></span>' }), h('div', { class: 'n', html: w[1] }))));
+    host.append(card); cards.push(card);
+  });
+  addWhyIn(host);
+  jump.onchange = () => cards[+jump.value].scrollIntoView({ behavior: 'smooth', block: 'start' });
+  if ('IntersectionObserver' in window) { let t; const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { const i = +e.target.dataset.i; jump.value = i; clearTimeout(t); t = setTimeout(() => store.set(posKey, i), 400); } }), { rootMargin: '-35% 0px -60% 0px' }); cards.forEach(c => io.observe(c)); }
+  if (saved > 0 && cards[saved]) bar.after(h('div', { class: 'ctl' }, h('button', { class: 'btn ghost', type: 'button', onclick: () => cards[saved].scrollIntoView({ block: 'start' }) }, `Continue where you stopped (slide ${SL[saved].n})`)));
+}
+function addWhyIn(root) { root.querySelectorAll('.wl').forEach(w => { const m = w.querySelector(':scope > .m'), n = w.querySelector(':scope > .n'); if (!m || !n) return; if (!n.textContent.trim()) { n.remove(); return; } if (m.querySelector('.whyb')) return; const b = h('button', { class: 'whyb', type: 'button', 'aria-expanded': 'false' }, 'why?'); b.onclick = ev => { ev.stopPropagation(); const o = w.classList.toggle('open'); b.textContent = o ? 'hide' : 'why?'; b.setAttribute('aria-expanded', o); }; m.append(b); }); }
+/* ===== the lectures from the slides: one section per lecture ===== */
+(function () {
+  Object.keys(SLIDES).forEach(k => { const s = addSection('s-' + k, LTITLES[k].replace(/^Lectures? [0-9–]+ · /, ''), ''); s.dataset.slides = k; const ref = $('#l1'); if (ref) ref.before(s); });
+})();
 /* ================= EXAM ROOM RENDERER ================= */
 function figEl(q) {
   if (q.fig && FIG[q.fig]) return h('div', { class: 'figimg' }, h('img', { src: FIG[q.fig], alt: 'figure from the exam paper' }));
