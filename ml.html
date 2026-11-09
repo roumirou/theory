@@ -1154,7 +1154,8 @@ function bootOS() {
 
   const secs = [
     { id: 'start', grp: 'Begin', ln: '—', name: 'Start here' },
-    ...Object.entries(LECT).map(([k, L]) => ({ id: k, grp: 'Lectures', ln: L.ln, name: L.name })),
+    ...(typeof SLIDES !== 'undefined' ? Object.keys(SLIDES).map(d => ({ id: 'learn-' + d, grp: 'The lectures, slide by slide', ln: 'L' + d.slice(1), name: LTITLES[d].replace(/^Lecture [0-9]+ · /, '') })) : []),
+    ...Object.entries(LECT).map(([k, L]) => ({ id: k, grp: 'Questions per lecture', ln: L.ln, name: L.name })),
     { id: 'all', grp: 'All lectures together', ln: 'Mix', name: 'Mixed review' },
     { id: 'defs', grp: 'All lectures together', ln: 'Def', name: 'All definitions' },
     { id: 'diffs', grp: 'All lectures together', ln: 'Diff', name: 'All differences' },
@@ -1163,7 +1164,14 @@ function bootOS() {
     { id: 'mistakes', grp: 'Review', ln: 'Redo', name: 'Mistakes notebook' }
   ];
   const nav = $('#nav'), sel = $('#navsel'); let g = '';
-  secs.forEach(s => { if (s.grp !== g) { g = s.grp; nav.append(h('div', { class: 'grp' }, g)); sel.append(h('option', { disabled: true }, '— ' + g)); } nav.append(h('a', { href: '#' + s.id, 'data-id': s.id }, h('span', { class: 'ln' }, s.ln), h('span', {}, s.name), s.id === 'mistakes' ? h('span', { class: 'mbadge' }) : h('span'))); sel.append(h('option', { value: s.id }, `${s.ln} · ${s.name}`)); });
+  const modeOf = s => s.id === 'start' ? 'both' : s.id.startsWith('learn-') ? 'learn' : 'practice';
+  const hasLearn = secs.some(x => x.id.startsWith('learn-'));
+  secs.forEach(s => { if (s.grp !== g) { g = s.grp; nav.append(h('div', { class: 'grp', 'data-mode': modeOf(s) }, g)); } nav.append(h('a', { href: '#' + s.id, 'data-id': s.id, 'data-mode': modeOf(s) }, h('span', { class: 'ln' }, s.ln), h('span', {}, s.name), s.id === 'mistakes' ? h('span', { class: 'mbadge' }) : h('span'))); });
+  let mode = hasLearn ? store.get('mode', 'learn') : 'practice'; const swb = [];
+  const fillSel = () => { sel.innerHTML = ''; let gg = ''; secs.filter(s => modeOf(s) === 'both' || modeOf(s) === mode).forEach(s => { if (s.grp !== gg) { gg = s.grp; sel.append(h('option', { disabled: true }, '— ' + gg)); } sel.append(h('option', { value: s.id }, `${s.ln} · ${s.name}`)); }); };
+  const setMode = (m, go) => { mode = m; store.set('mode', m); $$('#nav [data-mode]').forEach(a => a.hidden = !(a.dataset.mode === 'both' || a.dataset.mode === m)); swb.forEach(b => b.classList.toggle('on', b.dataset.m === m)); fillSel(); if (go) location.hash = m === 'learn' ? '#' + secs.find(x => x.id.startsWith('learn-')).id : '#' + Object.keys(LECT)[0]; };
+  const mkSw = () => { const w = h('div', { class: 'modesw' }); [['learn', '📖 Explanation'], ['practice', '✍️ Questions']].forEach(([m, t]) => { const b = h('button', { type: 'button', 'data-m': m }, t); b.onclick = () => setMode(m, true); swb.push(b); w.append(b); }); return w; };
+  if (hasLearn) { nav.before(mkSw()); $('.topbar').append(mkSw()); } setMode(mode);
   sel.onchange = () => location.hash = sel.value;
   const main = $('main');
   const headEl = (eyebrow, title, lead) => h('div', { class: 'ch-head' }, h('div', { class: 'eyebrow' }, eyebrow), h('h1', {}, title), lead ? h('p', { class: 'lead', html: lead }) : null);
@@ -1172,7 +1180,8 @@ function bootOS() {
     main.innerHTML = ''; const sec = h('section', { class: 'ch', id }); main.append(sec);
     const L = LECT[id]; const P = PAPERS.find(p => p.id === id);
     if (id === 'start') {
-      sec.append(headEl('CSAI 350 · Operating Systems', 'Questions only. Every type.', 'No explanations here, only questions on Lectures 1–6, the way the midterm can ask them: MCQ, True/False with correction, complete the sentence, matching, put in order, define, differentiate, list and explain, and calculation problems.'));
+      sec.append(headEl('CSAI 350 · Operating Systems', 'Understand it, then practise every type.', 'The <b>explanation</b>: Lectures 1–6 slide by slide with a simple explanation under each slide. The <b>questions</b>: every type the midterm can ask — MCQ, True/False with correction, complete the sentence, matching, put in order, define, differentiate, list and explain, and scheduling problems.'));
+      if (hasLearn) sec.append(h('div', { class: 'modecards' }, h('button', { type: 'button', class: 'modecard', onclick: () => setMode('learn', true) }, h('span', { class: 'mi' }, '📖'), h('span', { class: 'mt' }, 'Explanation'), h('span', { class: 'md' }, 'The lectures exactly as in the slides, slide by slide, with a short simple explanation under each slide.')), h('button', { type: 'button', class: 'modecard', onclick: () => setMode('practice', true) }, h('span', { class: 'mi' }, '✍️'), h('span', { class: 'mt' }, 'Questions'), h('span', { class: 'md' }, 'Every type of question on every lecture, all definitions and differences, scheduling problems, quizzes, the mock midterm and your mistakes.'))));
       const pr = store.get('prog', {});
       const tb = h('table', { class: 'tbl progt' }, h('tr', {}, h('th', {}, 'Lecture'), h('th', {}, 'Topic'), h('th', {}, 'Questions'), h('th', {}, 'Answered'), h('th', {}, 'Correct')));
       const row = (href, ln, name, its) => { const ids = its.map(x => x.id); const done = ids.filter(x => pr[x] != null); const ok = done.filter(x => pr[x] === 1).length; const pct = done.length ? Math.round(100 * ok / done.length) : null; const cov = Math.round(100 * done.length / ids.length);
@@ -1183,6 +1192,9 @@ function bootOS() {
       sec.append(h('h2', {}, 'Your progress'), h('p', { class: 'small muted' }, 'Answered = questions you checked at least once. Correct = of those, how many were right the last time. Red or orange = go back to that lecture.'), h('div', { class: 'tblwrap' }, tb));
       sec.append(h('h2', {}, 'How to use it'), h('ol', {}, h('li', { html: 'Do the lectures in order. Each lecture page has <b>all question types</b> on that lecture. Choices and blanks are marked as soon as you answer.' }), h('li', { html: 'For written questions, write first (on the page, on paper, or with the pencil), then open the model answer and tick the points you wrote.' }), h('li', { html: 'Then do the <b>Mixed review</b>, <b>All definitions</b> and <b>All differences</b>: they put the six lectures together.' }), h('li', { html: 'Before the midterm, take <b>Quiz A, B and C</b> with the clock (each has different questions), then the <b>Mock Midterm</b> 2–3 days before the exam. Use the ✎ pencil button to write answers by hand, like in the exam.' }), h('li', { html: 'Anything you get wrong goes to the <b>Mistakes notebook</b>. It leaves after you get it right twice.' })));
       sec.append(h('div', { class: 'box' }, h('div', { class: 'bt' }, 'Typing tips'), h('p', { class: 'small', html: 'Blanks accept the usual spellings (e.g. "ROM" or "EPROM"). Capital letters and spaces do not matter.' })));
+    } else if (id.startsWith('learn-')) {
+      sec.append(headEl('CSAI 350 · Operating Systems · explanation', LTITLES[id.slice(6)], 'The lecture slide by slide, exactly as in the slides, with a short simple explanation under each slide.'));
+      LectureText(sec, id.slice(6));
     } else if (L) {
       sec.append(headEl(`Lecture ${L.ln.slice(1)} · CSAI 350 Operating Systems`, L.name, `${L.items.length} questions. Covers: ${L.covers}.`));
       const bReset = h('button', { class: 'btn ghost', type: 'button' }, 'Clear my answers on this lecture and start again');
@@ -1212,7 +1224,7 @@ function bootOS() {
       if (!ids.length) sec.append(h('div', { class: 'banner ok' }, 'Empty. Nothing to redo right now.'));
       else { sec.append(h('p', {}, `${ids.length} question(s).`)); ids.forEach((x, i) => Item(sec, REG[x], i + 1, 'practice')); }
     }
-    $$('#nav a').forEach(a => a.classList.toggle('cur', a.dataset.id === id)); sel.value = id; badge();
+    { const sm = secs.find(x => x.id === id); if (sm && modeOf(sm) !== 'both' && modeOf(sm) !== mode) setMode(modeOf(sm)); } $$('#nav a').forEach(a => a.classList.toggle('cur', a.dataset.id === id)); sel.value = id; badge();
     window.scrollTo({ top: 0, behavior: 'instant' });
   }
   const show = () => { const id = (location.hash || '#start').slice(1); render(secs.some(s => s.id === id) ? id : 'start'); };
