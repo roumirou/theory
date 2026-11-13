@@ -488,7 +488,7 @@ svg.dgm{display:block;width:100%;max-width:640px;height:auto;color:var(--ink)}
 .rail .modesw button{background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.25)}
 .rail .modesw button.on{background:var(--ngu-cream);color:#3a1020;border-color:var(--ngu-cream)}
 @media (max-width:860px){.paperbar{top:calc(env(safe-area-inset-top,0px) + 100px)}}
-.oqsrc{font-size:11px;font-weight:700;letter-spacing:.04em;padding:2px 8px;border-radius:999px;background:var(--ngu-green);color:#1d3b1a}.ch .tblwrap{overflow-x:auto;margin:12px 0}.ch .tbl{border-collapse:collapse;width:100%}.ch .tbl td,.ch .tbl th{padding:7px 10px;border:1px solid var(--line);vertical-align:top;text-align:left}.ch .tbl th{background:var(--accent);color:#fff}.ch td.mono{font-family:var(--f-mono);font-size:13.5px;color:var(--accent);word-break:break-word}</style>
+.ch details.xtra{margin:26px 0;border:1px solid var(--line);border-radius:8px;padding:10px 14px;background:var(--paper)}.ch details.xtra>summary{cursor:pointer;font-weight:700;color:var(--accent);font-size:17px}.oqsrc{font-size:11px;font-weight:700;letter-spacing:.04em;padding:2px 8px;border-radius:999px;background:var(--ngu-green);color:#1d3b1a}.ch .tblwrap{overflow-x:auto;margin:12px 0}.ch .tbl{border-collapse:collapse;width:100%}.ch .tbl td,.ch .tbl th{padding:7px 10px;border:1px solid var(--line);vertical-align:top;text-align:left}.ch .tbl th{background:var(--accent);color:#fff}.ch td.mono{font-family:var(--f-mono);font-size:13.5px;color:var(--accent);word-break:break-word}</style>
 
 </head>
 <body>
@@ -2100,6 +2100,9 @@ function bootCY() {
   const LK = Object.keys(LECT);
   LK.forEach(k => LECT[k].items.forEach((it, i) => it.id = it.id || `${k}-${i}`));
   const ALL = LK.flatMap(k => LECT[k].items);
+  LK.forEach(k => LECT[k].items.forEach(x => x.ess = true)); // Cyber: every question covers a different line of the slides, so all are essential
+
+
   ALL.forEach(it => { if (it.t === 'tf' && it.fix) it.fix = it.fix.replace(/^(True|False)\.\s*/, ''); });
   // mix the options once per question (same order every visit, so saved answers stay valid)
   ALL.forEach(it => { if (!['mc', 'ms'].includes(it.t) || it._sh || it.opts.some(o => /all of the above|none of the above/i.test(o))) return;
@@ -2145,7 +2148,7 @@ function bootCY() {
       const tb = h('table', { class: 'tbl progt' }, h('tr', {}, h('th', {}, 'Lecture'), h('th', {}, 'Topic'), h('th', {}, 'Questions'), h('th', {}, 'Answered'), h('th', {}, 'Correct')));
       const row = (href, ln, name, its) => { const ids = its.map(x => x.id); const done = ids.filter(x => pr[x] != null); const ok = done.filter(x => pr[x] === 1).length; const pct = done.length ? Math.round(100 * ok / done.length) : null; const cov = Math.round(100 * done.length / ids.length);
         tb.append(h('tr', {}, h('td', {}, h('a', { href }, ln)), h('td', {}, name), h('td', { class: 'mono' }, String(ids.length)), h('td', {}, h('div', { class: 'pbar' }, h('i', { style: `width:${cov}%` })), h('span', { class: 'small muted' }, `${done.length} (${cov}%)`)), h('td', { class: 'mono ' + (pct == null ? '' : pct >= 80 ? 'pgood' : pct >= 60 ? 'pmid' : 'pbad') }, pct == null ? '—' : pct + '%'))); };
-      LK.forEach(k => row('#' + k, LECT[k].ln, LECT[k].name, LECT[k].items));
+      LK.forEach(k => row('#' + k, LECT[k].ln, LECT[k].name, LECT[k].items.filter(x => x.ess)));
       row('#mock', 'Mock', 'Mock MCQ exam', MOCK.qs.flatMap(q => q.items));
       sec.append(h('h2', {}, 'Your progress'), h('p', { class: 'small muted' }, 'Answered = questions you checked at least once. Correct = of those, how many were right the last time. Red or orange = go back to that lecture.'), h('div', { class: 'tblwrap' }, tb));
       sec.append(h('h2', {}, 'How to use it'), h('ol', {}, h('li', { html: 'Read each lecture in <b>📖 Explanation</b>: the slides exactly as given, with 💡 a simple explanation under each one.' }), h('li', { html: 'Then do its <b>Questions</b>: every question has an explanation after you answer.' }), h('li', { html: 'Do the <b>Labs</b> page: the filters and the answers of every Wireshark lab sheet.' }), h('li', { html: 'Finish with the <b>Mixed review</b> and the <b>Mock MCQ exam</b> with the clock.' }), h('li', { html: 'Anything you get wrong goes to the <b>Mistakes notebook</b>.' })));
@@ -2158,6 +2161,7 @@ function bootCY() {
     } else if (L) {
       sec.append(headEl(L.ln === 'Labs' ? 'Labs · Cyber Security' : `${L.ln} · Cyber Security`, L.name, `${L.items.length} questions. Covers: ${L.covers}.`));
       Practice(sec, L.items, PMG);
+
     } else if (id === 'all') {
       sec.append(headEl('All lectures together', 'Mixed review', '20 questions from all the lectures and labs, shuffled. Press the button for 20 new ones.'));
       const area = h('div'); const go = () => { area.innerHTML = ''; shuffle(ALL.filter(x => x.t !== 'write')).slice(0, 20).forEach((it, i) => Item(area, it, i + 1, 'practice')); };

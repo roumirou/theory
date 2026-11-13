@@ -488,7 +488,7 @@ svg.dgm{display:block;width:100%;max-width:640px;height:auto;color:var(--ink)}
 .rail .modesw button{background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.25)}
 .rail .modesw button.on{background:var(--ngu-cream);color:#3a1020;border-color:var(--ngu-cream)}
 @media (max-width:860px){.paperbar{top:calc(env(safe-area-inset-top,0px) + 100px)}}
-.oqsrc{font-size:11px;font-weight:700;letter-spacing:.04em;padding:2px 8px;border-radius:999px;background:var(--ngu-green);color:#1d3b1a}.ch .tblwrap{overflow-x:auto;margin:12px 0}.ch .tbl{border-collapse:collapse;width:100%}.ch .tbl td,.ch .tbl th{padding:7px 10px;border:1px solid var(--line);vertical-align:top;text-align:left}.ch .tbl th{background:var(--accent);color:#fff}.ch td.mono{font-family:var(--f-mono);font-size:13.5px;color:var(--accent);word-break:break-word}.ddwrap{margin:10px 0}.ddboxes{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}.ddwrap.isord .ddboxes{grid-template-columns:1fr}.ddbox{border:2px dashed var(--line);border-radius:8px;padding:8px;min-height:64px;background:var(--paper);cursor:pointer;transition:background .15s}.ddbox.over{background:var(--accent-soft);border-color:var(--accent)}.ddwrap.isord .ddbox{display:flex;align-items:center;gap:10px;min-height:46px}.ddcap{font-weight:700;color:var(--accent);font-size:13px;margin-bottom:6px}.ddwrap.isord .ddcap{margin:0;min-width:22px}.ddin{display:flex;flex-wrap:wrap;gap:6px;flex:1}.ddbank{display:flex;flex-wrap:wrap;gap:8px;min-height:44px;padding:8px;border-radius:8px;background:var(--accent-soft)}.ddbanklbl{margin:10px 0 4px}.ddchip{padding:7px 11px;border-radius:999px;background:#fff;border:1.5px solid var(--accent);color:var(--ink);font-size:14px;cursor:grab;user-select:none;-webkit-user-select:none;touch-action:manipulation}.ddchip.sel{background:var(--accent);color:#fff;box-shadow:0 0 0 3px var(--accent-soft)}.ddchip.good{border-color:#2e7d32;background:#e8f5e9;color:#1b5e20}.ddchip.bad{border-color:#c62828;background:#ffebee;color:#b71c1c}</style>
+.ch details.xtra{margin:26px 0;border:1px solid var(--line);border-radius:8px;padding:10px 14px;background:var(--paper)}.ch details.xtra>summary{cursor:pointer;font-weight:700;color:var(--accent);font-size:17px}.oqsrc{font-size:11px;font-weight:700;letter-spacing:.04em;padding:2px 8px;border-radius:999px;background:var(--ngu-green);color:#1d3b1a}.ch .tblwrap{overflow-x:auto;margin:12px 0}.ch .tbl{border-collapse:collapse;width:100%}.ch .tbl td,.ch .tbl th{padding:7px 10px;border:1px solid var(--line);vertical-align:top;text-align:left}.ch .tbl th{background:var(--accent);color:#fff}.ch td.mono{font-family:var(--f-mono);font-size:13.5px;color:var(--accent);word-break:break-word}.ddwrap{margin:10px 0}.ddboxes{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}.ddwrap.isord .ddboxes{grid-template-columns:1fr}.ddbox{border:2px dashed var(--line);border-radius:8px;padding:8px;min-height:64px;background:var(--paper);cursor:pointer;transition:background .15s}.ddbox.over{background:var(--accent-soft);border-color:var(--accent)}.ddwrap.isord .ddbox{display:flex;align-items:center;gap:10px;min-height:46px}.ddcap{font-weight:700;color:var(--accent);font-size:13px;margin-bottom:6px}.ddwrap.isord .ddcap{margin:0;min-width:22px}.ddin{display:flex;flex-wrap:wrap;gap:6px;flex:1}.ddbank{display:flex;flex-wrap:wrap;gap:8px;min-height:44px;padding:8px;border-radius:8px;background:var(--accent-soft)}.ddbanklbl{margin:10px 0 4px}.ddchip{padding:7px 11px;border-radius:999px;background:#fff;border:1.5px solid var(--accent);color:var(--ink);font-size:14px;cursor:grab;user-select:none;-webkit-user-select:none;touch-action:manipulation}.ddchip.sel{background:var(--accent);color:#fff;box-shadow:0 0 0 3px var(--accent-soft)}.ddchip.good{border-color:#2e7d32;background:#e8f5e9;color:#1b5e20}.ddchip.bad{border-color:#c62828;background:#ffebee;color:#b71c1c}</style>
 
 </head>
 <body>
@@ -2334,6 +2334,7 @@ items: [
 { LECT.n1.items = LECT.n1.items.filter((x, i) => !(i <= 42 && i !== 38) && !/Match each year with the event|evolution of search\/browsing|networking milestones/.test(x.q));
   LECT.n1.covers = 'convergence, communication model & tasks, end/intermediary devices, media, hardware & software, network sizes, LAN/WAN, Internet bodies, intranet/extranet, connections, topologies, reliable networks, design (the history part is not included)'; }
 /* ===== extra coverage: more True/False and calculation questions on every module ===== */
+const NW_BASE = {}; Object.keys(LECT).forEach(k => NW_BASE[k] = LECT[k].items.length);
 LECT.n1.items.push(
   T('An end device is where a message originates or is received.', true),
   T('Intermediary devices regenerate and retransmit data signals.', true),
@@ -2720,6 +2721,13 @@ function bootNW() {
   const LK = Object.keys(LECT);
   LK.forEach(k => LECT[k].items.forEach((it, i) => it.id = it.id || `${k}-${i}`));
   const ALL = LK.flatMap(k => LECT[k].items);
+  // ⭐ Essentials = the main bank (one question per idea, on every slide) + one calculation of each kind.
+  //    Extra practice = the same ideas asked again in another form (extra True/False, extra drag & drop, similar calculations).
+  const isCalc = x => x.t === 'mc' && /\d/.test(x.q) && (x.why || '').length > 0;
+  LK.forEach(k => { const base = (typeof NW_BASE !== 'undefined' && NW_BASE[k] != null) ? NW_BASE[k] : LECT[k].items.length; const seen = new Set();
+    LECT[k].items.forEach((x, i) => { if (i < base) { x.ess = true; return; } if (isCalc(x)) { const key = x.q.replace(/[\d.,]+/g, '#').slice(0, 30); if (!seen.has(key)) { seen.add(key); x.ess = true; return; } } x.ess = false; }); });
+
+
   ALL.forEach(it => { if (it.t === 'tf' && it.fix) it.fix = it.fix.replace(/^(True|False)\.\s*/, ''); });
   // mix the options once per question (same order every visit, so saved answers stay valid)
   ALL.forEach(it => { if (!['mc', 'ms'].includes(it.t) || it._sh || it.opts.some(o => /all of the above|none of the above/i.test(o))) return;
@@ -2766,13 +2774,13 @@ function bootNW() {
       sec.append(headEl('ECEN335 · Computer Networks', 'Understand it, then practise.', `The 7 modules and the Wireshark labs slide by slide with a simple explanation, the Packet Tracer labs explained, then ${ALL.length} questions in the exam types: <b>MCQ</b>, <b>True/False</b>, <b>matching</b> and <b>drag & drop</b> — on every slide and every lab.`));
       sec.append(h('div', { class: 'modecards' }, h('button', { type: 'button', class: 'modecard', onclick: () => setMode('learn', true) }, h('span', { class: 'mi' }, '📖'), h('span', { class: 'mt' }, 'Explanation'), h('span', { class: 'md' }, 'The lectures exactly as in the slides, slide by slide, with a short simple explanation under each slide.')), h('button', { type: 'button', class: 'modecard', onclick: () => setMode('practice', true) }, h('span', { class: 'mi' }, '✍️'), h('span', { class: 'mt' }, 'Questions'), h('span', { class: 'md' }, 'MCQ, True/False, matching and drag & drop on every module and lab, a mixed review, a mock exam and your mistakes.'))));
       const pr = store.get('prog', {});
-      const tb = h('table', { class: 'tbl progt' }, h('tr', {}, h('th', {}, 'Module'), h('th', {}, 'Topic'), h('th', {}, 'Questions'), h('th', {}, 'Answered'), h('th', {}, 'Correct')));
+      const tb = h('table', { class: 'tbl progt' }, h('tr', {}, h('th', {}, 'Module'), h('th', {}, 'Topic'), h('th', {}, 'Essentials'), h('th', {}, 'Answered'), h('th', {}, 'Correct')));
       const row = (href, ln, name, its) => { const ids = its.map(x => x.id); const done = ids.filter(x => pr[x] != null); const ok = done.filter(x => pr[x] === 1).length; const pct = done.length ? Math.round(100 * ok / done.length) : null; const cov = Math.round(100 * done.length / ids.length);
         tb.append(h('tr', {}, h('td', {}, h('a', { href }, ln)), h('td', {}, name), h('td', { class: 'mono' }, String(ids.length)), h('td', {}, h('div', { class: 'pbar' }, h('i', { style: `width:${cov}%` })), h('span', { class: 'small muted' }, `${done.length} (${cov}%)`)), h('td', { class: 'mono ' + (pct == null ? '' : pct >= 80 ? 'pgood' : pct >= 60 ? 'pmid' : 'pbad') }, pct == null ? '—' : pct + '%'))); };
-      LK.forEach(k => row('#' + k, LECT[k].ln, LECT[k].name, LECT[k].items));
+      LK.forEach(k => row('#' + k, LECT[k].ln, LECT[k].name, LECT[k].items.filter(x => x.ess)));
       row('#mock', 'Mock', 'Mock exam', MOCK.qs.flatMap(q => q.items));
       sec.append(h('h2', {}, 'Your progress'), h('p', { class: 'small muted' }, 'Answered = questions you checked at least once. Correct = of those, how many were right the last time. Red or orange = go back to that module.'), h('div', { class: 'tblwrap' }, tb));
-      sec.append(h('h2', {}, 'How to use it'), h('ol', {}, h('li', { html: 'Read each lecture in <b>📖 Explanation</b>: the slides exactly as given, with 💡 a simple explanation under each one.' }), h('li', { html: 'Then do its <b>Questions</b>: every question has an explanation after you answer.' }), h('li', { html: 'Do the <b>Labs</b>: Wireshark (Intro + IP) and the four Packet Tracer activities.' }), h('li', { html: 'Finish with the <b>Mixed review</b> and the <b>Mock exam</b> with the clock.' }), h('li', { html: 'Anything you get wrong goes to the <b>Mistakes notebook</b>.' })));
+      sec.append(h('h2', {}, 'How to use it'), h('ol', {}, h('li', { html: 'Read each lecture in <b>📖 Explanation</b>: the slides exactly as given, with 💡 a simple explanation under each one.' }), h('li', { html: 'Then do its <b>Questions</b>: every question has an explanation after you answer.' }), h('li', { html: 'Do the <b>Labs</b>: Wireshark (Intro + IP) and the four Packet Tracer activities.' }), h('li', { html: 'Finish with the <b>Mixed review</b> and the <b>Mock exam</b> with the clock.' }), h('li', { html: 'Every page starts with <b>⭐ Essentials</b> (about 20–25 questions that cover everything once). <b>📚 Extra practice</b> under them is optional.' }), h('li', { html: 'Anything you get wrong goes to the <b>Mistakes notebook</b>.' })));
     } else if (id === 'learn-pt') {
       sec.append(headEl('Computer Networks · labs', 'Packet Tracer labs explained', 'What each activity asks, the addresses, the commands, the cables and the answers.'));
       PTNotes(sec);
@@ -2780,8 +2788,13 @@ function bootNW() {
       sec.append(headEl('Computer Networks · explanation', LTITLES[id.slice(6)], 'The lecture slide by slide, exactly as in the slides, with a short simple explanation under each slide.'));
       LectureText(sec, id.slice(6));
     } else if (L) {
-      sec.append(headEl((L.ln === 'WS' || L.ln === 'PT') ? 'Labs · Computer Networks' : `${L.ln} · Computer Networks`, L.name, `${L.items.length} questions. Covers: ${L.covers}.`));
-      Practice(sec, L.items, PMG);
+      sec.append(headEl((L.ln === 'WS' || L.ln === 'PT') ? 'Labs · Computer Networks' : `${L.ln} · Computer Networks`, L.name, `${L.items.filter(x => x.ess).length} essential + ${L.items.filter(x => !x.ess).length} extra questions. Covers: ${L.covers}.`));
+      const E = L.items.filter(x => x.ess), X = L.items.filter(x => !x.ess);
+      if (X.length) sec.append(h('div', { class: 'banner ok', html: `<b>⭐ Essentials first:</b> ${E.length} questions that cover the slides of this module, plus one calculation of each kind. Do these. The other ${X.length} are <b>extra practice</b>: the same ideas asked again in another form — only if you have time.` }));
+      sec.append(h('h2', {}, `⭐ Essentials (${E.length})`));
+      Practice(sec, E, PMG);
+      if (X.length) { const det = h('details', { class: 'xtra' }, h('summary', {}, `📚 Extra practice — ${X.length} more questions (optional)`));
+      sec.append(det); let filled = false; det.addEventListener('toggle', () => { if (det.open && !filled) { filled = true; Practice(det, X, PMG); } }); }
     } else if (id === 'all') {
       sec.append(headEl('All lectures together', 'Mixed review', '20 questions from all the modules and labs, shuffled. Press the button for 20 new ones.'));
       const area = h('div'); const go = () => { area.innerHTML = ''; shuffle(ALL.filter(x => x.t !== 'write')).slice(0, 20).forEach((it, i) => Item(area, it, i + 1, 'practice')); };
