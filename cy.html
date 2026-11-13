@@ -530,8 +530,8 @@ svg.dgm{display:block;width:100%;max-width:640px;height:auto;color:var(--ink)}
   const CAN_SYNC = /(^|\.)github\.io$/.test(location.hostname) || location.hostname === 'localhost' || window.SYNC_FORCE;
   const SDK = window.SYNC_SDK || 'https://cdn.jsdelivr.net/npm/firebase@10.12.2/';
   const NOTES = 'study-notes';
-  const PAGES = { toc: 'theory.html', os: 'os.html', ml: 'ml.html', pm: 'pm.html', cy: 'cy.html' };
-  const SUBJ_NAME = { toc: 'Theory of Computing', os: 'Operating Systems', ml: 'Machine Learning', pm: 'Project Management', cy: 'Cyber Security', home: 'Front page' };
+  const PAGES = { toc: 'theory.html', os: 'os.html', ml: 'ml.html', pm: 'pm.html', cy: 'cy.html', nw: 'nw.html' };
+  const SUBJ_NAME = { toc: 'Theory of Computing', os: 'Operating Systems', ml: 'Machine Learning', pm: 'Project Management', cy: 'Cyber Security', nw: 'Computer Networks', home: 'Front page' };
   const LS = window.localStorage;
   const set0 = Storage.prototype.setItem, rem0 = Storage.prototype.removeItem;
   const raw = (k, d) => { try { const v = LS.getItem(k); return v == null ? d : v; } catch (e) { return d; } };
@@ -804,6 +804,9 @@ const W = (kind, q, model, points, extra) => Object.assign({ t: 'write', kind, q
 const DIFF = (a, b, rows, extra) => ({ t: 'diff', kind: 'Differentiate', q: `Differentiate between <b>${a}</b> and <b>${b}</b>.`, a, b, rows, extra });
 const MATCH = (q, pairs) => ({ t: 'match', q, pairs });
 const ORD = (q, steps, why) => ({ t: 'order', q, steps, why });
+/* drag & drop: DD(q, buckets, [[chip, bucketIndex], ...], why) · DDO(q, steps, why) = drag the steps into the right order */
+const DD = (q, cats, items, why) => ({ t: 'dd', q, cats, items, why });
+const DDO = (q, steps, why) => ({ t: 'dd', q, cats: steps.map((_, i) => String(i + 1)), items: steps.map((s, i) => [s, i]), why, ord: 1 });
 const NUM = (q, ans, model, unit, extra) => Object.assign({ t: 'num', q, ans, model, unit }, extra || {});
 const SCH = (alg, procs, opts = {}) => ({ t: 'sched', alg, procs, ...opts });
 const LABEL = (q, dg, acc, why) => ({ t: 'label', q, dg, acc, why });
@@ -831,7 +834,7 @@ function diagramSVG(dg) {
 /* ---------- marks ---------- */
 function marksOf(it) {
   if (it.marks != null) return it.marks;
-  return { mc: 1, ms: 1, tf: 1, fill: it.acc ? it.acc.length : 1, write: it.points ? it.points.length : 2, diff: it.rows ? Math.min(4, it.rows.length) : 3, match: Math.ceil((it.pairs || []).length / 2), order: 2, label: Math.ceil((it.acc || []).length / 2), num: 2, sched: 6 }[it.t] || 1;
+  return { mc: 1, ms: 1, tf: 1, fill: it.acc ? it.acc.length : 1, write: it.points ? it.points.length : 2, diff: it.rows ? Math.min(4, it.rows.length) : 3, match: Math.ceil((it.pairs || []).length / 2), order: 2, label: Math.ceil((it.acc || []).length / 2), num: 2, sched: 6, dd: Math.max(1, Math.ceil((it.items || []).length / 2)) }[it.t] || 1;
 }
 
 /* ---------- mistakes ---------- */
@@ -984,6 +987,33 @@ function Item(host, it, num, mode, onScore) {
     api.grade = () => { let ok = 0; sels.forEach((s, i) => { const good = s.value !== '' && it.pairs[+s.value][1] === it.pairs[i][1]; s.classList.toggle('good', good); s.classList.toggle('bad', !good); if (good) ok++; }); const g = Math.round(max * ok / sels.length * 2) / 2; show(ok === sels.length, `<b>${ok} of ${sels.length} right.</b> ${it.pairs.map((p, i) => `${i + 1} → ${letters[right.findIndex(r => r.i === i)]}`).join(' · ')}`); result(g, ok === sels.length); };
     b.onclick = () => api.grade();
   }
+  else if (it.t === 'dd') {
+    card.append(h('div', { class: 'oqt', html: it.q + ` <span class="muted">(${it.ord ? 'drag the steps into the boxes in the right order' : 'drag each card into the right box'} — or tap a card, then tap a box)</span>` }));
+    const key = `${id}-dd`; const saved = store.get(key, {}); let sel = null;
+    const order = shuffle(it.items.map((_, i) => i), (id || 'z').split('').reduce((a, c) => a * 7 + c.charCodeAt(0), 3) & 0xffff);
+    const bank = h('div', { class: 'ddbank' }); const boxes = it.cats.map((c, ci) => h('div', { class: 'ddbox' + (it.ord ? ' ddord' : ''), 'data-c': ci }, h('div', { class: 'ddcap', html: it.ord ? c + '.' : c }), h('div', { class: 'ddin' })));
+    const chips = {};
+    const place = (i, ci) => { const ch = chips[i]; if (ci == null) bank.append(ch); else boxes[ci].lastChild.append(ch); const sv = store.get(key, {}); if (ci == null) delete sv[i]; else sv[i] = ci; store.set(key, sv); };
+    const pick = i => { if (card.dataset.done) return; if (sel === i) { chips[i].classList.remove('sel'); sel = null; return; } if (sel != null) chips[sel].classList.remove('sel'); sel = i; chips[i].classList.add('sel'); };
+    order.forEach(i => { const ch = h('div', { class: 'ddchip', draggable: 'true', html: it.items[i][0], 'data-i': i }); chips[i] = ch;
+      ch.addEventListener('click', e => { e.stopPropagation(); const bx = ch.parentNode && ch.parentNode.parentNode; if (sel != null && sel !== i && bx && bx.dataset && bx.dataset.c != null) { drop(+bx.dataset.c); return; } if (sel != null && sel !== i && ch.parentNode === bank && chips[sel].parentNode !== bank) { drop(null); return; } pick(i); });
+      ch.addEventListener('dragstart', e => { if (card.dataset.done) { e.preventDefault(); return; } e.dataTransfer.setData('text/plain', String(i)); sel = i; ch.classList.add('sel'); });
+      ch.addEventListener('dragend', () => ch.classList.remove('sel')); bank.append(ch); });
+    const drop = ci => { if (sel == null || card.dataset.done) return; const i = sel; chips[i].classList.remove('sel'); sel = null;
+      if (it.ord && ci != null) { const cur = boxes[ci].lastChild.firstChild; if (cur && cur !== chips[i]) place(+cur.dataset.i, null); }
+      place(i, ci); };
+    boxes.forEach((b, ci) => { b.addEventListener('click', () => drop(ci)); b.addEventListener('dragover', e => { e.preventDefault(); b.classList.add('over'); }); b.addEventListener('dragleave', () => b.classList.remove('over')); b.addEventListener('drop', e => { e.preventDefault(); b.classList.remove('over'); drop(ci); }); });
+    bank.addEventListener('click', () => drop(null)); bank.addEventListener('dragover', e => e.preventDefault()); bank.addEventListener('drop', e => { e.preventDefault(); drop(null); });
+    Object.entries(saved).forEach(([i, ci]) => { if (chips[i] && boxes[ci]) boxes[ci].lastChild.append(chips[i]); });
+    const b = h('button', { class: 'btn primary', type: 'button' }, 'Check'); const rs = h('button', { class: 'btn', type: 'button' }, 'Start again');
+    rs.onclick = () => { delete card.dataset.done; fb.hidden = true; store.set(key, {}); order.forEach(i => { chips[i].classList.remove('good', 'bad'); bank.append(chips[i]); }); };
+    card.append(h('div', { class: 'ddwrap' + (it.ord ? ' isord' : '') }, h('div', { class: 'ddboxes' }, ...boxes), h('div', { class: 'ddbanklbl small muted' }, 'Cards:'), bank), ...(mode === 'practice' ? [h('div', { class: 'ctl' }, b, rs)] : []), fb);
+    api.grade = () => { if (card.dataset.done) return; card.dataset.done = 1; let ok = 0; const n = it.items.length;
+      it.items.forEach((x, i) => { const p = chips[i].parentNode.parentNode; const ci = p && p.dataset ? p.dataset.c : undefined; const good = ci != null && it.cats[+ci] === it.cats[x[1]]; chips[i].classList.toggle('good', good); chips[i].classList.toggle('bad', !good); if (good) ok++; });
+      const all = ok === n; const ans = it.ord ? `<ol>${it.items.map(x => `<li>${x[0]}</li>`).join('')}</ol>` : `<ul>${it.cats.map((c, ci) => `<li><b>${c}:</b> ${it.items.filter(x => x[1] === ci).map(x => x[0]).join(' · ') || '—'}</li>`).join('')}</ul>`;
+      show(all, `<b>${all ? 'All correct.' : `${ok} of ${n} in the right place.`}</b> The answer:${ans}${it.why || ''}`); result(all ? max : Math.round(max * ok / n * 2) / 2, all); };
+    b.onclick = () => api.grade();
+  }
   else if (it.t === 'order') {
     card.append(h('div', { class: 'oqt', html: it.q + ' <span class="muted">(write 1 for the first step)</span>' }));
     const sh = shuffle(it.steps.map((s, i) => ({ s, i })), (id || 'y').length * 31 + 3);
@@ -1077,7 +1107,7 @@ const WKINDS = ['Define', 'What happens if', 'Advantages & disadvantages', 'Give
 const groupOf = x => x.t === 'write' ? (WKINDS.includes(x.kind) ? x.kind : 'write') : x.t;
 function Practice(host, items, opts = {}) {
   const gof = opts.groupOf || groupOf; const TT = Object.assign({}, PART_TITLE, opts.titles || {});
-  const order = opts.order || ['mc', 'ms', 'tf', 'fill', 'match', 'order', 'label', 'Define', 'write', 'diff', 'What happens if', 'Advantages & disadvantages', 'Give an example', 'Find the mistake', 'Trace the code', 'num', 'sched'];
+  const order = opts.order || ['mc', 'ms', 'tf', 'fill', 'match', 'dd', 'order', 'label', 'Define', 'write', 'diff', 'What happens if', 'Advantages & disadvantages', 'Give an example', 'Find the mistake', 'Trace the code', 'num', 'sched'];
   let letter = 0;
   order.forEach(t => {
     const its = items.filter(x => gof(x) === t); if (!its.length) return;
@@ -1762,6 +1792,12 @@ LECT.lab.items.push(
   M('The filter for "Login incorrect" messages:', ['ftp.response.arg == "Login incorrect."  (code 530)', 'ftp.response.code == 230', 'ftp.response.code == 220', 'ftp.request.command == PASS'], 0, '', L6),
 );
 }
+/* remove questions that depend on the specific lab capture (counts, packet numbers, IPs found, usernames tried) */
+{ const DROP = [1, 2, 3, 4, 5, 6, 7, 8, 10, 13, 15, 17, 18, 27, 38, 39, 40, 41, 42, 48, 49, 50, 51, 55, 57, 58, 59, 60, 64, 66, 80];
+  const keep = LECT.lab.items.filter((_, i) => !DROP.includes(i));
+  keep.forEach(x => { if (/packet 81/.test(x.q)) x.q = 'To see the password tried in one FTP login attempt you:'; if (/TCP · 11/.test(x.q)) x.q = 'The number shown on the TCP tab of Statistics > Conversations (e.g. "TCP · 11") is:'; });
+  LECT.lab.items = keep;
+  LECT.lab.covers = 'display filters and operators (and, or, not, in, contains, matches), protocol & IP filters, TCP flags, conversations, DNS filters, tcp.completeness and SYN scans, FTP filters and response codes — general questions, not counts from a specific capture'; }
 const SLIDES = {"cy1": [["cy1", 29, "L1 · Introduction to Security"]], "cy2": [["cy2", 44, "L2 · Components of InfoSec, NSTISSC & Cybersecurity"]], "cy3": [["cy3", 22, "L3 · CIA+ & Specialized Areas of Security"]], "cy4": [["cy4", 36, "L4 · Threats & the Importance of Security"]], "cy5": [["cy5", 19, "L5 · Terminology & the Cyber Kill Chain"]], "cy6": [["cy6", 19, "L6 · Malware & Ransomware"]]};
 const SHEET = 8;
 const slideBg = (d, k) => { const c = Math.floor((k - 1) / SHEET), j = (k - 1) % SHEET; const n = SLIDES_N[d]; const rows = Math.min(SHEET, n - c * SHEET); return { url: `mls-${d}-${c + 1}.webp`, size: `100% ${rows * 100}%`, pos: `0 ${rows > 1 ? (j / (rows - 1)) * 100 : 0}%` }; };
@@ -1984,23 +2020,23 @@ const WSF = [
   ['matches', '<b>Regular expression</b>, <b>case-insensitive</b>. Use it for "regardless of case" or "X or Y".', 'frame matches "assets"   ·   frame matches ".(org|com)"'],
  ]],
  ['Protocol & IP filters (Lab sheet 3)', [
-  ['arp · ip · icmp · tcp · udp · dns · http · ftp', 'Show one protocol only. Use when the question says "how many ARP / IP / ICMP… packets".', 'arp → 1032 · ip → 6342 · icmp → 1064 · tcp → 6293'],
-  ['ip.addr == X', 'Everything <b>to OR from</b> host X.', 'ip.addr == 172.67.27.10 → 320'],
-  ['ip.src == X  /  ip.dst == X', 'Only <b>from</b> X / only <b>to</b> X.', 'packets from the DNS server → 6'],
-  ['icmp.type == 0  /  == 8', '0 = echo <b>reply</b>, 8 = echo <b>request</b> (ping).', 'icmp.type == 0 → 16'],
-  ['udp and !icmp', 'UDP, without the ICMP packets that carry UDP inside them.', '→ 9'],
-  ['Statistics > Conversations > IPv4', 'Not a filter: use it for "busiest conversation". Sort by Packets.', 'busiest → 714'],
-  ['Ethernet II > Source', 'For "what is the MAC address of …": filter the IP, then read the Ethernet source.', '192.168.56.1 → 0a:00:27:00:00:00'],
+  ['arp · ip · icmp · tcp · udp · dns · http · ftp', 'Show one protocol only. Use when the question says "how many ARP / IP / ICMP… packets".', 'arp · ip · icmp · tcp'],
+  ['ip.addr == X', 'Everything <b>to OR from</b> host X.', 'ip.addr == 172.67.27.10'],
+  ['ip.src == X  /  ip.dst == X', 'Only <b>from</b> X / only <b>to</b> X.', ''],
+  ['icmp.type == 0  /  == 8', '0 = echo <b>reply</b>, 8 = echo <b>request</b> (ping).', 'icmp.type == 0'],
+  ['udp and !icmp', 'UDP, without the ICMP packets that carry UDP inside them.', ''],
+  ['Statistics > Conversations > IPv4', 'Not a filter: use it for "busiest conversation". Sort by Packets.', ''],
+  ['Ethernet II > Source', 'For "what is the MAC address of …": filter the IP, then read the Ethernet source.', 'filter ip.addr == X, then Ethernet II > Source'],
  ]],
  ['TCP filters (Lab sheet 2)', [
-  ['tcp.flags.syn == 1', 'Connection attempts (SYN). Includes SYN/ACK too.', 'scan SYNs → 1023'],
-  ['tcp.flags.syn == 1 and tcp.flags.ack == 1', '<b>SYN/ACK</b> = the server says "port open". Use it to count open ports.', 'open ports → 23'],
+  ['tcp.flags.syn == 1', 'Connection attempts (SYN). Includes SYN/ACK too.', ''],
+  ['tcp.flags.syn == 1 and tcp.flags.ack == 1', '<b>SYN/ACK</b> = the server says "port open". Use it to count open ports.', ''],
   ['tcp.flags.ack == 0 and tcp.port == 80', 'SYNs only, <b>without</b> SYN/ACKs, on port 80.', ''],
   ['tcp.flags.fin == 1', 'Normal end of a connection.', ''],
   ['tcp.flags.reset == 1', 'Connection refused / aborted (RST).', ''],
   ['tcp.analysis.flags', 'All TCP <b>problems</b> Wireshark found (retransmissions, lost segments…). Use for "TCP errors".', ''],
-  ['tcp.port == N  /  tcp.port in {a..b}', 'One port / a range of ports.', 'tcp.port in {60404..60406} → 32'],
-  ['Statistics > Conversations > TCP', 'Count connections ("TCP · 11"), busiest connection, lowest/highest port (sort Port B).', '11 connections · ports 21 … 8180'],
+  ['tcp.port == N  /  tcp.port in {a..b}', 'One port / a range of ports.', 'tcp.port in {60404..60406}'],
+  ['Statistics > Conversations > TCP', 'Count connections ("TCP · 11"), busiest connection, lowest/highest port (sort Port B).', ''],
  ]],
  ['DNS filters (DNS lab)', [
   ['dns', 'All DNS. The first <b>Destination</b> of a query = the DNS server.', ''],
@@ -2013,19 +2049,19 @@ const WSF = [
  ['Scans: tcp.completeness (Lab sheet 5)', [
   ['Bit values', 'SYN 1 · SYN/ACK 2 · ACK 4 · DATA 8 · FIN 16 · RST 32. The value = the sum of what happened.', ''],
   ['tcp.completeness == 7', '<b>Full handshake</b>: SYN + SYN/ACK + ACK (1+2+4). A real connection.', ''],
-  ['tcp.completeness == 35', '<b>Stealth / half-open (SYN) scan</b>: SYN + SYN/ACK + RST (1+2+32). The port is open but the scanner does not connect.', 'scanner 192.168.56.102 → target .101'],
-  ['tcp.completeness == 37', '<b>Closed port</b>: the server answers with RST/ACK.', 'with tcp.flags.reset == 1 → 977'],
+  ['tcp.completeness == 35', '<b>Stealth / half-open (SYN) scan</b>: SYN + SYN/ACK + RST (1+2+32). The port is open but the scanner does not connect.', 'read the source IP = the scanner'],
+  ['tcp.completeness == 37', '<b>Closed port</b>: the server answers with RST/ACK.', 'tcp.completeness == 37 and tcp.flags.reset == 1'],
   ['tcp.completeness == 1', '<b>Filtered</b>: only a SYN, no answer (firewall).', ''],
   ['tcp.window_size_value == 1024', 'Nmap SYN scans use a small window (1024). Get the field name by right-click Window > Apply as Filter.', ''],
  ]],
  ['FTP: usernames & passwords (Lab sheet 6)', [
   ['ftp', 'All FTP (control port <b>21</b>). FTP sends usernames and passwords in <b>clear text</b>.', ''],
-  ['ftp.response.code == 220', 'Server ready → shows the <b>banner / version</b>.', 'vsFTPd 2.3.4'],
-  ['ftp.request.command == USER', 'Every username tried.', 'first: ADMIN, then FTPUSER'],
-  ['ftp.request.command == PASS', 'Every password tried.', 'first: USER'],
+  ['ftp.response.code == 220', 'Server ready → shows the <b>banner / version</b>.', 'shows the server name and version'],
+  ['ftp.request.command == USER', 'Every username tried.', ''],
+  ['ftp.request.command == PASS', 'Every password tried.', ''],
   ['ftp.response.code == 530', '<b>Login incorrect</b>.', ''],
-  ['ftp.response.code == 230', '<b>Login successful</b>. (= ftp.response.arg == "Login successful.")', 'msfadmin : msfadmin'],
-  ['ftp.request.command == USER and ftp.request.arg == CHRIS', 'Count tries of one username.', '→ 7'],
+  ['ftp.response.code == 230', '<b>Login successful</b>. (= ftp.response.arg == "Login successful.")', ''],
+  ['ftp.request.command == USER and ftp.request.arg == CHRIS', 'Count tries of one username.', ''],
   ['Follow > TCP Stream  /  tcp.stream eq N', 'Read one whole conversation (USER, PASS, reply) in order.', ''],
  ]],
 ];
@@ -2053,7 +2089,7 @@ function FilterNotes(sec) {
   sec.append(h('div', { class: 'tblwrap' }, t));
   WSF.forEach(([title, rows]) => {
     sec.append(h('h2', {}, title));
-    const tb = h('table', { class: 'tbl' }, h('tr', {}, h('th', {}, 'Filter / tool'), h('th', {}, 'What it does · when to use it'), h('th', {}, 'Example from the lab')));
+    const tb = h('table', { class: 'tbl' }, h('tr', {}, h('th', {}, 'Filter / tool'), h('th', {}, 'What it does · when to use it'), h('th', {}, 'Example')));
     rows.forEach(([f, d, e]) => tb.append(h('tr', {}, h('td', { class: 'mono' }, f), h('td', { html: d }), h('td', { class: 'mono small' }, e))));
     sec.append(h('div', { class: 'tblwrap' }, tb));
   });
@@ -2114,7 +2150,7 @@ function bootCY() {
       sec.append(h('h2', {}, 'Your progress'), h('p', { class: 'small muted' }, 'Answered = questions you checked at least once. Correct = of those, how many were right the last time. Red or orange = go back to that lecture.'), h('div', { class: 'tblwrap' }, tb));
       sec.append(h('h2', {}, 'How to use it'), h('ol', {}, h('li', { html: 'Read each lecture in <b>📖 Explanation</b>: the slides exactly as given, with 💡 a simple explanation under each one.' }), h('li', { html: 'Then do its <b>Questions</b>: every question has an explanation after you answer.' }), h('li', { html: 'Do the <b>Labs</b> page: the filters and the answers of every Wireshark lab sheet.' }), h('li', { html: 'Finish with the <b>Mixed review</b> and the <b>Mock MCQ exam</b> with the clock.' }), h('li', { html: 'Anything you get wrong goes to the <b>Mistakes notebook</b>.' })));
     } else if (id === 'learn-ws') {
-      sec.append(headEl('Cyber Security · labs', 'Wireshark filters cheat sheet', 'Every filter from the lab sheets: what it does, when to use it, and the answer it gave in the lab.'));
+      sec.append(headEl('Cyber Security · labs', 'Wireshark filters cheat sheet', 'Every filter from the lab sheets: what it does, when to use it, and an example.'));
       FilterNotes(sec);
     } else if (id.startsWith('learn-')) {
       sec.append(headEl('Cyber Security · explanation', LTITLES[id.slice(6)], 'The lecture slide by slide, exactly as in the slides, with a short simple explanation under each slide.'));
