@@ -352,6 +352,7 @@ h2::after{content:"NEWGIZA UNIVERSITY";position:absolute;right:0;bottom:12px;fon
 .scard:nth-child(3){border-top-color:var(--ngu-cream)}
 .scard:nth-child(4){border-top-color:var(--ngu-green)}
 .scard:nth-child(5){border-top-color:var(--ngu)}
+.scard:nth-child(6){border-top-color:var(--ngu-cream)}
 .scard:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.08)}
 .scard .code{font-size:12px;letter-spacing:.3em;color:var(--accent);font-weight:700}
 .scard .nm{font-size:26px;font-weight:700;color:var(--accent)}
@@ -399,8 +400,8 @@ h2::after{content:"NEWGIZA UNIVERSITY";position:absolute;right:0;bottom:12px;fon
   const CAN_SYNC = /(^|\.)github\.io$/.test(location.hostname) || location.hostname === 'localhost' || window.SYNC_FORCE;
   const SDK = window.SYNC_SDK || 'https://cdn.jsdelivr.net/npm/firebase@10.12.2/';
   const NOTES = 'study-notes';
-  const PAGES = { toc: 'theory.html', os: 'os.html', ml: 'ml.html', pm: 'pm.html', cy: 'cy.html' };
-  const SUBJ_NAME = { toc: 'Theory of Computing', os: 'Operating Systems', ml: 'Machine Learning', pm: 'Project Management', cy: 'Cyber Security', home: 'Front page' };
+  const PAGES = { toc: 'theory.html', os: 'os.html', ml: 'ml.html', pm: 'pm.html', cy: 'cy.html', nw: 'nw.html' };
+  const SUBJ_NAME = { toc: 'Theory of Computing', os: 'Operating Systems', ml: 'Machine Learning', pm: 'Project Management', cy: 'Cyber Security', nw: 'Computer Networks', home: 'Front page' };
   const LS = window.localStorage;
   const set0 = Storage.prototype.setItem, rem0 = Storage.prototype.removeItem;
   const raw = (k, d) => { try { const v = LS.getItem(k); return v == null ? d : v; } catch (e) { return d; } };
@@ -636,6 +637,7 @@ h2::after{content:"NEWGIZA UNIVERSITY";position:absolute;right:0;bottom:12px;fon
 <a class="scard" href="ml.html"><span class="code">CSAI 420</span><span class="nm">Machine Learning</span><span class="ds">Lectures 1–6 explained step by step with a "why?" on every line and interactive plots, then every type of question, model comparisons, unlimited calculation problems, 3 quizzes and a mock midterm.</span><span class="go">Open →</span></a>
 <a class="scard" href="pm.html"><span class="code">MGMT 313</span><span class="nm">Project Management</span><span class="ds">Weeks 1–6 slide by slide with a simple explanation under every slide, then questions on every slide: True/False with explanation, MCQ and essays, Exercise Sheet I with answers, and a mock midterm.</span><span class="go">Open →</span></a>
 <a class="scard" href="cy.html"><span class="code">CSAI 320</span><span class="nm">Cyber Security</span><span class="ds">The 6 lectures slide by slide with a simple explanation under every slide, a Wireshark filters cheat sheet, then MCQs on every line of the slides and every lab sheet, and a mock MCQ exam.</span><span class="go">Open →</span></a>
+<a class="scard" href="nw.html"><span class="code">ECEN 335</span><span class="nm">Computer Networks</span><span class="ds">Modules 1–7 and the Wireshark labs slide by slide with a simple explanation under every slide, the Packet Tracer labs explained, then MCQ, True/False, matching and drag &amp; drop on every slide and every lab, and a mock exam.</span><span class="go">Open →</span></a>
 </div></main>
 </body>
 </html>
